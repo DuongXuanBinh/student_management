@@ -13,7 +13,7 @@ class Subject extends Model
     public $timestamps = true;
 
     public function department(){
-        return $this->belongsTo(Deparment::class, 'department_id', 'id');
+        return $this->belongsTo(Department::class, 'department_id', 'id');
     }
     public function results(){
         return $this->hasMany(Result::class, 'subject_id', 'id');

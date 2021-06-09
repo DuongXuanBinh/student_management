@@ -1,0 +1,16 @@
+.table-display{
+    width: 100%;
+}
+.table-display tr th{
+    text-transform: capitalize;
+    font-size: 1.1em;
+    border: 1px solid black;
+    text-align: center;
+}
+/*.table-display tr th:nth-child(3),*/
+/*.table-display tr th:nth-child(5),*/
+/*.table-display tr th:nth-child(6),*/
+/*.table-display tr th:nth-child(9),*/
+/*.table-display tr th:nth-child(10){*/
+/*    width: 100px;*/
+/*}*/

@@ -12,5 +12,10 @@ interface ResultRepositoryInterface
      */
     public function findStudentByMarkRange($from, $to);
 
-
+    /**
+     * Update marks and subjects at the same time
+     * @param $array
+     * @return mixed
+     */
+    public function updateResult($array);
 }

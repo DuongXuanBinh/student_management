@@ -14,6 +14,7 @@ class Subjects extends Migration
     public function up()
     {
          Schema::create('subjects', function (Blueprint $table){
+             $table->unique(array('department_id','name'));
              $table->id();
              $table->string('name');
              $table->unsignedBigInteger('department_id');

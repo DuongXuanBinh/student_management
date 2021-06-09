@@ -14,13 +14,14 @@ class Results extends Migration
     public function up()
     {
         Schema::create('results', function (Blueprint $table){
+            $table->unique(array('student_id','subject_id'));
             $table->id();
-            $table->string('name');
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('students');
             $table->unsignedBigInteger('subject_id');
             $table->foreign('subject_id')->references('id')->on('subjects');
             $table->double('mark',4,2,true);
+            $table->timestamps();
         });
     }
 

@@ -32,13 +32,20 @@ interface StudentRepositoryInterface
 
     /**
      * Add new student
+     * @param $array
      * @return mixed
      */
-    public function addStudent();
+    public function addStudent($array);
 
     /**
      *Send mail to dismiss student
      * @return mixed
      */
     public function sendMailForDismiss();
+
+    /**
+     * Student can update profile
+     * @return mixed
+     */
+    public function updateProfile();
 }
