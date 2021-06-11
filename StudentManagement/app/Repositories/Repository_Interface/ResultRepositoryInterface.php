@@ -17,5 +17,5 @@ interface ResultRepositoryInterface
      * @param $array
      * @return mixed
      */
-    public function updateResult($array);
+    public function massiveUpdateResult($array);
 }

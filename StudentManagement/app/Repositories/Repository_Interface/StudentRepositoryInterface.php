@@ -31,13 +31,6 @@ interface StudentRepositoryInterface
     public function incompleteStudent();
 
     /**
-     * Add new student
-     * @param $array
-     * @return mixed
-     */
-    public function addStudent($array);
-
-    /**
      *Send mail to dismiss student
      * @return mixed
      */
@@ -47,5 +40,5 @@ interface StudentRepositoryInterface
      * Student can update profile
      * @return mixed
      */
-    public function updateProfile();
+
 }

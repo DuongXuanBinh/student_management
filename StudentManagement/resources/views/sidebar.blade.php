@@ -32,10 +32,9 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">HEADER</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Students</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Departments</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Subjects</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Results</span></a></li>
+            <li class="active"><a href="/"><i class="fa fa-link"></i> <span>Students</span></a></li>
+            <li><a href="/department"><i class="fa fa-link"></i> <span>Departments & Subjects</span></a></li>
+            <li><a href="/result"><i class="fa fa-link"></i> <span>Results</span></a></li>
 {{--            <li class="treeview">--}}
 {{--                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>--}}
 {{--                    <span class="pull-right-container">--}}
