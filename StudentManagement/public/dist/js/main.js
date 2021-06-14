@@ -1,20 +1,39 @@
 $(window).on('load', function() {
-    $('#notification').modal('show');
+    // $('#notification').modal('show');
+
 });
+
 
 $(".filter-student").on('click',function () {
     $(".filter-by").css("display","inline");
-    $(".filter-by").on('change',function(){
+    $(".button-filter").attr('disabled',true);
+    $("#filter-by").on('change',function(){
+        $(".button-filter").attr('disabled',false);
         var filter = $(this).val();
         if (filter === "age-range" || filter === "mark-range"){
             $(".range").css("display","inline");
-            $(".operator").css("display","none");
+            $(".operator").css("display","none").attr('name','');
+            if(filter === "age-range"){
+                $("form.filter").attr('action','/student/age-filter')
+            }else
+            {
+                $("form.filter").attr('action','/student/mark-filter')
+            }
         }else if (filter === "mobile-operator"){
             $(".operator").css("display","inline");
             $(".range").css("display","none");
+            $("#from, #to").attr('name','');
+            $("form.filter").attr('action','/student/mobile-operator-filter');
         }else{
-            $(".operator").css("display","none");
+            $("#from, #to").attr('name','');
+            $(".operator").css("display","none").attr('name','');
             $(".range").css("display","none");
+            if(filter === "complete"){
+                $("form.filter").attr('action','/student/complete-filter');
+            }else
+            {
+                $("form.filter").attr('action','/student/in-progress-filter');
+            }
         }
     })
 })
@@ -41,16 +60,26 @@ $(".add-button").on('click',function () {
        "                                            <path d=\"M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z\"/>\n" +
        "                                        </svg></a>\n" +
        "                                    </div>\n" +
-       "\n" +
        "                                </div>"
-   $("#massive-update div.modal-body").append(new_input);
-   count++;
+    if(count < 3){
+        $("#massive-update div.modal-body").append(new_input);
+        count++;
+        $(".add-button").attr('disabled',false);
+    }
     if(count === 3){
         $(".add-button").attr('disabled',true);
     }
-   $(".delete-subject").on('click',function(){
-       $(this).parentsUntil(".subject-mark").remove();
-       count--;
-   })
+});
 
+$('.modal-body').on('click','.delete-subject',function () {
+    $(this).parent().parent().remove();
+    count--;
+    if(count < 3){
+        $(".add-button").attr('disabled',false);
+    }
 })
+
+
+
+
+

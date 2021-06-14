@@ -32,9 +32,9 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">HEADER</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="/"><i class="fa fa-link"></i> <span>Students</span></a></li>
-            <li><a href="/department"><i class="fa fa-link"></i> <span>Departments & Subjects</span></a></li>
-            <li><a href="/result"><i class="fa fa-link"></i> <span>Results</span></a></li>
+            <li class="{{(request()->segment(1)=='student') ? 'active' : ''}}"><a href="/student"><i class="fa fa-link"></i> <span>Students</span></a></li>
+            <li class="{{(request()->segment(1)=='department') ? 'active' : ''}}"><a href="/department" ><i class="fa fa-link"></i> <span>Departments & Subjects</span></a></li>
+            <li class="{{(request()->segment(1)=='result') ? 'active' : ''}}"><a href="/result"><i class="fa fa-link"></i> <span>Results</span></a></li>
 {{--            <li class="treeview">--}}
 {{--                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>--}}
 {{--                    <span class="pull-right-container">--}}

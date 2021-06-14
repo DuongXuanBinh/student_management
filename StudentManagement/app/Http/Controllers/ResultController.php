@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Repositories\Repository_Interface\ResultRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,9 @@ class ResultController extends Controller
 
     public function index()
     {
-        $result = $this->_resultRepository->index();
+        $results = $this->_resultRepository->index();
 
-        return back()->with($result);
+        return view('results',compact('results'));
     }
 
     public function addNewResult(Request $request)
@@ -46,11 +47,11 @@ class ResultController extends Controller
 
     public function findStudentByMark(Request $request)
     {
-        $mark_from = $request->mark_from;
-        $mark_to = $request->mark_to;
+        $mark_from = $request->from;
+        $mark_to = $request->to;
 
         $students = $this->_resultRepository->findStudentByMarkRange($mark_from,$mark_to);
-
-        return back()->with('students');
+        $departments = Department::all();
+        return view('student',compact('students','departments'));
     }
 }

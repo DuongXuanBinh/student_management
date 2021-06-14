@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Result;
 use App\Models\Student;
 use App\Repositories\Repository_Interface\ResultRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ResultRepository extends EloquentRepository implements ResultRepositoryInterface
 {
@@ -51,7 +52,9 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
             array_push($students,$student);
         }
 
-        return $students;
+        $student = new LengthAwarePaginator($students,count($students),.50);
+
+        return $student;
     }
 
     public function massiveUpdateResult($array)

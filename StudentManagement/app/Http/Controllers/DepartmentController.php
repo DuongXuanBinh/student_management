@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subject;
 use App\Repositories\Repository_Interface\DepartmentRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,11 @@ class DepartmentController extends Controller
 
     public function index()
     {
-        $result = $this->_departmentController->index();
+        $departments = $this->_departmentController->index();
 
-        return $result;
+        $subjects = Subject::all();
+
+        return view('department',compact('departments','subjects'));
     }
 
     public function addNewDepartment(Request $request)

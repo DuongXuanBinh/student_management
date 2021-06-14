@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Repositories\Repository_Interface\StudentRepositoryInterface;
-use Dotenv\Validator;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
@@ -30,16 +32,15 @@ class StudentController extends Controller
             'department_id' => ['required',Rule::in(['1','2','3','4','5','6'])],
             'email' => 'required|email|unique:students,email',
             'gender' => ['required',Rule::in(['0','1'])],
-            'birthday' => 'required|date|before:',
+            'birthday' => 'required|date',
             'address' => 'required',
-            'phone' =>'required|regex/^(09)[0-9]{8}$/|unique:students,phone',
+            'phone' =>'required|regex:/^(09)[0-9]{8}$/|unique:students,phone',
         ],$message);
 
         if ($validator->fails()) {
             return back()->withErrors($validator);
         } else{
             $result = $this->_studentRepository->createNewStudent($request->all());
-            //lay thong tin user
             return back()->with('notification','Successfully added');
         }
     }
@@ -55,9 +56,10 @@ class StudentController extends Controller
 
     public function index()
     {
-        $indices = $this->_studentRepository->index();
+        $students = $this->_studentRepository->index();
+        $departments = Department::all();
 
-        return view('student',compact($indices));
+        return view('student',compact('students','departments'));
     }
 
     public function updateStudent(Request $request)
@@ -95,7 +97,7 @@ class StudentController extends Controller
         $to = $request ->to;
         $students = $this->_studentRepository->findStudentByAgeRange($from, $to);
 
-        return back()->with($students);
+        return view('student',compact('students'));
     }
 
     public function findByMobileOperator(Request $request)
@@ -103,21 +105,21 @@ class StudentController extends Controller
         $operator = $request -> operator;
         $students = $this->_studentRepository->findStudentByPhone($operator);
 
-        return back()->with($students);
+        return view('student',compact('students'));
     }
 
     public function incompleteStudents()
     {
         $students = $this->_studentRepository->incompleteStudent();
 
-        return back()->with('students');
+        return view('student',compact('students'));
     }
 
     public function completedStudent()
     {
         $students = $this->_studentRepository->completedStudent();
-
-        return back()->with('students');
+//        dd($students);
+        return view('student',compact('students'));
     }
 
 

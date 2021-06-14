@@ -8,6 +8,9 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Repositories\Repository_Interface\StudentRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class StudentRepository extends EloquentRepository implements StudentRepositoryInterface
 {
@@ -59,24 +62,28 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $vina = array('090','094','098');
         $mobi = array('095','096','097','099');
 
-        if ($operator === 'Viettel') {
+        if ($operator === 'viettel') {
             for ($i = 0; $i < count($viettel); $i++){
-                $viettel_users = Student::where('phone','LIKE',$viettel[$i].'%')->paginate(50);
+                $viettel_users = Student::where('phone','LIKE',$viettel[$i].'%')->get();
                 foreach ($viettel_users as $viettel_user)
                     array_push($results,$viettel_user);
             }
-        }elseif ($operator === 'Vinaphone') {
+        }elseif ($operator === 'vinaphone') {
             for ($i = 0; $i < count($vina); $i++){
-                $vina_users = Student::where('phone','LIKE',$vina[$i].'%')->paginate(50);
-                array_push($results,$vina_users);
+                $vina_users = Student::where('phone','LIKE',$vina[$i].'%')->get();
+                foreach ($vina_users as $vina_user)
+                    array_push($results,$vina_user);
             }
-        }elseif ($operator === 'Mobiphone') {
+        }elseif ($operator === 'mobiphone') {
             for ($i = 0; $i < count($mobi); $i++){
-                $mobi_users = Student::where('phone','LIKE',$mobi[$i].'%')->paginate(50);
-                array_push($results,$mobi_users);
+                $mobi_users = Student::where('phone','LIKE',$mobi[$i].'%')->get();
+                foreach ($mobi_users as $mobi_user)
+                    array_push($results,$mobi_user);
             }
         }
-        return $results;
+        $paginator = new LengthAwarePaginator($results,count($results),50);
+
+        return $paginator;
     }
 
     /**Function to check student's completion
@@ -118,14 +125,25 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function incompleteStudent()
     {
         $result = $this->checkCompletion(1);
-        return $result;
+        $paginator = new LengthAwarePaginator($result,count($result),'50');
+
+        return $paginator;
     }
 
     public function completedStudent()
     {
         $result = $this->checkCompletion(2);
-        return $result;
+        $paginator = new LengthAwarePaginator($result,count($result),1);
+
+
+        return $paginator;
     }
+//    public function paginate($items, $perPage = 50, $page = null, $options = [])
+//    {
+//        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+//        $items = $items instanceof Collection ? $items : Collection::make($items);
+//        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+//    }
 
     public function sendMailForDismiss()
     {

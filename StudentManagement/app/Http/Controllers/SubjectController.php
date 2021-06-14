@@ -15,9 +15,9 @@ class SubjectController extends Controller
     }
 
     public function index(){
-        $result = $this->_subjectRepository->index();
+        $subjects = $this->_subjectRepository->index();
 
-        return $result;
+        return view('department',compact('subjects'));
     }
 
     public function createSubject(Request $request){

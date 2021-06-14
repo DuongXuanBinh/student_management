@@ -31,9 +31,23 @@
     text-align: center;
     padding-left: 0;
 }
+.table-result{
+    text-align: center;
+}
 .filter{
     float: right;
 }
+.filter-by,.range,.operator{
+    display: none;
+}
+.delete-subject{
+    color: darkred;
+    position: absolute;
+    top: 5px;
+}
+/*.subject-mark{*/
+/*    display: none;*/
+/*}*/
 .filter input{
     width: 50px;
 }
@@ -42,6 +56,7 @@
 }
 .filter-student{
     padding-right: 10px;
+    float: right;
 }
 .table-department, .table-subject, .table-result tr td:not(:nth-child(2)){
     text-align: center;
