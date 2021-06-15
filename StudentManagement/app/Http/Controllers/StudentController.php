@@ -27,21 +27,23 @@ class StudentController extends Controller
             'before' => 'Under 15 is not eligible',
             'regex' => 'Phone number is in wrong format'
         ];
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
-            'department_id' => ['required',Rule::in(['1','2','3','4','5','6'])],
+            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
             'email' => 'required|email|unique:students,email',
-            'gender' => ['required',Rule::in(['0','1'])],
+            'gender' => ['required', Rule::in(['0', '1'])],
             'birthday' => 'required|date',
             'address' => 'required',
-            'phone' =>'required|regex:/^(09)[0-9]{8}$/|unique:students,phone',
-        ],$message);
+            'phone' => 'required|regex:/^(09)[0-9]{8}$/|unique:students,phone',
+        ], $message);
 
         if ($validator->fails()) {
+            dd($message);
             return back()->withErrors($validator);
-        } else{
+        } else {
+            dd('1');
             $result = $this->_studentRepository->createNewStudent($request->all());
-            return back()->with('notification','Successfully added');
+            return back()->with('notification', 'Successfully added');
         }
     }
 
@@ -59,7 +61,7 @@ class StudentController extends Controller
         $students = $this->_studentRepository->index();
         $departments = Department::all();
 
-        return view('student',compact('students','departments'));
+        return view('student', compact('students', 'departments'));
     }
 
     public function updateStudent(Request $request)
@@ -71,15 +73,15 @@ class StudentController extends Controller
             'before' => 'Under 15 is not eligible',
             'regex' => 'Phone number is in wrong format'
         ];
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
-            'department_id' => ['required',Rule::in(['1','2','3','4','5','6'])],
-            'email' => ['required|email',Rule::unique('students','email')->ignore($request->email)],
-            'gender' => ['required',Rule::in(['0','1'])],
+            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
+            'email' => ['required|email', Rule::unique('students', 'email')->ignore($request->email)],
+            'gender' => ['required', Rule::in(['0', '1'])],
             'birthday' => 'required|date_format:Y-m-d|before:2007-01-01',
             'address' => 'required',
-            'phone' =>['required|regex/^(09)[0-9]{8}$/',Rule::unique('students','phone')->ignore($request->phone)]
-        ],$message);
+            'phone' => ['required|regex/^(09)[0-9]{8}$/', Rule::unique('students', 'phone')->ignore($request->phone)]
+        ], $message);
 
         if ($validator->fails()) {
             return back()->withErrors($validator);
@@ -91,35 +93,11 @@ class StudentController extends Controller
         }
     }
 
-    public function findByAgeRange(Request $request)
+    public function filterStudent(Request $request)
     {
-        $from = $request -> from;
-        $to = $request ->to;
-        $students = $this->_studentRepository->findStudentByAgeRange($from, $to);
-
-        return view('student',compact('students'));
-    }
-
-    public function findByMobileOperator(Request $request)
-    {
-        $operator = $request -> operator;
-        $students = $this->_studentRepository->findStudentByPhone($operator);
-
-        return view('student',compact('students'));
-    }
-
-    public function incompleteStudents()
-    {
-        $students = $this->_studentRepository->incompleteStudent();
-
-        return view('student',compact('students'));
-    }
-
-    public function completedStudent()
-    {
-        $students = $this->_studentRepository->completedStudent();
-//        dd($students);
-        return view('student',compact('students'));
+        $students = $this->_studentRepository->filterStudent($request);
+        $departments = Department::all();
+        return view('student',compact('students','departments'));
     }
 
 

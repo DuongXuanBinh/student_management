@@ -16,7 +16,7 @@ class Department extends Model
     {
         return $this->hasMany(Subject::class, 'subject_id', 'id');
     }
-    public function student(){
-        return $this->belongsTo(Student::class, 'department_id', 'id');
+    public function students(){
+        return $this->hasMany(Student::class, 'department_id', 'id');
     }
 }

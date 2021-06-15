@@ -44,14 +44,4 @@ class ResultController extends Controller
 
         return $result;
     }
-
-    public function findStudentByMark(Request $request)
-    {
-        $mark_from = $request->from;
-        $mark_to = $request->to;
-
-        $students = $this->_resultRepository->findStudentByMarkRange($mark_from,$mark_to);
-        $departments = Department::all();
-        return view('student',compact('students','departments'));
-    }
 }

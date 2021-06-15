@@ -14,12 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('/student')->group(function (){
     Route::get('/',[\App\Http\Controllers\StudentController::class,'index']);
-    Route::get('/age-filter',[\App\Http\Controllers\StudentController::class,'findByAgeRange']);
-    Route::get('/mark-filter',[\App\Http\Controllers\ResultController::class,'findStudentByMark']);
-    Route::get('/complete-filter',[\App\Http\Controllers\StudentController::class,'completedStudent']);
-    Route::get('/in-progress-filter',[\App\Http\Controllers\StudentController::class,'incompleteStudents']);
-    Route::get('/mobile-operator-filter',[\App\Http\Controllers\StudentController::class,'findByMobileOperator']);
-    Route::post('/add',[\App\Http\Controllers\StudentController::class,'addNewStudent']);
+    Route::get('/filter',[\App\Http\Controllers\StudentController::class,'filterStudent']);
+    Route::get('/add',[\App\Http\Controllers\StudentController::class,'addNewStudent']);
 });
 
 Route::get('/department',[\App\Http\Controllers\DepartmentController::class,'index']);

@@ -1,39 +1,19 @@
 <?php
 namespace App\Repositories\Repository_Interface;
 
+use Illuminate\Http\Request;
+
 interface StudentRepositoryInterface
 {
     /**
      * Get students in range of age
-     * @param $from
-     * @param $to
+     * @param Request $request
      * @return mixed
      */
-    public function findStudentByAgeRange($from, $to);
+    public function filterStudent(Request $request);
 
     /**
-     * Get students by mobile service operator
-     * @param $operator
-     * @return mixed
-     */
-    public function findStudentByPhone($operator);
 
-    /**
-     * Get students completed all courses
-     * @return mixed
-     */
-    public function completedStudent();
-
-    /**
-     * Get students
-     * @return mixed
-     */
-    public function incompleteStudent();
-
-    /**
-     *Send mail to dismiss student
-     * @return mixed
-     */
     public function sendMailForDismiss();
 
     /**

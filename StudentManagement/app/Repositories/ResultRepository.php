@@ -34,29 +34,6 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return parent::update($id, $attribute);
     }
 
-    public function findStudentByMarkRange($from, $to)
-    {
-        $students_id = array();
-        $students = array();
-        $result = Result::select('student_id')->where('mark','>=',$from)->where('mark','<=',$to)->get();
-
-        for ($i = 0; $i < count($result); $i++) {
-            array_push($students_id,$result[$i]->student_id);
-        }
-
-        $student_id = array_unique($students_id);
-        sort($student_id);
-
-        for($i = 0; $i<count($student_id); $i++){
-            $student = Student::where('id','=',$student_id[$i])->first();
-            array_push($students,$student);
-        }
-
-        $student = new LengthAwarePaginator($students,count($students),.50);
-
-        return $student;
-    }
-
     public function massiveUpdateResult($array)
     {
 

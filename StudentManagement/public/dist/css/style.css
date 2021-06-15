@@ -37,8 +37,8 @@
 .filter{
     float: right;
 }
-.filter-by,.range,.operator{
-    display: none;
+.filter-by,.range,.mobile-network{
+    display: inline;
 }
 .delete-subject{
     color: darkred;
