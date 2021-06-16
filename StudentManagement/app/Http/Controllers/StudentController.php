@@ -20,31 +20,29 @@ class StudentController extends Controller
 
     public function addNewStudent(Request $request)
     {
-        $message = [
-            'email.unique' => 'Email is already exist',
-            'phone.unique' => 'Phone number is already exist',
-            'required' => 'All information is required',
-            'before' => 'Under 15 is not eligible',
-            'regex' => 'Phone number is in wrong format'
-        ];
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:30',
-            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
-            'email' => 'required|email|unique:students,email',
-            'gender' => ['required', Rule::in(['0', '1'])],
-            'birthday' => 'required|date',
-            'address' => 'required',
-            'phone' => 'required|regex:/^(09)[0-9]{8}$/|unique:students,phone',
-        ], $message);
-
-        if ($validator->fails()) {
-            dd($message);
-            return back()->withErrors($validator);
-        } else {
-            dd('1');
+//        $message = [
+//            'email.unique' => 'Email is already exist',
+//            'phone.unique' => 'Phone number is already exist',
+//            'required' => 'All information is required',
+//            'before' => 'Under 15 is not eligible',
+//            'regex' => 'Phone number is in wrong format'
+//        ];
+//        $validator = Validator::make($request->all(), [
+//            'name' => 'required|max:30',
+//            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
+//            'email' => 'required|email|unique:students,email',
+//            'gender' => ['required', Rule::in(['0', '1'])],
+//            'birthday' => 'required|date',
+//            'address' => 'required',
+//            'phone' => 'required|regex:/^(09)[0-9]{8}$/|unique:students,phone',
+//        ], $message);
+//
+//        if ($validator->fails()) {
+//            return back()->withErrors($validator);
+//        } else {
             $result = $this->_studentRepository->createNewStudent($request->all());
             return back()->with('notification', 'Successfully added');
-        }
+
     }
 
     public function deleteStudent(Request $request)
@@ -53,7 +51,7 @@ class StudentController extends Controller
 
         $result = $this->_studentRepository->deleteStudent($id);
 
-        return $result;
+        return back()->with('notification', 'Successfully deleted');
     }
 
     public function index()

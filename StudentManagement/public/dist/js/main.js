@@ -1,25 +1,25 @@
 $(window).on('load', function () {
-    // $('#notification').modal('show');
+    $('#notification').modal('show');
     $(".range input").attr('disabled', true);
     $(".mobile-network").attr('disabled', true);
     $("button.filter-by").attr('disabled', true);
 });
 
-$("select.filter-by").change(function (){
+$("select.filter-by").change(function () {
     var type = $(this).val();
-    if(type === 'age-range'|| type === 'mark-range'){
+    if (type === 'age-range' || type === 'mark-range') {
         $(".range input").attr('disabled', false);
         $(".mobile-network").attr('disabled', true);
         $("button.filter-by").attr('disabled', false);
-    } else if(type === 'mobile-network'){
+    } else if (type === 'mobile-network') {
         $(".range input").attr('disabled', true);
         $(".mobile-network").attr('disabled', false);
         $("button.filter-by").attr('disabled', false);
-    } else if (type === 'complete' || type === 'in-progress'){
+    } else if (type === 'complete' || type === 'in-progress') {
         $(".range input").attr('disabled', true);
         $(".mobile-network").attr('disabled', true);
         $("button.filter-by").attr('disabled', false);
-    } else{
+    } else {
         $(".range input").attr('disabled', true);
         $(".mobile-network").attr('disabled', true);
         $("button.filter-by").attr('disabled', true);
@@ -66,6 +66,43 @@ $('.modal-body').on('click', '.delete-subject', function () {
     if (count < 3) {
         $(".add-button").attr('disabled', false);
     }
+})
+
+$('.update-student').click(function () {
+    var id = $(this).parent().siblings('td:first-child').text();
+    $('#edit-details div.modal-body>div.row>input').val(id);
+
+    var name = $(this).parent().siblings('td:nth-of-type(2)').text();
+    $("#edit-details input[name='name']").val(name);
+
+    var department = $(this).parent().siblings('td:nth-of-type(3)').text();
+    $("#edit-details select[name='department']").val(department);
+
+    var email = $(this).parent().siblings('td:nth-of-type(4)').text();
+    $("#edit-details input[name='email']").val(email);
+
+    var gender = $(this).parent().siblings('td:nth-of-type(5)').text();
+    $("#edit-details select[name='gender']").val(gender);
+
+    var birthday = $(this).parent().siblings('td:nth-of-type(6)').text();
+    $("#edit-details input[name='birthday']").val(birthday);
+
+    var address = $(this).parent().siblings('td:nth-of-type(7)').text();
+    $("#edit-details input[name='address']").val(address);
+
+    var phone = $(this).parent().siblings('td:nth-of-type(8)').text();
+    $("#edit-details input[name='phone']").val(phone);
+
+    $("#edit-details button[type='submit']").attr('disabled', true);
+    $('#edit-details input, #edit-details select').on('change keyup',function () {
+        $("#edit-details button[type='submit']").attr('disabled', false);
+    });
+});
+
+
+$(".delete-student").click(function(){
+    var id = $(this).parent().siblings('td:first-child').text();
+    $("#delete-details input").val(id);
 })
 
 

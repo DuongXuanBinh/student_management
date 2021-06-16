@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::prefix('/student')->group(function (){
-    Route::get('/',[\App\Http\Controllers\StudentController::class,'index']);
-    Route::get('/filter',[\App\Http\Controllers\StudentController::class,'filterStudent']);
-    Route::get('/add',[\App\Http\Controllers\StudentController::class,'addNewStudent']);
+Route::prefix('/student')->group(function () {
+    Route::get('/', [\App\Http\Controllers\StudentController::class, 'index']);
+    Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent']);
+    Route::get('/add', [\App\Http\Controllers\StudentController::class, 'addNewStudent']);
+    Route::get('/update', [\App\Http\Controllers\StudentController::class, 'updateStudent']);
+    Route::get('/delete',[\App\Http\Controllers\StudentController::class,'deleteStudent']);
 });
 
-Route::get('/department',[\App\Http\Controllers\DepartmentController::class,'index']);
-Route::get('result',[\App\Http\Controllers\ResultController::class,'index']);
+Route::get('/department', [\App\Http\Controllers\DepartmentController::class, 'index']);
+Route::get('result', [\App\Http\Controllers\ResultController::class, 'index']);

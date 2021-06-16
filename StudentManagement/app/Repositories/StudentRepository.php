@@ -63,9 +63,13 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
                 ->select('students.*')->where('results.mark', '>=', $from)->where('results.mark', '<=', $to)
                 ->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
         } elseif ($type === 'complete') {
-
+            $studentID = $this->checkCompletion(2);
+            $students = Student::whereIn('id',$studentID)->paginate(50)->withQueryString();
+            dd($students);
         } elseif ($type === 'in-progress') {
-
+            $studentID = $this->checkCompletion(1);
+            $students = Student::whereIn('id',$studentID)->paginate(50)->withQueryString();
+            dd($students);
         } elseif ($type === 'mobile-network') {
             if ($request->mobile_network === 'viettel') {
                 $students = Student::where('phone', 'regexp','^09[3456]{1}[0-9]{7}$')->paginate(50)->withQueryString();
@@ -86,27 +90,18 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
      */
     public function checkCompletion($type)
     {
-        $students = Student::all();
-        $departments = Department::all('id');
-        $number_of_subjects = array();
-        $check_complete = array();
 
-        for ($i = 0; $i < count($departments); $i++) {
-            $amount = count(Subject::where('department_id', '=', $departments[$i]->id)->get());
-            array_push($number_of_subjects, $amount);
-        }
+        $result_of_student = Result::select('student_id','department_id',DB::raw('count(mark) as num_of_result'),DB::raw('count'))
+            ->join('students','students.id','results.student_id')
+            ->groupBy('student_id','department_id')
+            ->orderBy('student_id','asc')->take(15)->get();
 
-        for ($i = 0; $i < count($students); $i++) {
-            $result = count(Result::where('student_id', '=', $students[$i]->id)->get());
-            $student_department = $students[$i]->department_id;
-            for ($j = 0; $j < count($departments); $j++) {
-                if ($type == 1 && $student_department == $departments[$j]->id && $result < $number_of_subjects[$j]) {
-                    array_push($check_complete, $students[$i]);
-                } elseif ($type == 2 && $student_department == $departments[$j]->id && $result == $number_of_subjects[$j]) {
-                    array_push($check_complete, $students[$i]);
-                }
-            }
-        }
+        $num_of_subject = Subject::select('department_id',DB::raw('count(*) as num_of_subject'))
+            ->groupBy('department_id')->get()->toQuery();
+
+
+
+        dd($num_of_subject);
         return $check_complete;
     }
 

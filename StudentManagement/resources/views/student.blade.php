@@ -2,6 +2,26 @@
 
 @section('content')
 
+    @if(session('notification'))
+        <div class="modal fade" id="notification" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">Notification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>{{session('notification')}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     {{--    Modal flash message--}}
     @if($errors->any())
         <div class="modal fade" id="notification" tabindex="-1">
@@ -33,119 +53,89 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Edit student details</h4>
                 </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="row">
-                            <input type="hidden" name="id">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Name: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="name">
-                                </div>
+                {{Form::open(['method'=>'GET'])}}
+                <div class="modal-body">
+                    {{Form::hidden('id')}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('name','Name')}}
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Department: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select name="department_id">
-
-                                        <!--                            Dung ham lay ra-->
-                                        <option value="1">Romaguera PLC</option>
-                                        <option value="2">Emmerich, Wilkinson and Collins</option>
-                                        <option value="3">O'Conner, Batz and Von</option>
-                                        <option value="4">Stanton, Harvey and Jacobson</option>
-                                        <option value="5">Jast-Hansen</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Email: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="email" name="email">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Gender: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select name="gender">
-                                        <option value="0">Female</option>
-                                        <option value="1">Male</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Birthday: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="date" name="birthday">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Address: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="address">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Phone: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="phone">
-                                </div>
+                            <div class="col-md-8">
+                                {{Form::text('name')}}
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Add</button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('department_id','Department')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::select('department_id',$departments->pluck('name','id'))}}
+                            </div>
+                        </div>
                     </div>
-                </form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('email','Email')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::email('email')}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('gender','Gender')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::select('gender',['0'=>'Female','1'=>'Male'])}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('birthday','Birthday')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::date('birthday')}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('address','Address')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::text('address')}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('phone','Phone Number')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::text('phone')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{Form::button('Cancel',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
+                    {{Form::button('Update',['class'=>'btn btn-primary','type'=>'submit'])}}
+                </div>
+                {{Form::close()}}
             </div>
         </div>
     </div>
-    @if(session('notification'))
-        <div class="modal fade" id="notification" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">Notification</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p>{{session('notification')}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+
     {{--Delete pop-up--}}
     <div class="modal fade" id="delete-details" tabindex="-1">
         <div class="modal-dialog">
@@ -153,7 +143,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Delete Student</h4>
                 </div>
-                <form action="">
+                <form method="get" action="student/delete">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -164,7 +154,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Delete</button>
+                        <button type="submit" class="btn btn-primary">Delete</button>
                     </div>
                 </form>
             </div>
@@ -178,95 +168,89 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Add new student</h4>
                 </div>
-                <form action="student/add" method="get">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Name: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="name" value="{{old('name')}}">
-                                </div>
+                {{Form::open(['method'=>'GET','url'=>'student/add'])}}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('name','Name')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::text('name',old('name'))}}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Department: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select name="department">
-                                        @foreach($departments as $department)
-                                            <option value="{{$department->id}}">{{$department->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('department_id','Department')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::select('department_id',$departments->pluck('name','id'))}}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Email: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="email" name="email" value="{{old('email')}}">
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('email','Email')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::email('email',old('email'))}}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Gender: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select name="gender">
-                                        <option value="0">Female</option>
-                                        <option value="1">Male</option>
-                                    </select>
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('gender','Gender')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::select('gender',['0'=> 'Female','1' => 'Male'])}}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Birthday: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="date" name="birthday" value="{{old('birthday')}}">
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('birthday','Birthday')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::date('birthday',old('birthday'))}}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Address: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="address">
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('address','Address')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::text('address',old('address'))}}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label>Phone: </label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="phone">
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                {{Form::label('phone','Phone Number')}}
+                            </div>
+                            <div class="col-md-8">
+                                {{Form::text('phone',old('phone'))}}
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        {{Form::button('Cancel',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
+                        {{Form::button('Add',['class'=>'btn btn-primary','type'=>'submit'])}}
                     </div>
-                </form>
+                </div>
+                {{Form::close()}}
             </div>
         </div>
     </div>
 
+    {{--    </div>--}}
     {{--List-student--}}
     <div class="row">
         <div class="col-md-12">
@@ -304,7 +288,7 @@
                 </select>
                 <button class="filter-by" type="submit">Submit</button>
             </form>
-            <a style="cursor: pointer" class="filter-student">
+            <a class="filter-student">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel"
                      viewBox="0 0 16 16">--}}
                     <path
@@ -328,7 +312,7 @@
                     <th></th>
                 </tr>
                 @foreach($students as $student)
-                    <tr>
+                    <tr class="student-details">
                         <td>{{$student->id}}</td>
                         <td>{{$student->name}}</td>
                         <td>{{$student->department_id}}</td>
@@ -338,14 +322,14 @@
                         <td>{{$student->address}}</td>
                         <td>{{$student->phone}}</td>
                         <td>
-                            <a data-toggle="modal" href="#edit-details" class="update-details">
+                            <a data-toggle="modal" href="#edit-details" class="update-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path
                                         d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                                 </svg>
                             </a>
-                            <a data-toggle="modal" href="#delete-details" class="delete-details">
+                            <a data-toggle="modal" href="#delete-details" class="delete-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-trash" viewBox="0 0 16 16">
                                     <path

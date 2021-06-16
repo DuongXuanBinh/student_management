@@ -11,10 +11,10 @@
     margin: 0 5px;
 }
 
-.update-details{
+.update-student, .update-subject, .update-result, .update-department{
     color: green;
 }
-.delete-details{
+.delete-student,.delete-subject, .delete-result, .delete-department{
     color: darkred;
 }
 .table-display tr th{
