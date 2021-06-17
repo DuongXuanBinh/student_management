@@ -20,35 +20,20 @@ class StudentController extends Controller
 
     public function addNewStudent(Request $request)
     {
-//        $message = [
-//            'email.unique' => 'Email is already exist',
-//            'phone.unique' => 'Phone number is already exist',
-//            'required' => 'All information is required',
-//            'before' => 'Under 15 is not eligible',
-//            'regex' => 'Phone number is in wrong format'
-//        ];
-//        $validator = Validator::make($request->all(), [
-//            'name' => 'required|max:30',
-//            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
-//            'email' => 'required|email|unique:students,email',
-//            'gender' => ['required', Rule::in(['0', '1'])],
-//            'birthday' => 'required|date',
-//            'address' => 'required',
-//            'phone' => 'required|regex:/^(09)[0-9]{8}$/|unique:students,phone',
-//        ], $message);
-//
-//        if ($validator->fails()) {
-//            return back()->withErrors($validator);
-//        } else {
+        $validator = $this->validateStudent($request);
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator)->with('notification', 'Failed');
+        } else {
             $result = $this->_studentRepository->createNewStudent($request->all());
-            return back()->with('notification', 'Successfully added');
+            $id = $result->id;
 
+            return back()->with('notification', 'Successfully added');
+        }
     }
 
     public function deleteStudent(Request $request)
     {
         $id = $request->id;
-
         $result = $this->_studentRepository->deleteStudent($id);
 
         return back()->with('notification', 'Successfully deleted');
@@ -64,6 +49,28 @@ class StudentController extends Controller
 
     public function updateStudent(Request $request)
     {
+
+        $validator = $this->validateStudent($request);
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator)->with('notification', 'Failed');
+        } else {
+            $id = $request->id;
+            $result = $this->_studentRepository->updateStudent($id, $request->all());
+        }
+
+    }
+
+    public function filterStudent(Request $request)
+    {
+        $students = $this->_studentRepository->filterStudent($request);
+        $departments = Department::all();
+
+        $request->flash();
+        return view('student', compact('students', 'departments'));
+    }
+
+    public function validateStudent(Request $request)
+    {
         $message = [
             'email.unique' => 'Email is already exist',
             'phone.unique' => 'Phone number is already exist',
@@ -74,29 +81,19 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
             'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
-            'email' => ['required|email', Rule::unique('students', 'email')->ignore($request->email)],
+            'email' => 'required|email',Rule::unique('students','email')->ignore($request->email),
             'gender' => ['required', Rule::in(['0', '1'])],
-            'birthday' => 'required|date_format:Y-m-d|before:2007-01-01',
+            'birthday' => 'required|date',
             'address' => 'required',
-            'phone' => ['required|regex/^(09)[0-9]{8}$/', Rule::unique('students', 'phone')->ignore($request->phone)]
+            'phone' => 'required|regex:/^(09)[0-9]{8}$/',Rule::unique('students','phone')->ignore($request->phone),
         ], $message);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        } else {
-            $id = $request->id;
-            $result = $this->_studentRepository->updateStudent($id, $request->all());
-
-            return $result;
-        }
+        return $validator;
     }
 
-    public function filterStudent(Request $request)
+    public function createAccount(Request $request, $id)
     {
-        $students = $this->_studentRepository->filterStudent($request);
-        $departments = Department::all();
-        return view('student',compact('students','departments'));
-    }
 
+    }
 
 }

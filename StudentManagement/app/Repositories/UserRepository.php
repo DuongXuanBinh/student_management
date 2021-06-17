@@ -14,6 +14,12 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
 
     public function updateProfile()
     {
-        // TODO: Implement updateProfile() method.
+
     }
+
+    public function createUser(array $attribute)
+    {
+        return parent::create($attribute);
+    }
+
 }

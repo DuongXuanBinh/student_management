@@ -12,6 +12,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <p>{{session('notification')}}</p>
+                                @if($errors->any())
+                                    @foreach($errors->all() as $error)
+                                        <p>{{$error}}</p>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -22,38 +27,15 @@
             </div>
         </div>
     @endif
-    {{--    Modal flash message--}}
-    @if($errors->any())
-        <div class="modal fade" id="notification" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Error</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                @foreach($errors as $error)
-                                    <p>{{$error}}</p>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+
     {{--Edit pop-up--}}
-    <div class="modal fade" id="edit-details" tabindex="-1">
+    <div class="modal fade" id="edit-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Edit student details</h4>
                 </div>
-                {{Form::open(['method'=>'GET'])}}
+                {{Form::open(['method'=>'GET','url'=>'/student/update','class'=>'form-edit-student'])}}
                 <div class="modal-body">
                     {{Form::hidden('id')}}
                     <div class="row">
@@ -267,24 +249,37 @@
             <form class="filter" method="get" action="/student/filter">
                 <label class="filter-by" for="filter-by">By: </label>
                 <select name="type" class="filter-by" id="filter-by">
-                    <option value=""></option>
-                    <option value="age-range">Age Range</option>
-                    <option value="mark-range">Mark Range</option>
-                    <option value="complete">Complete all subjects</option>
-                    <option value="in-progress">Still in progess</option>
-                    <option value="mobile-network">Mobile operator</option>
+                    <option value="{{old('type')}}"></option>
+                    <option value="age-range" @if(old('type')=='age-range') selected="selected" @endif>Age Range
+                    </option>
+                    <option value="mark-range" @if(old('type')=='mark-range') selected="selected" @endif>Mark Range
+                    </option>
+                    <option value="complete" @if(old('type')=='complete') selected="selected" @endif>Complete all
+                        subjects
+                    </option>
+                    <option value="in-progress" @if(old('type')=='in-progress') selected="selected" @endif>Still in
+                        progess
+                    </option>
+                    <option value="mobile-network" @if(old('type')=='mobile-network') selected="selected" @endif>Mobile
+                        operator
+                    </option>
                 </select>
                 <div class="range">
                     <label for="from">From: </label>
-                    <input type="text" id="from" name="from">
+                    <input type="text" value="{{old('from')}}" id="from" name="from">
                     <label for="to">To: </label>
-                    <input type="text" id="to" name="to">
+                    <input type="text" value="{{old('to')}}" id="to" name="to">
                 </div>
                 <select name="mobile_network" class="mobile-network">
-                    <option value=""></option>
-                    <option value="viettel">Viettel</option>
-                    <option value="vinaphone">Vinaphone</option>
-                    <option value="mobiphone">Mobiphone</option>
+                    <option></option>
+                    <option value="viettel" @if(old('mobile_network')=='viettel') selected="selected" @endif>Viettel
+                    </option>
+                    <option value="vinaphone" @if(old('mobile_network')=='vinaphone') selected="selected" @endif>
+                        Vinaphone
+                    </option>
+                    <option value="mobiphone" @if(old('mobile_network')=='mobiphone') selected="selected" @endif>
+                        Mobiphone
+                    </option>
                 </select>
                 <button class="filter-by" type="submit">Submit</button>
             </form>
@@ -322,14 +317,14 @@
                         <td>{{$student->address}}</td>
                         <td>{{$student->phone}}</td>
                         <td>
-                            <a data-toggle="modal" href="#edit-details" class="update-student">
+                            <a data-toggle="modal" href="#edit-student" class="update-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path
                                         d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                                 </svg>
                             </a>
-                            <a data-toggle="modal" href="#delete-details" class="delete-student">
+                            <a data-toggle="modal" href="#delete-student" class="delete-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-trash" viewBox="0 0 16 16">
                                     <path
