@@ -2,6 +2,25 @@
 
 @section('content')
 
+    <div class="modal fade" id="update-notification" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if(session('notification'))
         <div class="modal fade" id="notification" tabindex="-1">
             <div class="modal-dialog">
@@ -33,9 +52,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit student details</h4>
+                    <h4 class="modal-title">Update student details</h4>
                 </div>
-                {{Form::open(['method'=>'GET','url'=>'/student/update','class'=>'form-edit-student'])}}
+                {{Form::open(['method'=>'GET','url'=>'student/update','class'=>'form-edit-student'])}}
                 <div class="modal-body">
                     {{Form::hidden('id')}}
                     <div class="row">
@@ -119,7 +138,7 @@
     </div>
 
     {{--Delete pop-up--}}
-    <div class="modal fade" id="delete-details" tabindex="-1">
+    <div class="modal fade" id="delete-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -232,7 +251,6 @@
         </div>
     </div>
 
-    {{--    </div>--}}
     {{--List-student--}}
     <div class="row">
         <div class="col-md-12">
@@ -308,14 +326,14 @@
                 </tr>
                 @foreach($students as $student)
                     <tr class="student-details">
-                        <td>{{$student->id}}</td>
-                        <td>{{$student->name}}</td>
-                        <td>{{$student->department_id}}</td>
-                        <td>{{$student->email}}</td>
-                        <td>{{$student->gender}}</td>
-                        <td>{{$student->birthday}}</td>
-                        <td>{{$student->address}}</td>
-                        <td>{{$student->phone}}</td>
+                        <td class="student-id">{{$student->id}}</td>
+                        <td class="student-name">{{$student->name}}</td>
+                        <td class="student-departmnet">{{$student->department_id}}</td>
+                        <td class="student-email">{{$student->email}}</td>
+                        <td class="student-gender">{{$student->gender}}</td>
+                        <td class="student-birthday">{{$student->birthday}}</td>
+                        <td class="student-address">{{$student->address}}</td>
+                        <td class="student-phone">{{$student->phone}}</td>
                         <td>
                             <a data-toggle="modal" href="#edit-student" class="update-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

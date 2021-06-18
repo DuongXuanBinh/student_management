@@ -38,4 +38,16 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
     {
 
     }
+
+    public function deleteStudentResult($id)
+    {
+        $result = Result::where('student_id', '=', $id);
+        if ($result) {
+            $result->delete();
+
+            return true;
+        }
+
+        return false;
+    }
 }

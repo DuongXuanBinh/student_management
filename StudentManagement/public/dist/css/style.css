@@ -125,3 +125,7 @@
     height: 16px;
     width: 16px;
 }
+body{
+    padding-right: 0 !important;
+    overflow: hidden;
+}

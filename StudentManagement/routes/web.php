@@ -19,6 +19,11 @@ Route::prefix('/student')->group(function () {
     Route::get('/update', [\App\Http\Controllers\StudentController::class, 'updateStudent']);
     Route::get('/delete',[\App\Http\Controllers\StudentController::class,'deleteStudent']);
 });
+Route::prefix('/department')->group(function(){
+    Route::get('/', [\App\Http\Controllers\DepartmentController::class, 'index']);
+    Route::get('/add-department',[\App\Http\Controllers\DepartmentController::class,'addNewDepartment']);
+    Route::get('/update-department',[\App\Http\Controllers\DepartmentController::class,'updateDepartment']);
+    Route::get('/delete-department',[\App\Http\Controllers\DepartmentController::class,'deleteDepartment']);
+});
 
-Route::get('/department', [\App\Http\Controllers\DepartmentController::class, 'index']);
 Route::get('result', [\App\Http\Controllers\ResultController::class, 'index']);

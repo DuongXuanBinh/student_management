@@ -29,7 +29,7 @@ class ResultController extends Controller
         return $result;
     }
 
-    public function updateNewResult(Request $request)
+    public function updateResult(Request $request)
     {
         $id = $request->id;
         $result = $this->_resultRepository->updateResult($id, $request->all());

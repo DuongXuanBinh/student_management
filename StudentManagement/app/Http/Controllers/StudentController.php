@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Repositories\Repository_Interface\ResultRepositoryInterface;
 use App\Repositories\Repository_Interface\StudentRepositoryInterface;
 
 use Illuminate\Http\Request;
@@ -12,10 +13,12 @@ use Illuminate\Validation\Rule;
 class StudentController extends Controller
 {
     protected $_studentRepository;
+    protected $_resultRepository;
 
-    public function __construct(StudentRepositoryInterface $studentRepository)
+    public function __construct(StudentRepositoryInterface $studentRepository, ResultRepositoryInterface $resultRepository)
     {
         $this->_studentRepository = $studentRepository;
+        $this->_resultRepository = $resultRepository;
     }
 
     public function addNewStudent(Request $request)
@@ -25,7 +28,7 @@ class StudentController extends Controller
             return back()->withInput()->withErrors($validator)->with('notification', 'Failed');
         } else {
             $result = $this->_studentRepository->createNewStudent($request->all());
-            $id = $result->id;
+//            $id = $result->id;
 
             return back()->with('notification', 'Successfully added');
         }
@@ -34,9 +37,13 @@ class StudentController extends Controller
     public function deleteStudent(Request $request)
     {
         $id = $request->id;
-        $result = $this->_studentRepository->deleteStudent($id);
-
-        return back()->with('notification', 'Successfully deleted');
+        $delete_result = $this->_resultRepository->deleteStudentResult($id);
+        $delete_student = $this->_studentRepository->deleteStudent($id);
+        if($delete_result === true && $delete_student === true) {
+            return back()->with('notification', 'Successfully deleted');
+        }else{
+            return back()->with('notification','Delete Failed');
+        }
     }
 
     public function index()
@@ -49,15 +56,15 @@ class StudentController extends Controller
 
     public function updateStudent(Request $request)
     {
-
         $validator = $this->validateStudent($request);
         if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator)->with('notification', 'Failed');
+            $result = $validator->errors()->all();
+            array_unshift($result,false);
         } else {
             $id = $request->id;
             $result = $this->_studentRepository->updateStudent($id, $request->all());
         }
-
+        return $result;
     }
 
     public function filterStudent(Request $request)
@@ -71,23 +78,15 @@ class StudentController extends Controller
 
     public function validateStudent(Request $request)
     {
-        $message = [
-            'email.unique' => 'Email is already exist',
-            'phone.unique' => 'Phone number is already exist',
-            'required' => 'All information is required',
-            'before' => 'Under 15 is not eligible',
-            'regex' => 'Phone number is in wrong format'
-        ];
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
             'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
-            'email' => 'required|email',Rule::unique('students','email')->ignore($request->email),
+            'email' => ['required','email', Rule::unique('students', 'email')->ignore($request->id)],
             'gender' => ['required', Rule::in(['0', '1'])],
             'birthday' => 'required|date',
             'address' => 'required',
-            'phone' => 'required|regex:/^(09)[0-9]{8}$/',Rule::unique('students','phone')->ignore($request->phone),
-        ], $message);
-
+            'phone' => ['required','regex:/^(09)[0-9]{8}$/', Rule::unique('students', 'phone')->ignore($request->id)],
+        ]);
         return $validator;
     }
 
