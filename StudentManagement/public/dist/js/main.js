@@ -3,7 +3,6 @@ $(document).ready(function () {
     $('#notification').modal('show');
     $("#update-notification").modal('hide');
     $(".range input").attr('disabled', true);
-
     $(".mobile-network").attr('disabled', true);
 
     $("button.filter-by").attr('disabled', true);
@@ -34,6 +33,7 @@ $(document).ready(function () {
     });
 
     $(".add-button").on('click', function () {
+        $(this).parentsUntil('.modal-body').find("input[name='student_id']").attr('disabled', 'true');
 
         var new_input = "<div class=\"row subject-mark\">\n" +
             "                                    <div class=\"col-md-12\">\n" +
@@ -41,7 +41,7 @@ $(document).ready(function () {
             "                                            <label>Subject: </label>\n" +
             "                                        </div>\n" +
             "                                        <div class=\"col-md-6\">\n" +
-            "                                            <select name=\"department_id\">\n" +
+            "                                            <select name=\"subject_id\">\n" +
             "                                                <option value=\"\">Romaguera PLC</option>\n" +
             "                                            </select>\n" +
             "                                        </div>\n" +
@@ -49,7 +49,7 @@ $(document).ready(function () {
             "                                            <label>Mark: </label>\n" +
             "                                        </div>\n" +
             "                                        <div class=\"col-md-2\">\n" +
-            "                                            <input type=\"text\" name=\"text\">\n" +
+            "                                            <input type=\"text\" name=\"mark\">\n" +
             "                                        </div>\n" +
             "                                        <a class=\"delete-option\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-x-lg\" viewBox=\"0 0 16 16\">\n" +
             "                                            <path d=\"M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z\"/>\n" +
@@ -64,13 +64,28 @@ $(document).ready(function () {
         if (count === 3) {
             $(".add-button").attr('disabled', true);
         }
+
     });
+
+
+    // $('#massive-update input#student_id').keyup(function(){
+    //     var x = $(this).text();
+    //
+    //     if(x === ''){
+    //         $(".add-button").attr('disabled','true');
+    //     }else{
+    //         $(".add-button").attr('disabled','false');
+    //     }
+    // })
 
     $('.modal-body').on('click', '.delete-option', function () {
         $(this).parent().parent().remove();
-        count--;
+        --count;
         if (count < 3) {
             $(".add-button").attr('disabled', false);
+        }
+        if (count === 0) {
+            $("#student_id").attr('disabled','false');
         }
     })
 
@@ -124,12 +139,13 @@ $(document).ready(function () {
     });
 
     $(".delete-subject").click(function () {
+        var id = $(this).parent().siblings('td:first-of-type').text();
         $("#delete-subject input[name='id']").val(id);
     });
 
     $('.update-student').click(function () {
         var selector = $("#edit-student");
-        var id = $(this).parent().siblings('td:first-child').text();
+        var id = $(this).parent().siblings('td:first-of-type').text();
         selector.find("input[name='id']").attr('value', id);
 
         var name = $(this).parent().siblings('td:nth-of-type(2)').text();
@@ -152,18 +168,65 @@ $(document).ready(function () {
 
         var phone = $(this).parent().siblings('td:nth-of-type(8)').text();
         selector.find("input[name='phone']").attr('value', phone);
-
-        selector.find("button[type='submit']").attr('disabled', true);
-        selector.find("input, #edit-student select").on('change keyup', function () {
-            selector.find("button[type='submit']").attr('disabled', false);
-        });
     });
 
+    $('.update-department').click(function () {
+        var selector = $("#edit-department");
+        var id = $(this).parent().siblings('td:first-of-type').text();
+        selector.find("input[name='id']").attr('value', id);
+
+        var name = $(this).parent().siblings('td:nth-of-type(2)').text();
+        selector.find("input[name='name']").attr('value', name);
+    });
+
+    $('.update-subject').click(function () {
+        var selector = $("#edit-subject");
+        var id = $(this).parent().siblings('td:first-of-type').text();
+        selector.find("input[name='id']").attr('value', id);
+
+        var name = $(this).parent().siblings('td:nth-of-type(2)').text();
+        selector.find("input[name='name']").attr('value', name);
+
+        var department = $(this).parent().siblings('td:nth-of-type(3)').text();
+        selector.find("select[name='department_id'] option[value='" + department + "']").attr('selected', 'selected');
+    });
+
+    $('.update-result').click(function (){
+        var selector = $("#edit-result");
+        var id = $(this).parent().siblings('td:first-of-type').text();
+        selector.find("input[name='id']").attr('value', id);
+
+        var student_id = $(this).parent().siblings('td:nth-of-type(2)').text();
+        selector.find("input[name='student_id']").attr('value', student_id);
+
+        var subject_id = $(this).parent().siblings('td:nth-of-type(3)').text();
+        selector.find("select[name='subject_id'] option[value='" + subject_id + "']").attr('selected', 'selected');
+
+        var mark = $(this).parent().siblings('td:nth-of-type(4)').text();
+        selector.find("input[name='mark']").attr('value', mark);
+    })
 
 });
 
+function toggleResetPswd(e){
+    e.preventDefault();
+    $('#logreg-forms .form-signin').toggle() // display:block or none
+    $('#logreg-forms .form-reset').toggle() // display:block or none
+}
 
+function toggleSignUp(e){
+    e.preventDefault();
+    $('#logreg-forms .form-signin').toggle(); // display:block or none
+    $('#logreg-forms .form-signup').toggle(); // display:block or none
+}
 
+$(()=>{
+    // Login Register Form
+    $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
+    $('#logreg-forms #cancel_reset').click(toggleResetPswd);
+    $('#logreg-forms #btn-signup').click(toggleSignUp);
+    $('#logreg-forms #cancel_signup').click(toggleSignUp);
+})
 
 
 

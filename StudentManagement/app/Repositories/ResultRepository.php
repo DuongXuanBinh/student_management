@@ -50,4 +50,16 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
         return false;
     }
+
+    public function deleteSubjectResult($id)
+    {
+        $result = Result::where('subject_id', '=', $id);
+        if ($result) {
+            $result->delete();
+
+            return true;
+        }
+
+        return false;
+    }
 }

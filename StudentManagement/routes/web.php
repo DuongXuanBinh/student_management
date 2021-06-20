@@ -12,18 +12,31 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', [\App\Http\Controllers\StudentController::class,'createAccount']);
+
 Route::prefix('/student')->group(function () {
     Route::get('/', [\App\Http\Controllers\StudentController::class, 'index']);
     Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent']);
     Route::get('/add', [\App\Http\Controllers\StudentController::class, 'addNewStudent']);
     Route::get('/update', [\App\Http\Controllers\StudentController::class, 'updateStudent']);
-    Route::get('/delete',[\App\Http\Controllers\StudentController::class,'deleteStudent']);
+    Route::get('/delete', [\App\Http\Controllers\StudentController::class, 'deleteStudent']);
 });
-Route::prefix('/department')->group(function(){
+Route::prefix('/department')->group(function () {
     Route::get('/', [\App\Http\Controllers\DepartmentController::class, 'index']);
-    Route::get('/add-department',[\App\Http\Controllers\DepartmentController::class,'addNewDepartment']);
-    Route::get('/update-department',[\App\Http\Controllers\DepartmentController::class,'updateDepartment']);
-    Route::get('/delete-department',[\App\Http\Controllers\DepartmentController::class,'deleteDepartment']);
+    Route::get('/add-department', [\App\Http\Controllers\DepartmentController::class, 'addNewDepartment']);
+    Route::get('/update-department', [\App\Http\Controllers\DepartmentController::class, 'updateDepartment']);
+    Route::get('/delete-department', [\App\Http\Controllers\DepartmentController::class, 'deleteDepartment']);
+    Route::get('/add-subject', [\App\Http\Controllers\SubjectController::class, 'addNewSubject']);
+    Route::get('/update-subject', [\App\Http\Controllers\SubjectController::class, 'updateSubject']);
+    Route::get('/delete-subject', [\App\Http\Controllers\SubjectController::class, 'deleteSubject']);
+    Route::get('/get-subject', [\App\Http\Controllers\SubjectController::class, 'getSubject']);
 });
 
-Route::get('result', [\App\Http\Controllers\ResultController::class, 'index']);
+Route::prefix('/result')->group(function () {
+    Route::get('/', [\App\Http\Controllers\ResultController::class, 'index']);
+    Route::get('/update', [\App\Http\Controllers\ResultController::class, 'updateResult']);
+    Route::get('/delete', [\App\Http\Controllers\ResultController::class, 'deleteResult']);
+    Route::get('add', [\App\Http\Controllers\ResultController::class, 'addNewResult']);
+});
+

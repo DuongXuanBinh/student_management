@@ -80,7 +80,7 @@ class StudentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
-            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5', '6'])],
+            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5'])],
             'email' => ['required','email', Rule::unique('students', 'email')->ignore($request->id)],
             'gender' => ['required', Rule::in(['0', '1'])],
             'birthday' => 'required|date',
@@ -90,9 +90,9 @@ class StudentController extends Controller
         return $validator;
     }
 
-    public function createAccount(Request $request, $id)
+    public function createAccount()
     {
-
+        $this->_studentRepository->sendMailforDismiss();
     }
 
 }

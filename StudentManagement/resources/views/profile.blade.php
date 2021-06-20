@@ -1,5 +1,7 @@
-@extends('admin_template')
+@extends('user_template')
 
 @section('content')
 
+
+    <div></div>
 @endsection

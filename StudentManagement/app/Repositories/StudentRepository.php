@@ -115,6 +115,11 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function sendMailForDismiss()
     {
+        $check_complete = $this->checkCompletion(1);
 
+        $dismiss_student = Result::select('student_id',DB::raw('avg(mark) as average_mark'))->whereIn('student_id',$check_complete)
+            ->groupBy('student_id')
+            ->get();
+        dd($dismiss_student);
     }
 }

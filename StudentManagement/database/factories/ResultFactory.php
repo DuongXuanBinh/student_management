@@ -31,7 +31,7 @@ class ResultFactory extends Factory
         return [
             'student_id' => $student_id,
             'subject_id' => $subject_id,
-            'mark' => $this->faker->randomFloat(2,0,10)
+            'mark' => $this->faker->randomFloat(1,0,10)
         ];
     }
 }

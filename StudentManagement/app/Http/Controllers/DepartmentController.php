@@ -42,9 +42,9 @@ class DepartmentController extends Controller
     public function updateDepartment(Request $request)
     {
         $validator = $this->validateSDepartment($request);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->with('notification', 'Failed');
-        }else{
+        } else {
             $id = $request->id;
             $result = $this->_departmentRepository->updateDepartment($id, $request->all());
             if ($result === false) {
@@ -58,12 +58,12 @@ class DepartmentController extends Controller
     public function deleteDepartment(Request $request)
     {
         $id = $request->id;
-        $delete_subject =
+        $delete_subject = $this->_subjectRepository->deleteDepartmentSubject($id);
         $delete_department = $this->_departmentRepository->deleteDepartment($id);
-        if ($result === false) {
-            return back()->with('notification', 'Delete Failed');
-        } else {
+        if ($delete_department === true && $delete_subject === true) {
             return back()->with('notification', 'Delete Successfully');
+        } else {
+            return back()->with('notification', 'Delete Failed');
         }
     }
 

@@ -1,24 +1,6 @@
 @extends('admin_template')
 
 @section('content')
-    <div class="modal fade" id="update-notification" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">Notification</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @if(session('notification'))
         <div class="modal fade" id="notification" tabindex="-1">
@@ -30,11 +12,16 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <p>{{session('notification')}}</p>
+                                @if($errors->any())
+                                    @foreach($errors->all() as $error)
+                                        <p>{{$error}}</p>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -62,7 +49,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{Form::button('Close',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
+                    {{Form::button('Cancel',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
                     {{Form::button('Update',['class'=>'btn btn-primary','type'=>'submit'])}}
                 </div>
                 {{Form::close()}}
@@ -79,7 +66,7 @@
                 {{Form::open(['method'=>'get','url'=>'department/update-subject'])}}
                 <div class="modal-body">
                     <div class="row">
-                        {{Form::hidden('name')}}
+                        {{Form::hidden('id')}}
                         <div class="col-md-12">
                             <div class="col-md-4">
                                 {{Form::label('name','Name')}}
@@ -101,7 +88,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{Form::button('Close',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
+                    {{Form::button('Cancel',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
                     {{Form::button('Update',['class'=>'btn btn-primary','type'=>'submit'])}}
                 </div>
                 {{Form::close()}}
@@ -163,7 +150,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Add new department</h4>
                 </div>
-                {{Form::open(['method'=>'get','url'=>'department/add-deparment'])}}
+                {{Form::open(['method'=>'get','url'=>'department/add-department'])}}
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
@@ -177,7 +164,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{Form::button('Close',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
+                    {{Form::button('Cancel',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
                     {{Form::button('Add',['class'=>'btn btn-primary','type'=>'submit'])}}
                 </div>
                 {{Form::close()}}
@@ -215,7 +202,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{Form::button('Close',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
+                    {{Form::button('Cancel',['class'=>'btn btn-secondary','data-dismiss'=>'modal'])}}
                     {{Form::button('Add',['class'=>'btn btn-primary','type'=>'submit'])}}
                 </div>
                 {{Form::close()}}

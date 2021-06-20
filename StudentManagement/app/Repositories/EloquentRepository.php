@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Repositories\Repository_Interface\RepositoryInterface;
@@ -74,9 +75,9 @@ abstract class EloquentRepository implements RepositoryInterface
         $result = $this->find($id);
 
         if ($result) {
-           $result->update($attribute);
+            $result->update($attribute);
 
-           return $result;
+            return $result;
         }
 
         return false;
@@ -91,9 +92,9 @@ abstract class EloquentRepository implements RepositoryInterface
         $result = $this->find($id);
 
         if ($result) {
-           $result->delete();
+            $result->delete();
 
-           return true;
+            return true;
         }
 
         return false;

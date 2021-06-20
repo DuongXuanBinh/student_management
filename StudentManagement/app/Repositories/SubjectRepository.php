@@ -34,14 +34,23 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
 
     public function deleteDepartmentSubject($id)
     {
-        $result = Subject::where('department_id','=',$id);
-        if($result){
+        $result = Subject::where('department_id', '=', $id);
+        if ($result) {
             $result->delete();
 
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
+    public function getSubjectByStudentID($id)
+    {
+        $result = Subject::select('id','name')->join('results','subjects.id','results.subject_id')
+        ->where('results.student_id','=',$id)->get();
+
+        return $result;
+    }
+
 
 }
