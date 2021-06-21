@@ -69,10 +69,27 @@ desired effect
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Title
-                <small>Title</small>
-            </h1>
+            @if(request()->segment(1)==='student')
+                <h1>
+                    Student List
+                    @if(request()->segment(2)==='view-massive-update')
+                        <small>Update results</small>
+                    @endif
+                </h1>
+            @elseif(request()->segment(1)==='department')
+                <h1>
+                    Departments & Subjects
+                </h1>
+            @elseif(request()->segment(1)==='result')
+                <h1>
+                    Results
+                </h1>
+            @elseif(request()->segment(1)==='update-result')
+                <h1>
+                    Update Results
+                </h1>
+            @endif
+
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
                 <li class="active">Here</li>

@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    var count = 0;
+    var count = $(".result-subset").length;
+    var max_count = $(".result-subset:first-of-type select[name='subject_id'] option").length;
     $('#notification').modal('show');
     $("#update-notification").modal('hide');
     $(".range input").attr('disabled', true);
@@ -32,60 +33,26 @@ $(document).ready(function () {
         }
     });
 
-    $(".add-button").on('click', function () {
-        $(this).parentsUntil('.modal-body').find("input[name='student_id']").attr('disabled', 'true');
-
-        var new_input = "<div class=\"row subject-mark\">\n" +
-            "                                    <div class=\"col-md-12\">\n" +
-            "                                        <div class=\"col-md-2\">\n" +
-            "                                            <label>Subject: </label>\n" +
-            "                                        </div>\n" +
-            "                                        <div class=\"col-md-6\">\n" +
-            "                                            <select name=\"subject_id\">\n" +
-            "                                                <option value=\"\">Romaguera PLC</option>\n" +
-            "                                            </select>\n" +
-            "                                        </div>\n" +
-            "                                        <div class=\"col-md-2\">\n" +
-            "                                            <label>Mark: </label>\n" +
-            "                                        </div>\n" +
-            "                                        <div class=\"col-md-2\">\n" +
-            "                                            <input type=\"text\" name=\"mark\">\n" +
-            "                                        </div>\n" +
-            "                                        <a class=\"delete-option\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-x-lg\" viewBox=\"0 0 16 16\">\n" +
-            "                                            <path d=\"M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z\"/>\n" +
-            "                                        </svg></a>\n" +
-            "                                    </div>\n" +
-            "                                </div>"
-        if (count < 3) {
-            $("#massive-update div.modal-body").append(new_input);
+    $("button.add-button").on('click', function () {
+        var input = $(".subset-hidden").eq(0).clone().css("display", "block");
+        if (count < max_count) {
+            $("div.result-set").append(input);
             count++;
             $(".add-button").attr('disabled', false);
         }
-        if (count === 3) {
+        if (count === max_count) {
             $(".add-button").attr('disabled', true);
         }
-
     });
 
-
-    // $('#massive-update input#student_id').keyup(function(){
-    //     var x = $(this).text();
-    //
-    //     if(x === ''){
-    //         $(".add-button").attr('disabled','true');
-    //     }else{
-    //         $(".add-button").attr('disabled','false');
-    //     }
-    // })
-
-    $('.modal-body').on('click', '.delete-option', function () {
+    $('.massive-update').on('click', '.delete-option', function () {
         $(this).parent().parent().remove();
         --count;
-        if (count < 3) {
+        if (count < max_count) {
             $(".add-button").attr('disabled', false);
         }
         if (count === 0) {
-            $("#student_id").attr('disabled','false');
+            $(".massive-update button[type='submit']").attr('disabled', 'true');
         }
     })
 
@@ -191,7 +158,7 @@ $(document).ready(function () {
         selector.find("select[name='department_id'] option[value='" + department + "']").attr('selected', 'selected');
     });
 
-    $('.update-result').click(function (){
+    $('.update-result').click(function () {
         var selector = $("#edit-result");
         var id = $(this).parent().siblings('td:first-of-type').text();
         selector.find("input[name='id']").attr('value', id);
@@ -206,21 +173,26 @@ $(document).ready(function () {
         selector.find("input[name='mark']").attr('value', mark);
     })
 
+    $(".massive-update button.btn-secondary").click(function () {
+        location.href = '/student';
+    })
+
+    $(".result-subset select")
 });
 
-function toggleResetPswd(e){
+function toggleResetPswd(e) {
     e.preventDefault();
     $('#logreg-forms .form-signin').toggle() // display:block or none
     $('#logreg-forms .form-reset').toggle() // display:block or none
 }
 
-function toggleSignUp(e){
+function toggleSignUp(e) {
     e.preventDefault();
     $('#logreg-forms .form-signin').toggle(); // display:block or none
     $('#logreg-forms .form-signup').toggle(); // display:block or none
 }
 
-$(()=>{
+$(() => {
     // Login Register Form
     $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
     $('#logreg-forms #cancel_reset').click(toggleResetPswd);

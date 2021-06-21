@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class StudentRepository extends EloquentRepository implements StudentRepositoryInterface
 {
@@ -113,13 +114,35 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     }
 
 
-    public function sendMailForDismiss()
-    {
-        $check_complete = $this->checkCompletion(1);
+//    public function sendMailForDismiss()
+//    {
+//        $check_complete = $this->checkCompletion(1);
+//        $student_id = [];
+//        $dismiss_student = Result::select('student_id', DB::raw('avg(mark) as average_mark'))
+//            ->whereIn('student_id', $check_complete)
+//            ->groupBy('student_id')->having('average_mark', '<', 5)
+//            ->get();
+//        for ($i = 0; $i < count($dismiss_student); $i++) {
+//            $id = $dismiss_student[$i]->student_id;
+//            array_push($student_id, $id);
+//        }
+//        $student = Student::whereIn('student_id', $student_id)->get();
+//        for ($i = 0; $i < count($student); $i++){
+//            $name = $student->name;
+//            $student_id = $student->student_id;
+//            $department
+//            Mail::send('mail_dismiss',compact('student_id'),function ($message) use ($student->name,$));
+//        }
+//
+//        $result = Result::select('subjects.name', 'mark')->join('subjects', 'subjects.id', 'results.subject_id')->where()
+//        dd($student_id);
+//    }
 
-        $dismiss_student = Result::select('student_id',DB::raw('avg(mark) as average_mark'))->whereIn('student_id',$check_complete)
-            ->groupBy('student_id')
-            ->get();
-        dd($dismiss_student);
+    public function getDepartmentName($department_id){
+        $department_name = Department::select('name')->find($department_id)->first();
+        dd($department_name);
+        return $department_name;
     }
+
+
 }

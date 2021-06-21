@@ -62,4 +62,11 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
         return false;
     }
+
+    public function getResultByStudentID($id){
+        $result = Result::select('results.*','subjects.name')
+        ->join('subjects','subjects.id','results.subject_id')
+        ->where('student_id','=',$id)->get();
+        return $result;
+    }
 }

@@ -44,10 +44,10 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
         }
     }
 
-    public function getSubjectByStudentID($id)
+    public function getSubjectByDepartmentID($id)
     {
-        $result = Subject::select('id','name')->join('results','subjects.id','results.subject_id')
-        ->where('results.student_id','=',$id)->get();
+        $result = Subject::select('id','name')
+        ->where('department_id','=',$id)->get();
 
         return $result;
     }

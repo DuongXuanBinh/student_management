@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Repositories\DepartmentRepository;
+use App\Repositories\Repository_Interface\DepartmentRepositoryInterface;
 use App\Repositories\Repository_Interface\ResultRepositoryInterface;
 use App\Repositories\Repository_Interface\StudentRepositoryInterface;
 
+use App\Repositories\Repository_Interface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -14,11 +17,18 @@ class StudentController extends Controller
 {
     protected $_studentRepository;
     protected $_resultRepository;
+    protected $_departmentRepository;
+    protected $_subjectRepository;
 
-    public function __construct(StudentRepositoryInterface $studentRepository, ResultRepositoryInterface $resultRepository)
+    public function __construct(StudentRepositoryInterface $studentRepository,
+                                ResultRepositoryInterface $resultRepository,
+                                DepartmentRepositoryInterface $departmentRepository,
+                                SubjectRepositoryInterface $subjectRepository)
     {
         $this->_studentRepository = $studentRepository;
         $this->_resultRepository = $resultRepository;
+        $this->_departmentRepository = $departmentRepository;
+        $this->_subjectRepository = $subjectRepository;
     }
 
     public function addNewStudent(Request $request)
@@ -94,5 +104,18 @@ class StudentController extends Controller
     {
         $this->_studentRepository->sendMailforDismiss();
     }
+
+    public function viewMassiveUpdate(Request  $request){
+        $department_id = $request->department_id;
+        $student_id = $request->id;
+        $student_name = $request->name;
+        $department = $this->_departmentRepository->findSubject($department_id);
+        $department_name = $department->name;
+        $results = $this->_resultRepository->getResultByStudentID($student_id);
+        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
+
+        return view('massive-update',compact('student_id','student_name','department_name','results','subjects'));
+    }
+
 
 }
