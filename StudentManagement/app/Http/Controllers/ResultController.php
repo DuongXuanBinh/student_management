@@ -91,7 +91,7 @@ class ResultController extends Controller
             'subject_id' => ['required','exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id) {
                 return $query->where('student_id','=', $student_id)
                     ->where('subject_id','=', $subject_id);
-            })->ignore($request->id)],
+            })->ignore($request->id[0])],
             'mark' => 'required|numeric|min:0|max:10',
         ]);
         return $validator;
@@ -101,7 +101,7 @@ class ResultController extends Controller
     {
         $validator = $this->validateResult($request);
         if($validator->fails()){
-            return back()->withErrors($validator)->withInput();
+            return back()->withErrors($validator);
         }
     }
 }

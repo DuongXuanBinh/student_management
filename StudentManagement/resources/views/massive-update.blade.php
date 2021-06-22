@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-md-12">
                     @foreach($errors->all() as $error)
-                        <p>{{$error}}</p>
+                        <p style="color: darkred">{{$error}}</p>
                     @endforeach
                 </div>
             </div>
