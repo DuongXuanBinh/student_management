@@ -24,11 +24,21 @@
                 <button class="add-button">+ Add Subject</button>
             </div>
         </div>
-        {{Form::open(['method'=>'get'])}}
+        @if($errors->any())
+            <div class="row">
+                <div class="col-md-12">
+                    @foreach($errors->all() as $error)
+                        <p>{{$error}}</p>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+        {{Form::open(['method'=>'get','url'=>'/student/massive-update-result'])}}
         <div class="result-set">
             @foreach($results as $result)
                 <div class="row result-subset">
                     <div class="col-md-12">
+                        {{Form::hidden('id',$result->id)}}
                         {{Form::hidden('student_id',$student_id)}}
                         <div class="col-md-2">
                             {{Form::label('subject_id','Subject')}}
@@ -61,18 +71,18 @@
 {{--        form to append    --}}
         <div class="row result-subset subset-hidden">
             <div class="col-md-12">
-                {{Form::hidden('student_id')}}
+                {{Form::hidden('student_id[]',$student_id)}}
                 <div class="col-md-2">
                     {{Form::label('subject_id','Subject')}}
                 </div>
                 <div class="col-md-4">
-                    {{Form::select('subject_id',$subjects->pluck('name','id'))}}
+                    {{Form::select('subject_id[]',$subjects->pluck('name','id'))}}
                 </div>
                 <div class="col-md-2">
                     {{Form::label('mark','Mark')}}
                 </div>
                 <div class="col-md-4">
-                    {{Form::text('mark')}}
+                    {{Form::text('mark[]')}}
                 </div>
                 <a class="delete-option">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

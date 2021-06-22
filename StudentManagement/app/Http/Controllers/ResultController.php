@@ -22,7 +22,7 @@ class ResultController extends Controller
     public function index()
     {
         $results = $this->_resultRepository->index();
-        $subjects = Subject::all();
+        $subjects = Subject::all()->sortBy('name');
 
         return view('results', compact('results', 'subjects'));
     }
@@ -38,7 +38,7 @@ class ResultController extends Controller
                 return back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
             }
             $result = $this->_resultRepository->createResult($request->all());
-            return $result;
+            return back()->with('notification', 'Added Successfully');
         }
     }
 
@@ -87,13 +87,21 @@ class ResultController extends Controller
         $student_id = $request->student_id;
         $validator = Validator::make($request->all(), [
             'student_id' => 'required|exists:students,id',
-            'subject_id' => ['required', 'exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id) {
-                $query->where('student_id', $student_id)
-                    ->where('subject_id', $subject_id);
+//            'subject_id' => 'required|exists:subjects,id|unique:results,student_id,NULL,id,subject_id,'.$request->student_id,
+            'subject_id' => ['required','exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id) {
+                return $query->where('student_id','=', $student_id)
+                    ->where('subject_id','=', $subject_id);
             })->ignore($request->id)],
             'mark' => 'required|numeric|min:0|max:10',
         ]);
-
         return $validator;
+    }
+
+    public function massiveUpdate(Request $request)
+    {
+        $validator = $this->validateResult($request);
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput();
+        }
     }
 }

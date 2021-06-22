@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\StudentController::class,'createAccount']);
+Route::get('/', [\App\Http\Controllers\StudentController::class, 'createAccount']);
 //Route::get('/',function(){
 //    return view('mail_dismiss');
 //});
@@ -23,10 +23,8 @@ Route::prefix('/student')->group(function () {
     Route::get('/add', [\App\Http\Controllers\StudentController::class, 'addNewStudent']);
     Route::get('/update', [\App\Http\Controllers\StudentController::class, 'updateStudent']);
     Route::get('/delete', [\App\Http\Controllers\StudentController::class, 'deleteStudent']);
-    Route::get('/view-massive-update',[\App\Http\Controllers\StudentController::class,'viewMassiveUpdate']);
-    Route::get('/update-result',function (){
-        return view('massive-update');
-    });
+    Route::get('/view-massive-update', [\App\Http\Controllers\StudentController::class, 'indexMassiveUpdate']);
+    Route::get('/massive-update-result', [\App\Http\Controllers\ResultController::class, 'massiveUpdate']);
 });
 Route::prefix('/department')->group(function () {
     Route::get('/', [\App\Http\Controllers\DepartmentController::class, 'index']);

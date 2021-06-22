@@ -59,7 +59,7 @@ class StudentController extends Controller
     public function index()
     {
         $students = $this->_studentRepository->index();
-        $departments = Department::all();
+        $departments = Department::all()->sortBy('name');
 
         return view('student', compact('students', 'departments'));
     }
@@ -105,7 +105,7 @@ class StudentController extends Controller
         $this->_studentRepository->sendMailforDismiss();
     }
 
-    public function viewMassiveUpdate(Request  $request){
+    public function indexMassiveUpdate(Request  $request){
         $department_id = $request->department_id;
         $student_id = $request->id;
         $student_name = $request->name;

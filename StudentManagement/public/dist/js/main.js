@@ -1,6 +1,11 @@
 $(document).ready(function () {
-    var count = $(".result-subset").length;
+    var count = $(".result-set .result-subset").length;
     var max_count = $(".result-subset:first-of-type select[name='subject_id'] option").length;
+    $(".result-subset").find("input[name='student_id']").attr("name", "student_id[]");
+    $(".result-subset").find("select[name='subject_id']").attr("name", "subject_id[]");
+    $(".result-subset").find("input[name='mark']").attr("name", "mark[]");
+    $(".result-subset").find("input[name='id']").attr("name", "id[]");
+
     $('#notification').modal('show');
     $("#update-notification").modal('hide');
     $(".range input").attr('disabled', true);
@@ -33,28 +38,6 @@ $(document).ready(function () {
         }
     });
 
-    $("button.add-button").on('click', function () {
-        var input = $(".subset-hidden").eq(0).clone().css("display", "block");
-        if (count < max_count) {
-            $("div.result-set").append(input);
-            count++;
-            $(".add-button").attr('disabled', false);
-        }
-        if (count === max_count) {
-            $(".add-button").attr('disabled', true);
-        }
-    });
-
-    $('.massive-update').on('click', '.delete-option', function () {
-        $(this).parent().parent().remove();
-        --count;
-        if (count < max_count) {
-            $(".add-button").attr('disabled', false);
-        }
-        if (count === 0) {
-            $(".massive-update button[type='submit']").attr('disabled', 'true');
-        }
-    })
 
     $(".form-edit-student").submit(function (e) {
         e.preventDefault();
@@ -177,7 +160,88 @@ $(document).ready(function () {
         location.href = '/student';
     })
 
-    $(".result-subset select")
+    var value_array = [];
+    $(".result-subset").eq(0).find("option").each(function () {
+        var option = $(this).val();
+        value_array.push(option);
+    })
+
+    $("button.add-button").on('click', function () {
+        var input = $(".subset-hidden").eq(0).clone().removeClass("subset-hidden");
+        $(".result-set .result-subset select").each(function () {
+            var prevVal = $(this).data("previous");
+            $(input).find("option[value='" + prevVal + "']").show();
+            var value = $(this).val();
+            $(this).data("previous", value);
+            $(input).find("option[value='" + value + "']").hide();
+            var index = value_array.indexOf(value);
+            if (index > -1) {
+                value_array.splice(index, 1);
+            }
+        });
+
+        const random = Math.floor(Math.random() * value_array.length);
+        $(input).find("select").val(value_array[random]).find("option[value='" + value_array[random] + "']").attr('selected', 'selected');
+        if (count < max_count) {
+            $("div.result-set").append(input);
+            $(".result-set .result-subset select").each(function () {
+                var selected = $(this).find("option[selected='selected']").val();
+                $(".result-set .result-subset select").not(this).find("option[value = '" + selected + "']").hide();
+            });
+            ++count;
+            $(".add-button").attr('disabled', false);
+            $(".massive-update button[type='submit']").attr('disabled', false);
+        }
+        if (count === max_count) {
+            $(".add-button").attr('disabled', true);
+        }
+        $(".result-set .result-subset select").change(function () {
+            $(input).find("option[value='" + value_array[random] + "']").attr('selected', false);
+            var prevVal = $(this).data("previous");
+            $(this).find("option[value='"+ prevVal + "']").attr('selected',false);
+            $(".result-set .result-subset select").not(this).find("option[value='" + prevVal + "']").show();
+
+            var value = $(this).val();
+            $(this).find("option[value='"+ value + "']").attr('selected','selected');
+            $(this).data("previous", value);
+            $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
+        });
+
+    });
+
+    $('.massive-update').on('click', '.delete-option', function () {
+        var x = $(this).parent().find("select").val();
+        $(".result-set .result-subset select").find("option[value='" + x + "']").show().attr('selected', false);
+        $(this).parent().parent().remove();
+        --count;
+        if (count < max_count) {
+            $(".add-button").attr('disabled', false);
+
+        }
+        if (count === 0) {
+            $(".massive-update button[type='submit']").attr('disabled', 'true');
+        }
+    })
+
+    $(".result-set .result-subset select").each(function () {
+        var value = $(this).val();
+        $(this).data("previous", value)
+        $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
+    })
+
+    $(".result-set .result-subset select").change(function () {
+        var prevVal = $(this).data("previous");
+        $(".result-set .result-subset select").not(this).find("option[value='" + prevVal + "']").show();
+
+        var value = $(this).val();
+        $(this).find("option[value='"+prevVal+"']").attr("selected",false).end().find("option[value='"+ value + "']").attr('selected','selected');
+        $(this).data("previous", value);
+        $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
+    });
+
+
+
+
 });
 
 function toggleResetPswd(e) {
@@ -199,6 +263,7 @@ $(() => {
     $('#logreg-forms #btn-signup').click(toggleSignUp);
     $('#logreg-forms #cancel_signup').click(toggleSignUp);
 })
+
 
 
 
