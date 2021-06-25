@@ -1,6 +1,32 @@
 @extends('admin_template')
 
 @section('content')
+    @if(session('notification'))
+        <div class="modal fade" id="notification" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">Notification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>{{session('notification')}}</p>
+                                @if($errors->any())
+                                    @foreach($errors->all() as $error)
+                                        <p>{{$error}}</p>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="massive-update">
         <div class="row">
             <div class="col-md-12">
@@ -24,16 +50,21 @@
                 <button class="add-button">+ Add Subject</button>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="errorTxt"></p>
+            </div>
+        </div>
         @if($errors->any())
             <div class="row">
                 <div class="col-md-12">
                     @foreach($errors->all() as $error)
-                        <p style="color: darkred">{{$error}}</p>
+                        <p class="errorTxt">{{$error}}</p>
                     @endforeach
                 </div>
             </div>
         @endif
-        {{Form::open(['method'=>'get','url'=>'/student/massive-update-result'])}}
+        {{Form::open(['method'=>'get','url'=>'/student/massive-update-result','id'=>'massive-form'])}}
         <div class="result-set">
             @foreach($results as $result)
                 <div class="row result-subset">

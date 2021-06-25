@@ -11,7 +11,6 @@ class Result extends Model
 
     protected $fillable = ['name', 'student_id', 'subject_id', 'mark'];
     public $timestamps = true;
-
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id', 'id');
@@ -20,5 +19,4 @@ class Result extends Model
     public function subject(){
         return $this->belongsTo(Subject::class, 'subject_id', 'id');
     }
-
 }

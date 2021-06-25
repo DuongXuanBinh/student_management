@@ -51,7 +51,6 @@
 
 .table-result {
     text-align: center;
-    width: 70%;
     margin: 10px auto;
 }
 
@@ -121,6 +120,10 @@
 .massive-update button{
     float: right;
     margin: 10px 10px;
+}
+
+.errorTxt{
+    color: darkred;
 }
 
 /*.subject-mark{*/

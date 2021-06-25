@@ -28,6 +28,28 @@
         </div>
     @endif
 
+    <div class="modal fade" id="dismiss-student" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dismiss Student</h4>
+                </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="id">
+                                <p>Are you sure to send mail of dismiss all the student with GPA under 5?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a><button class="btn btn-secondary" data-dismiss="modal">Cancel</button></a>
+                        <a href=""><button class="btn btn-primary">Delete</button></a>
+                    </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="edit-result" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -161,6 +183,7 @@
                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                 </svg>
             </a>
+            <button style="float: right" data-toggle="modal" href="#dismiss-student">Dismiss Student</button>
         </div>
         <div class="col-md-12">
             <table class="table-display table-result">

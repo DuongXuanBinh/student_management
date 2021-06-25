@@ -198,15 +198,31 @@ $(document).ready(function () {
         $(".result-set .result-subset select").change(function () {
             $(input).find("option[value='" + value_array[random] + "']").attr('selected', false);
             var prevVal = $(this).data("previous");
-            $(this).find("option[value='"+ prevVal + "']").attr('selected',false);
+            $(this).find("option[value='" + prevVal + "']").attr('selected', false);
             $(".result-set .result-subset select").not(this).find("option[value='" + prevVal + "']").show();
 
             var value = $(this).val();
-            $(this).find("option[value='"+ value + "']").attr('selected','selected');
+            $(this).find("option[value='" + value + "']").attr('selected', 'selected');
             $(this).data("previous", value);
             $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
         });
-
+        $("#massive-form button[type='submit']").attr('disabled','disabled');
+        $("#massive-form").find("input[type='text']").keyup(function () {
+            $("#massive-form button[type='submit']").attr('disabled',false);
+            var value = $(this).val();
+            $("#massive-form button[type='submit']").click(function (e) {
+                if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)){
+                    $("p.errorTxt").html("");
+                    $("#massive-form").submit();
+                } else if (value === '') {
+                    e.preventDefault();
+                    $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
+                } else {
+                    e.preventDefault();
+                    $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
+                }
+            });
+        });
     });
 
     $('.massive-update').on('click', '.delete-option', function () {
@@ -216,7 +232,6 @@ $(document).ready(function () {
         --count;
         if (count < max_count) {
             $(".add-button").attr('disabled', false);
-
         }
         if (count === 0) {
             $(".massive-update button[type='submit']").attr('disabled', 'true');
@@ -234,15 +249,28 @@ $(document).ready(function () {
         $(".result-set .result-subset select").not(this).find("option[value='" + prevVal + "']").show();
 
         var value = $(this).val();
-        $(this).find("option[value='"+prevVal+"']").attr("selected",false).end().find("option[value='"+ value + "']").attr('selected','selected');
+        $(this).find("option[value='" + prevVal + "']").attr("selected", false).end().find("option[value='" + value + "']").attr('selected', 'selected');
         $(this).data("previous", value);
         $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
     });
 
-
-
-
-});
+    $("#massive-form").find("input[type='text']").keyup(function () {
+        $("#massive-form button[type='submit']").attr('disabled',false);
+        var value = $(this).val();
+        $("#massive-form button[type='submit']").click(function (e) {
+            if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)) {
+                $("p.errorTxt").html("");
+                $("#massive-form").submit();
+            } else if (value === '') {
+                e.preventDefault();
+                $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
+            } else {
+                e.preventDefault();
+                $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
+            }
+        });
+    });
+})
 
 function toggleResetPswd(e) {
     e.preventDefault();

@@ -87,11 +87,10 @@ class ResultController extends Controller
         $student_id = $request->student_id;
         $validator = Validator::make($request->all(), [
             'student_id' => 'required|exists:students,id',
-//            'subject_id' => 'required|exists:subjects,id|unique:results,student_id,NULL,id,subject_id,'.$request->student_id,
-            'subject_id' => ['required','exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id) {
-                return $query->where('student_id','=', $student_id)
-                    ->where('subject_id','=', $subject_id);
-            })->ignore($request->id[0])],
+            'subject_id' => ['required', 'exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id) {
+                return $query->where('student_id', '=', $student_id)
+                    ->where('subject_id', '=', $subject_id);
+            })->ignore($request->id)],
             'mark' => 'required|numeric|min:0|max:10',
         ]);
         return $validator;
@@ -99,9 +98,11 @@ class ResultController extends Controller
 
     public function massiveUpdate(Request $request)
     {
-        $validator = $this->validateResult($request);
-        if($validator->fails()){
-            return back()->withErrors($validator);
+        $result = $this->_resultRepository->massiveUpdateResult($request);
+        if ($result) {
+            return back()->with('notification', 'Update result successfully');
+        } else {
+            return back()->with('notification','Failed');
         }
     }
 }

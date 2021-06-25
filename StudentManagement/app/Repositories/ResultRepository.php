@@ -5,7 +5,9 @@ namespace App\Repositories;
 use App\Models\Result;
 use App\Models\Student;
 use App\Repositories\Repository_Interface\ResultRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+
 
 class ResultRepository extends EloquentRepository implements ResultRepositoryInterface
 {
@@ -34,9 +36,30 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return parent::update($id, $attribute);
     }
 
-    public function massiveUpdateResult($array)
+    public function massiveUpdateResult(Request $request)
     {
+        $id = $request->id;
+        $subject_id = $request->subject_id;
+        $student_id = $request->student_id;
+        $mark = $request->mark;
+//        dd(count($id), $id, $student_id, $student_id, count($student_id));
+        for ($i = 0; $i < count($id); $i++) {
+            $result = Result::find($id[$i]);
+            $result->subject_id = $subject_id[$i];
+            $result->student_id = $student_id[$i];
+            $result->mark = $mark[$i];
+            $result->save();
+        };
+        for ($j = count($id); $j < count($subject_id); $j++) {
+            $result = Result::create([
+                'subject_id' => $subject_id[$j],
+                'student_id' => $student_id[$j],
+                'mark' => $mark[$j]
+            ]);
+        }
 
+
+        return true;
     }
 
     public function deleteStudentResult($id)
@@ -63,10 +86,11 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return false;
     }
 
-    public function getResultByStudentID($id){
-        $result = Result::select('results.*','subjects.name')
-        ->join('subjects','subjects.id','results.subject_id')
-        ->where('student_id','=',$id)->get();
+    public function getResultByStudentID($id)
+    {
+        $result = Result::select('results.*', 'subjects.name')
+            ->join('subjects', 'subjects.id', 'results.subject_id')
+            ->where('student_id', '=', $id)->get();
         return $result;
     }
 }

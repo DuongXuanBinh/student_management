@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\StudentController::class, 'createAccount']);
 //Route::get('/',function(){
-//    return view('mail_dismiss');
+//    return view('sign-in');
 //});
 Route::prefix('/student')->group(function () {
     Route::get('/', [\App\Http\Controllers\StudentController::class, 'index']);

@@ -2,6 +2,10 @@
 
 namespace App\Repositories\Repository_Interface;
 
+
+
+use Illuminate\Http\Request;
+
 interface ResultRepositoryInterface
 {
 
@@ -10,5 +14,5 @@ interface ResultRepositoryInterface
      * @param $array
      * @return mixed
      */
-    public function massiveUpdateResult($array);
+    public function massiveUpdateResult(Request $request);
 }
