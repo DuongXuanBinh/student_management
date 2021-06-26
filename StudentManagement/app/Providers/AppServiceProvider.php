@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use App\Jobs\SendMailDismiss;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Repository_Interface\DepartmentRepositoryInterface::class,
             \App\Repositories\DepartmentRepository::class
         );
+
     }
 
     /**

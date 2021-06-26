@@ -31,6 +31,7 @@
                 <td>Subject</td>
                 <td>Mark</td>
             </tr>
+
             <tr>
                 <td>GPA</td>
                 <td>Mark</td>

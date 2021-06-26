@@ -64,9 +64,7 @@
 
 .delete-option {
     color: darkred;
-    position: absolute;
-    top: 5px;
-    left: 515px;
+    position: relative;
 }
 
 .massive-update {
@@ -194,6 +192,9 @@
     float: right;
     height: 16px;
     width: 16px;
+    position: absolute;
+    top: 5px;
+    left:-30px;
 }
 
 body {

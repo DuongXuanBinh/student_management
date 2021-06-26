@@ -102,7 +102,7 @@ class StudentController extends Controller
 
     public function createAccount()
     {
-        $this->_studentRepository->sendMailforDismiss();
+
     }
 
     public function indexMassiveUpdate(Request  $request){
