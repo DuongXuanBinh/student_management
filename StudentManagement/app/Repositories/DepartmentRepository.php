@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Repository_Interface\DepartmentRepositoryInterface;
+use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 
 class DepartmentRepository extends EloquentRepository implements DepartmentRepositoryInterface
 {

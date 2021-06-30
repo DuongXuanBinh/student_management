@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Repository_Interface\ResultRepositoryInterface;
-use App\Repositories\Repository_Interface\SubjectRepositoryInterface;
+use App\Http\Requests\SubjectRequest;
+use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
+use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
@@ -26,10 +25,20 @@ class SubjectController extends Controller
         return view('department', compact('subjects'));
     }
 
-
-    public function addNewSubject(Request $request)
+    public function create()
     {
-        $validator = $this->validateSubject($request);
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validator = $request->validated();
         if ($validator->fails()) {
             return back()->withErrors($validator)->with('notification', 'Failed');
         } else {
@@ -37,12 +46,40 @@ class SubjectController extends Controller
 
             return back()->with('notification', 'Added Successfully');
         }
-
     }
 
-    public function updateSubject(Request $request)
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
-        $validator = $this->validateSubject($request);
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $validator = $request->validated();
         if ($validator->fails()) {
             return back()->withErrors($validator)->with('notification', 'Failed');
         } else {
@@ -56,30 +93,20 @@ class SubjectController extends Controller
         }
     }
 
-    public function deleteSubject(Request $request)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
     {
-        $id = $request->id;
-        $delete_result= $this->_resultRepository->deleteSubjectResult($id);
+        $delete_result = $this->_resultRepository->deleteSubjectResult($id);
         $delete_subject = $this->_subjectRepository->deleteSubject($id);
-        if($delete_subject === true && $delete_result === true){
+        if ($delete_subject === true && $delete_result === true) {
             return back()->with('notification', 'Delete Successfully');
         } else {
             return back()->with('notification', 'Delete Failed');
         }
     }
-
-    public function validateSubject(Request $request)
-    {
-        $name = $request->name;
-        $department_id = $request->department_id;
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'department_id' => ['required', Rule::unique('subjects')->where(function ($query) use ($name, $department_id) {
-                return $query->where('name', '=', $name)->where('department_id', '=', $department_id);
-            })->ignore($request->id)],
-        ]);
-
-        return $validator;
-    }
-
 }

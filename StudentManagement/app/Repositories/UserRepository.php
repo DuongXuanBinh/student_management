@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Repository_Interface\UserRepositoryInterface;
+use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Support\Facades\App;
 
 class UserRepository extends EloquentRepository implements UserRepositoryInterface

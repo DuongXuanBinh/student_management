@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DepartmentRequest;
 use App\Models\Subject;
-use App\Repositories\Repository_Interface\DepartmentRepositoryInterface;
-use App\Repositories\Repository_Interface\SubjectRepositoryInterface;
+use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
+use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {
@@ -19,33 +19,74 @@ class DepartmentController extends Controller
         $this->_subjectRepository = $subjectRepository;
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $departments = $this->_departmentRepository->index();
-
         $subjects = Subject::all();
 
-        return view('department', compact('departments', 'subjects'));
+        return response()->view('departments.department', compact('departments', 'subjects'));
     }
 
-    public function addNewDepartment(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $validator = $this->validateSDepartment($request);
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param DepartmentRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(DepartmentRequest $request, $id)
+    {
+        $validator = $request->validated();
         if ($validator->fails()) {
             return back()->withErrors($validator)->with('notification', 'Failed');
         } else {
-            $this->_departmentRepository->createDepartment($request->all());
-            return back()->with('notification', 'Added Successfully');
-        }
-    }
-
-    public function updateDepartment(Request $request)
-    {
-        $validator = $this->validateSDepartment($request);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->with('notification', 'Failed');
-        } else {
-            $id = $request->id;
             $result = $this->_departmentRepository->updateDepartment($id, $request->all());
             if ($result === false) {
                 return back()->with('notification', 'Update Failed');
@@ -55,9 +96,14 @@ class DepartmentController extends Controller
         }
     }
 
-    public function deleteDepartment(Request $request)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return
+     */
+    public function destroy($id)
     {
-        $id = $request->id;
         $delete_subject = $this->_subjectRepository->deleteDepartmentSubject($id);
         $delete_department = $this->_departmentRepository->deleteDepartment($id);
         if ($delete_department === true && $delete_subject === true) {
@@ -65,13 +111,5 @@ class DepartmentController extends Controller
         } else {
             return back()->with('notification', 'Delete Failed');
         }
-    }
-
-    public function validateSDepartment(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:departments,name,' . $request->id . ',id',
-        ]);
-        return $validator;
     }
 }

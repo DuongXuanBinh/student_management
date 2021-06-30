@@ -2,98 +2,125 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
-use App\Models\Student;
-use App\Models\Subject;
-use App\Repositories\Repository_Interface\ResultRepositoryInterface;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ResultRequest;
+use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
+use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
+use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ResultController extends Controller
 {
     protected $_resultRepository;
+    protected $_subjectRepository;
+    protected $_studentRepository;
 
-    public function __construct(ResultRepositoryInterface $resultRepository)
+    public function __construct(ResultRepositoryInterface $resultRepository,
+                                SubjectRepositoryInterface $subjectRepository,
+                                StudentRepositoryInterface $studentRepository)
     {
         $this->_resultRepository = $resultRepository;
+        $this->_subjectRepository = $subjectRepository;
+        $this->_studentRepository = $studentRepository;
     }
 
+    /**
+     * Show result list
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $results = $this->_resultRepository->index();
-        $subjects = Subject::all()->sortBy('name');
 
-        return view('results', compact('results', 'subjects'));
+        return response()->view('results.index', compact('results'));
     }
 
-    public function addNewResult(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $validator = $this->validateResult($request);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->with('notification', 'Failed');
+        $subjects = $this->_subjectRepository->index();
+
+        return response()->view('results.create',compact('subjects'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param ResultRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(ResultRequest $request)
+    {
+        $subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
+        if ($subject === null) {
+            return back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
+        }
+        $this->_resultRepository->createResult($request->all());
+
+        return back()->with('notification', 'Added Successfully');
+    }
+
+
+    public function show($id)
+    {
+        $result = $this->_resultRepository->find($id);
+
+        return response()->view('results.show',compact('result'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $result = $this->_resultRepository->find($id);
+        $subjects = $this->_subjectRepository->index();
+        return response()->view('results.edit',compact('result','subjects'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, $id)
+    {
+        $result = $this->_resultRepository->updateResult($id, $request->all());
+        if ($result === false) {
+            return redirect()->back()->with('notification', 'Update Failed');
         } else {
-            $check_subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
-            if ($check_subject === null) {
-                return back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
-            }
-            $result = $this->_resultRepository->createResult($request->all());
-            return back()->with('notification', 'Added Successfully');
+            return redirect()->back()->with('notification', 'Update Successfully');
         }
     }
 
-    public function updateResult(Request $request)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id)
     {
-        $validator = $this->validateResult($request);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->with('notification', 'Failed');
-        } else {
-            $id = $request->id;
-            $check_subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
-
-            if ($check_subject === null) {
-                return back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
-            } else {
-                $result = $this->_resultRepository->updateResult($id, $request->all());
-                if ($result === false) {
-                    return back()->with('notification', 'Update Failed');
-                } else {
-                    return back()->with('notification', 'Update Successfully');
-                }
-            }
-        }
-    }
-
-    public function deleteResult(Request $request)
-    {
-        $id = $request->id;
         $this->_resultRepository->deleteResult($id);
 
-        return back()->with('notification', 'Delete Successfully');
+        return redirect()->back()->with('notification', 'Delete Successfully');
     }
 
     public function checkSubjectOfStudent($student_id, $subject_id)
     {
-        $check_department = Student::where('id', '=', $student_id)->first();
-        $department_id = $check_department->department_id;
-        $check_subject = Subject::where('department_id', '=', $department_id)->where('id', '=', $subject_id)->first();
+        $student = $this->_studentRepository->findStudentById($student_id);
+        $department_id = $student->department_id;
+        $subject = $this->_subjectRepository->getSubjectByDepartment($department_id, $subject_id);
 
-        return $check_subject;
-    }
-
-    public function validateResult(Request $request)
-    {
-        $subject_id = $request->subject_id;
-        $student_id = $request->student_id;
-        $validator = Validator::make($request->all(), [
-            'student_id' => 'required|exists:students,id',
-            'subject_id' => ['required', 'exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id) {
-                return $query->where('student_id', '=', $student_id)
-                    ->where('subject_id', '=', $subject_id);
-            })->ignore($request->id)],
-            'mark' => 'required|numeric|min:0|max:10',
-        ]);
-        return $validator;
+        return $subject;
     }
 
     public function massiveUpdate(Request $request)
@@ -102,7 +129,7 @@ class ResultController extends Controller
         if ($result) {
             return back()->with('notification', 'Update result successfully');
         } else {
-            return back()->with('notification','Failed');
+            return back()->with('notification', 'Failed');
         }
     }
 }

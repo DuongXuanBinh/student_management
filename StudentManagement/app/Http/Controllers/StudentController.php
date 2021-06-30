@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
-use App\Repositories\DepartmentRepository;
-use App\Repositories\Repository_Interface\DepartmentRepositoryInterface;
-use App\Repositories\Repository_Interface\ResultRepositoryInterface;
-use App\Repositories\Repository_Interface\StudentRepositoryInterface;
-
-use App\Repositories\Repository_Interface\SubjectRepositoryInterface;
+use App\Http\Requests\StudentRequest;
+use App\Jobs\SendMailDismiss;
+use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
+use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
+use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
+use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
@@ -31,81 +28,93 @@ class StudentController extends Controller
         $this->_subjectRepository = $subjectRepository;
     }
 
-    public function addNewStudent(Request $request)
-    {
-        $validator = $this->validateStudent($request);
-        if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator)->with('notification', 'Failed');
-        } else {
-            $result = $this->_studentRepository->createNewStudent($request->all());
-//            $id = $result->id;
-
-            return back()->with('notification', 'Successfully added');
-        }
-    }
-
-    public function deleteStudent(Request $request)
-    {
-        $id = $request->id;
-        $delete_result = $this->_resultRepository->deleteStudentResult($id);
-        $delete_student = $this->_studentRepository->deleteStudent($id);
-        if($delete_result === true && $delete_student === true) {
-            return back()->with('notification', 'Successfully deleted');
-        }else{
-            return back()->with('notification','Delete Failed');
-        }
-    }
-
     public function index()
     {
         $students = $this->_studentRepository->index();
-        $departments = Department::all()->sortBy('name');
 
-        return view('student', compact('students', 'departments'));
+        return view('student', compact('students'));
     }
 
-    public function updateStudent(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $validator = $this->validateStudent($request);
-        if ($validator->fails()) {
-            $result = $validator->errors()->all();
-            array_unshift($result,false);
-        } else {
-            $id = $request->id;
-            $result = $this->_studentRepository->updateStudent($id, $request->all());
-        }
+        //
+    }
+
+
+    public function store(StudentRequest $request)
+    {
+        $this->_studentRepository->createNewStudent($request->all());
+
+        return redirect()->back()->with('notification', 'Successfully added');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+
+        $id = $request->id;
+        $result = $this->_studentRepository->updateStudent($id, $request->all());
+
         return $result;
+    }
+
+
+    public function destroy($id)
+    {
+        $delete_result = $this->_resultRepository->deleteStudentResult($id);
+        $delete_student = $this->_studentRepository->deleteStudent($id);
+        if ($delete_result === true && $delete_student === true) {
+            return back()->with('notification', 'Successfully deleted');
+        } else {
+            return back()->with('notification', 'Delete Failed');
+        }
     }
 
     public function filterStudent(Request $request)
     {
-        $students = $this->_studentRepository->filterStudent($request);
-        $departments = Department::all();
-
+        $result_per_student = $this->_resultRepository->getResultQuantity();
+        $subject_per_department = $this->_subjectRepository->getSubjectQuantity();
+        $students = $this->_studentRepository->filterStudent($request, $result_per_student, $subject_per_department);
         $request->flash();
+
         return view('student', compact('students', 'departments'));
     }
 
-    public function validateStudent(Request $request)
+    public function indexMassiveUpdate(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:30',
-            'department_id' => ['required', Rule::in(['1', '2', '3', '4', '5'])],
-            'email' => ['required','email', Rule::unique('students', 'email')->ignore($request->id)],
-            'gender' => ['required', Rule::in(['0', '1'])],
-            'birthday' => 'required|date',
-            'address' => 'required',
-            'phone' => ['required','regex:/^(09)[0-9]{8}$/', Rule::unique('students', 'phone')->ignore($request->id)],
-        ]);
-        return $validator;
-    }
-
-    public function createAccount()
-    {
-
-    }
-
-    public function indexMassiveUpdate(Request  $request){
         $department_id = $request->department_id;
         $student_id = $request->id;
         $student_name = $request->name;
@@ -114,8 +123,20 @@ class StudentController extends Controller
         $results = $this->_resultRepository->getResultByStudentID($student_id);
         $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
 
-        return view('massive-update',compact('student_id','student_name','department_name','results','subjects'));
+        return view('massive-update', compact('student_id', 'student_name', 'department_name', 'results', 'subjects'));
     }
 
+    public function sendMailDismiss()
+    {
+        $result_per_student = $this->_resultRepository->getResultQuantity();
+        $subject_per_department = $this->_subjectRepository->getSubjectQuantity();
+        $complete_student = $this->_studentRepository->checkCompletion(1, $result_per_student, $subject_per_department);
+        $bad_student = $this->_resultRepository->getBadStudent($complete_student);
 
+        $student_id = $this->_studentRepository->getStudentIDToDismiss($bad_student);
+        $sendEmail = new SendMailDismiss($student_id);
+        $this->dispatch($sendEmail);
+
+        return redirect()->back()->with('notification', 'Send e-mail successfully');
+    }
 }

@@ -1,43 +1,56 @@
 $(document).ready(function () {
     var count = $(".result-set .result-subset").length;
-    var max_count = $(".result-subset:first-of-type select[name='subject_id'] option").length;
+    var flag_filter = 0;
+    var max_count = $(".subset-hidden select[name='subject_id[]'] option").length;
+    if (count === max_count) {
+        $("button.add-button").attr('disabled', 'disabled');
+    }
+    var value_array = [];
     $(".result-subset").find("input[name='student_id']").attr("name", "student_id[]");
     $(".result-subset").find("select[name='subject_id']").attr("name", "subject_id[]");
     $(".result-subset").find("input[name='mark']").attr("name", "mark[]");
     $(".result-subset").find("input[name='id']").attr("name", "id[]");
-
     $('#notification').modal('show');
     $("#update-notification").modal('hide');
     $(".range input").attr('disabled', true);
     $(".mobile-network").attr('disabled', true);
-
     $("button.filter-by").attr('disabled', true);
+    $(".filter-student").css("display", "none");
 
-    $("select.filter-by").click(function () {
-        var type = $(this).val();
-        if (type === 'age-range' || type === 'mark-range') {
-            $(".range input").attr('disabled', false);
-            $(".mobile-network").attr('disabled', true).val('');
-            $("button.filter-by").attr('disabled', false);
-        } else if (type === 'mobile-network') {
-            $(".range input").attr('disabled', true);
-            $(".mobile-network").attr('disabled', false);
-            $("button.filter-by").attr('disabled', false);
-            $(".filter input[name='from']").val('');
-            $(".filter input[name='to']").val('');
-        } else if (type === 'complete' || type === 'in-progress') {
-            $(".range input").attr('disabled', true);
-            $(".mobile-network").attr('disabled', true);
-            $("button.filter-by").attr('disabled', false);
-            $(".filter input[name='from']").val('');
-            $(".filter input[name='to']").val('');
+    $(".filter").click(function () {
+        if (flag_filter === 0) {
+            $(".filter-student").css("display", "block");
+            flag_filter = 1;
         } else {
-            $(".range input").attr('disabled', true);
-            $(".mobile-network").attr('disabled', true);
-            $("button.filter-by").attr('disabled', true);
+            $(".filter-student").css("display", "none");
+            flag_filter = 0;
         }
     });
 
+    $(".filter-student button[type='submit']").click(function () {
+        var age_from = $(".filter-student input[name='age_from']").text();
+        var age_to = $(".filter-student input[name='age_to']").text();
+        var mark_from = $(".filter-student input[name='mark_from']").text();
+        var mark_to = $(".filter-student input[name='mark_to']").text();
+        if (age_from === '') {
+            $(".filter-student input[name='age_from']").val(0).css('color', 'transparent');
+        }
+        if (age_to === '') {
+            $(".filter-student input[name='age_to']").val(100).css('color', 'transparent');
+        }
+        if (mark_from === '') {
+            $(".filter-student input[name='mark_from']").val(0).css('color', 'transparent');
+        }
+        if (mark_to === '') {
+            $(".filter-student input[name='mark_to']").val(10).css('color', 'transparent');
+        }
+        if ($("#vinaphone").is(':unchecked') && $("#viettel").is(':unchecked') && $("#mobiphone").is(':unchecked')) {
+            $("#vinaphone, #mobiphone, #viettel").attr('checked', 'checked').css('color', 'transparent');
+        }
+        if ($("#complete").is(':unchecked') && $("#in-progress").is(':unchecked')) {
+            $("#complete, #in-progress").attr('checked', 'checked').css('color', 'transparent');
+        }
+    });
 
     $(".form-edit-student").submit(function (e) {
         e.preventDefault();
@@ -49,7 +62,6 @@ $(document).ready(function () {
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
                 if (data[0] == false) {
-                    $("#edit-student").modal('hide');
                     $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
                     var i;
                     for (i = 1; i < data.length; i++) {
@@ -57,14 +69,20 @@ $(document).ready(function () {
                     }
                 } else {
                     $("#edit-student").modal('hide');
-                    const selector = $('.table-display tr td[class="student-id"]').filter(function () {
+
+                    const selector = $('.table-student tr td[class="student-id"]').filter(function () {
                         return $(this).text() == data.id;
                     });
                     selector.siblings(".student-name").text(data.name);
                     selector.siblings(".student-address").text(data.address);
                     selector.siblings(".student-birthday").text(data.birthday);
-                    selector.siblings(".student-departmnet").text(data.department_id);
-                    selector.siblings(".student-gender").text(data.gender);
+                    var department_name = $("#edit-student").find("option[value='" + data.department_id + "']").text();
+                    selector.siblings(".student-department").text(department_name);
+                    if (data.gender === '0') {
+                        selector.siblings(".student-gender").html('Female');
+                    } else {
+                        selector.siblings(".student-gender").html('Male');
+                    }
                     selector.siblings(".student-email").text(data.email);
                     selector.siblings(".student-phone").text(data.phone);
                     $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
@@ -102,13 +120,20 @@ $(document).ready(function () {
         selector.find("input[name='name']").attr('value', name);
 
         var department = $(this).parent().siblings('td:nth-of-type(3)').text();
-        selector.find("select[name='department_id'] option[value='" + department + "']").attr('selected', 'selected');
+        selector.find("select[name='department_id'] option").filter(function () {
+            return $(this).text() === department;
+        }).attr('selected', 'selected');
 
         var email = $(this).parent().siblings('td:nth-of-type(4)').text();
         selector.find("input[name='email']").attr('value', email);
 
         var gender = $(this).parent().siblings('td:nth-of-type(5)').text();
-        selector.find("select[name='gender'] option[value='" + gender + "']").attr('selected', 'selected');
+        if (gender === 'Female') {
+            selector.find("select[name='gender'] option[value=0]").attr('selected', 'selected');
+        } else {
+            selector.find("select[name='gender'] option[value=1]").attr('selected', 'selected');
+        }
+
 
         var birthday = $(this).parent().siblings('td:nth-of-type(6)').text();
         selector.find("input[name='birthday']").attr('value', birthday);
@@ -160,7 +185,6 @@ $(document).ready(function () {
         location.href = '/student';
     })
 
-    var value_array = [];
     $(".result-subset").eq(0).find("option").each(function () {
         var option = $(this).val();
         value_array.push(option);
@@ -206,12 +230,12 @@ $(document).ready(function () {
             $(this).data("previous", value);
             $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
         });
-        $("#massive-form button[type='submit']").attr('disabled','disabled');
+        $("#massive-form button[type='submit']").attr('disabled', 'disabled');
         $("#massive-form").find("input[type='text']").keyup(function () {
-            $("#massive-form button[type='submit']").attr('disabled',false);
+            $("#massive-form button[type='submit']").attr('disabled', false);
             var value = $(this).val();
             $("#massive-form button[type='submit']").click(function (e) {
-                if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)){
+                if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)) {
                     $("p.errorTxt").html("");
                     $("#massive-form").submit();
                 } else if (value === '') {
@@ -255,7 +279,7 @@ $(document).ready(function () {
     });
 
     $("#massive-form").find("input[type='text']").keyup(function () {
-        $("#massive-form button[type='submit']").attr('disabled',false);
+        $("#massive-form button[type='submit']").attr('disabled', false);
         var value = $(this).val();
         $("#massive-form button[type='submit']").click(function (e) {
             if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)) {

@@ -10,23 +10,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class SendMailDismiss implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $_student;
-    protected $_result;
+    protected $_id;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Student $student, Result $result)
+    public function __construct(array $id)
     {
-        $this->_student = $student;
-        $this->_result = $result;
+        $this->_id = $id;
     }
 
     /**
@@ -36,9 +35,18 @@ class SendMailDismiss implements ShouldQueue
      */
     public function handle()
     {
-        Mail::send('mail_dismiss',[],function ($message){
-            $message->to();
-            $message->subject('Mail of Dismissal');
-        });
+        $student_ids = $this->_id;
+        foreach ($student_ids as $student_id){
+            $student = Student::where('id','=',$student_id)->first();
+            $department = Student::join('departments','students.department_id','departments.id')
+                ->where('students.id','=',$student_id)->first();
+            $results = Result::join('subjects','subjects.id','results.subject_id')->where('student_id','=',$student_id)->get();
+            $gpa = Result::select(DB::raw('avg(mark) as average_mark'))->where('student_id','=',$student_id)->first();
+            Mail::send('mail_dismiss',['student'=>$student,'department'=>$department,'results'=>$results,'gpa'=>$gpa],function ($message) use ($student) {
+                $message->from('xuanbinh1011@gmail.com','ABC University');
+                $message->to($student->email);
+                $message->subject('Mail of Dismissal');
+            });
+        }
     }
 }
