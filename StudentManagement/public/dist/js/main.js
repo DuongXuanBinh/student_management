@@ -57,10 +57,11 @@ $(document).ready(function () {
 
     $(".update-student-form").submit(function (e) {
         e.preventDefault();
+        alert(student_id);
         $.ajax({
             type: "PUT",
-            url: "students/" + student_id,
-            data: {query: $(this).serialize(), id: student_id},
+            url: "{{route('students/" + student_id + "')}}",
+            data: [$(this).serialize(), student_id],
             success: function (data) {
                 alert('Failed');
                 $("#update-notification").modal('show');
@@ -78,10 +79,9 @@ $(document).ready(function () {
                 $(this).find("input[name='email']").text(data.email);
                 $(this).find("input[name='phone']").text(data.phone);
                 $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
-                // }
             },
             error: function (response) {
-                alert(toJSON(response));
+                alert('1');
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
                 $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
