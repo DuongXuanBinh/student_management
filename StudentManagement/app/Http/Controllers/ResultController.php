@@ -87,11 +87,11 @@ class ResultController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param ResultRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(ResultRequest $request, $id)
     {
         $result = $this->_resultRepository->updateResult($id, $request->all());
         if ($result === false) {
@@ -111,7 +111,7 @@ class ResultController extends Controller
     {
         $this->_resultRepository->deleteResult($id);
 
-        return redirect()->back()->with('notification', 'Delete Successfully');
+        return redirect('/results')->with('notification', 'Delete Successfully');
     }
 
     public function checkSubjectOfStudent($student_id, $subject_id)

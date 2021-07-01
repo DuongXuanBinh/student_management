@@ -33,6 +33,11 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
         return parent::update($id, $attribute);
     }
 
+    public function find($id)
+    {
+        return parent::find($id);
+    }
+
     /**
      * Delete Subject by department id
      * @param $id
@@ -57,9 +62,13 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
      */
     public function getSubject($id)
     {
-        $result = Subject::select('id', 'name')->where('department_id', '=', $id)->get();
+        $subject_id = [];
+        $result = Subject::select('id')->where('department_id', '=', $id)->get();
+        for($i = 0; $i < count($result); $i++){
+            array_push($subject_id,$result[$i]->id);
+        }
 
-        return $result;
+        return $subject_id;
     }
 
     public function getSubjectQuantity()

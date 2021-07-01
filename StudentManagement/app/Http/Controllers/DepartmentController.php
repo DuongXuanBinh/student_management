@@ -3,20 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DepartmentRequest;
-use App\Models\Subject;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
+use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
+use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
-use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
     protected $_departmentRepository;
     protected $_subjectRepository;
+    protected $_resultRepository;
+    protected $_studentRepository;
 
-    public function __construct(DepartmentRepositoryInterface $departmentRepository, SubjectRepositoryInterface $subjectRepository)
+    public function __construct(DepartmentRepositoryInterface $departmentRepository,
+                                SubjectRepositoryInterface $subjectRepository,
+                                ResultRepositoryInterface $resultRepository,
+                                StudentRepositoryInterface $studentRepository)
     {
         $this->_departmentRepository = $departmentRepository;
         $this->_subjectRepository = $subjectRepository;
+        $this->_resultRepository = $resultRepository;
+        $this->_studentRepository = $studentRepository;
     }
 
     /**
@@ -27,9 +34,8 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = $this->_departmentRepository->index();
-        $subjects = Subject::all();
 
-        return response()->view('departments.department', compact('departments', 'subjects'));
+        return response()->view('departments.index', compact('departments'));
     }
 
     /**
@@ -39,18 +45,22 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        $departments = $this->_departmentRepository->index();
+
+        return response()->view('departments.create', compact('departments'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\DepartmentRequest $request
      * @return
      */
-    public function store(Request $request)
+    public function store(DepartmentRequest $request)
     {
-        //
+        $this->_departmentRepository->createDepartment($request->all());
+
+        return redirect()->back()->with('notification', 'Added successfully');
     }
 
     /**
@@ -61,7 +71,10 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        //
+        $department = $this->_departmentRepository->find($id);
+
+        return response()->view('departments.show', compact('department'));
+
     }
 
     /**
@@ -72,7 +85,9 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $department = $this->_departmentRepository->find($id);
+
+        return response()->view('departments.edit', compact('department'));
     }
 
     /**
@@ -83,16 +98,11 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, $id)
     {
-        $validator = $request->validated();
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->with('notification', 'Failed');
+        $result = $this->_departmentRepository->updateDepartment($id, $request->all());
+        if ($result === false) {
+            return back()->with('notification', 'Update Failed');
         } else {
-            $result = $this->_departmentRepository->updateDepartment($id, $request->all());
-            if ($result === false) {
-                return back()->with('notification', 'Update Failed');
-            } else {
-                return back()->with('notification', 'Update Successfully');
-            }
+            return back()->with('notification', 'Update Successfully');
         }
     }
 
@@ -104,12 +114,21 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        $delete_subject = $this->_subjectRepository->deleteDepartmentSubject($id);
+        $subjects = $this->_subjectRepository->getSubject($id);
+        if (count($subjects) != 0) {
+            $this->_resultRepository->deleteSubjectResult($subjects);
+            $this->_subjectRepository->deleteDepartmentSubject($id);
+        }
+        $students = $this->_studentRepository->getStudent($id);
+        if (count($students) != 0) {
+            $this->_studentRepository->deleteDepartmentStudent($id);
+        }
+
         $delete_department = $this->_departmentRepository->deleteDepartment($id);
-        if ($delete_department === true && $delete_subject === true) {
-            return back()->with('notification', 'Delete Successfully');
+        if ($delete_department === true) {
+            return redirect('/departments')->with('notification', 'Delete Successfully');
         } else {
-            return back()->with('notification', 'Delete Failed');
+            return redirect()->back()->with('notification', 'Delete Failed');
         }
     }
 }

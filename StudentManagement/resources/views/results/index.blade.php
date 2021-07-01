@@ -36,7 +36,9 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Delete Result</h4>
                 </div>
-                <form action="result/delete" method="get">
+                <form action="/" method="post">
+                    @csrf
+                    @method('delete')
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -56,7 +58,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a data-toggle="modal" href="#add-result" class="add-result">
+            <a data-toggle="modal" href="/results/create" class="add-result">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-plus-square" viewBox="0 0 16 16">
                     <path
@@ -83,7 +85,7 @@
                         <td>{{$result->subject_id}}</td>
                         <td>{{$result->mark}}</td>
                         <td>
-                            <a data-toggle="modal" href="#edit-result" class="update-result">
+                            <a href="/results/{{$result->id}}/edit" class="update-result">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path

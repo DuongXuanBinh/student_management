@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="row">
-        <h3>Update Subject</h3>
+        <h3>Add Subject</h3>
     </div>
     <div class="row">
         <div class="col-md-6">
-            @include('subjects.form_subject')
+            @include('departments.form_department')
         </div>
     </div>
 @endsection

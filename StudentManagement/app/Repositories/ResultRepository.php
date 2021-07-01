@@ -92,7 +92,11 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
      */
     public function deleteSubjectResult($id)
     {
-        $result = Result::where('subject_id', '=', $id);
+        if(is_array($id)){
+            $result = Result::whereIn('subject_id', $id);
+        }else{
+            $result = Result::where('subject_id', $id);
+        }
         if ($result) {
             $result->delete();
 

@@ -32,7 +32,7 @@ class StudentController extends Controller
     {
         $students = $this->_studentRepository->index();
 
-        return view('student', compact('students'));
+        return response()->view('students.index', compact('students'));
     }
 
     /**
@@ -42,9 +42,10 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
-    }
+        $departments = $this->_departmentRepository->index();
 
+        return response()->view('students.create',compact('departments'));
+    }
 
     public function store(StudentRequest $request)
     {
@@ -61,7 +62,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $student = $this->_studentRepository->find($id);
+
+        return response()->view('students.show', compact('students'));
     }
 
     /**
@@ -72,7 +75,10 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $student = $this->_studentRepository->find($id);
+        $departments = $this->_departmentRepository->index();
+
+        return response()->view('students.edit',compact('departments','student'));
     }
 
     /**
@@ -82,22 +88,19 @@ class StudentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StudentRequest $request, $id)
     {
-
-        $id = $request->id;
         $result = $this->_studentRepository->updateStudent($id, $request->all());
 
         return $result;
     }
-
 
     public function destroy($id)
     {
         $delete_result = $this->_resultRepository->deleteStudentResult($id);
         $delete_student = $this->_studentRepository->deleteStudent($id);
         if ($delete_result === true && $delete_student === true) {
-            return back()->with('notification', 'Successfully deleted');
+            return redirect('/students')->with('notification', 'Successfully deleted');
         } else {
             return back()->with('notification', 'Delete Failed');
         }

@@ -1,14 +1,19 @@
 @extends('layout.admin_template')
 
 @section('content')
-    {{--Delete pop-up--}}
+    <div class="row">
+        <h3>Student List</h3>
+    </div>
+
     <div class="modal fade" id="delete-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Delete Student</h4>
                 </div>
-                <form method="get" action="student/delete">
+                <form method="post" action="/">
+                    @csrf
+                    @method('delete')
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -29,7 +34,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row col-md-6">
-                <a data-toggle="modal" href="" class="add-student">
+                <a href="/students/create" class="add-student">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-plus-square" viewBox="0 0 16 16">
                         <path
@@ -52,8 +57,8 @@
                             Filter</a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 filter-student">
+                <div class="row filter-student">
+                    <div class="col-md-12">
                         <form method="get" action="/student/filter">
                             <div class="row">
                                 <div class="col-md-4">
@@ -148,14 +153,14 @@
                         <td class="student-address">{{$student->address}}</td>
                         <td class="student-phone">{{$student->phone}}</td>
                         <td>
-                            <a data-toggle="modal" href="" class="update-student">
+                            <a href="/students/{{$student->id}}/edit" class="update-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path
                                         d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                                 </svg>
                             </a>
-                            <a data-toggle="modal" href="" class="delete-student">
+                            <a data-toggle="modal" href="#delete-student" class="delete-student">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-trash" viewBox="0 0 16 16">
                                     <path

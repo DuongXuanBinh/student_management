@@ -1,5 +1,5 @@
 @if(request()->segment(2)== 'create')
-    {{Form::open(['method'=>'get','url'=>'/result/update'])}}
+    {{Form::open(['method'=>'post','url'=>'/results','class'=>'form-layout'])}}
     <div class="row">
         {{Form::hidden('id')}}
         <div class="col-md-12">
@@ -31,13 +31,14 @@
             </div>
         </div>
     </div>
-    <div>
-        {{Form::button('Cancel',['class'=>'btn btn-secondary'])}}
-        {{Form::button('Update',['class'=>'btn btn-primary','type'=>'submit'])}}
+    <div class="row">
+        <div class="col-md-offset-7">
+            {{Form::button('ADD',['class'=>'btn btn-primary','type'=>'submit'])}}
+        </div>
     </div>
     {{Form::close()}}
 @else
-    {{Form::model($result,array('route'=>array('results.edit',$result->id)))}}
+    {{Form::model($result,array('route'=>array('results.update',$result->id),'class'=>'form-layout','method'=>'put'))}}
     <div class="row">
         {{Form::hidden('id')}}
         <div class="col-md-12">
@@ -69,9 +70,10 @@
             </div>
         </div>
     </div>
-    <div>
-        {{Form::button('Cancel',['class'=>'btn btn-secondary'])}}
-        {{Form::button('Update',['class'=>'btn btn-primary','type'=>'submit'])}}
+    <div class="row">
+        <div class="col-md-offset-7">
+            {{Form::button('UPDATE',['class'=>'btn btn-primary','type'=>'submit'])}}
+        </div>
     </div>
     {{Form::close()}}
 @endif

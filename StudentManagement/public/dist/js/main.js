@@ -1,3 +1,5 @@
+import {toJSON} from "../../bower_components/moment/src/lib/moment/to-type";
+
 $(document).ready(function () {
     var count = $(".result-set .result-subset").length;
     var flag_filter = 0;
@@ -15,7 +17,6 @@ $(document).ready(function () {
     $(".range input").attr('disabled', true);
     $(".mobile-network").attr('disabled', true);
     $("button.filter-by").attr('disabled', true);
-    $(".filter-student").css("display", "none");
 
     $(".filter").click(function () {
         if (flag_filter === 0) {
@@ -52,40 +53,41 @@ $(document).ready(function () {
         }
     });
 
-    $(".form-edit-student").submit(function (e) {
+    var student_id = $(".update-student-form input[name='id']").val();
+
+    $(".update-student-form").submit(function (e) {
         e.preventDefault();
         $.ajax({
-            type: "GET",
-            url: "student/update",
-            data: $(this).serialize(),
+            type: "PUT",
+            url: "students/" + student_id,
+            data: {query: $(this).serialize(), id: student_id},
             success: function (data) {
+                alert('Failed');
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
-                if (data[0] == false) {
-                    $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
-                    var i;
-                    for (i = 1; i < data.length; i++) {
-                        $("#update-notification .modal-body .col-md-12").append('<p>' + data[i] + '</p>');
-                    }
+                $(this).find("input[name='name']").text(data.name);
+                $(this).find("input[name='address']").text(data.address);
+                $(this).find("input[name='birthday']").text(data.birthday);
+                var department_name = $(this).find("option[value='" + data.department_id + "']").text();
+                $(this).find("select[name='department_id']").text(department_name);
+                if (data.gender === '0') {
+                    $(this).find("select[name='gender']").html('Female');
                 } else {
-                    $("#edit-student").modal('hide');
-
-                    const selector = $('.table-student tr td[class="student-id"]').filter(function () {
-                        return $(this).text() == data.id;
-                    });
-                    selector.siblings(".student-name").text(data.name);
-                    selector.siblings(".student-address").text(data.address);
-                    selector.siblings(".student-birthday").text(data.birthday);
-                    var department_name = $("#edit-student").find("option[value='" + data.department_id + "']").text();
-                    selector.siblings(".student-department").text(department_name);
-                    if (data.gender === '0') {
-                        selector.siblings(".student-gender").html('Female');
-                    } else {
-                        selector.siblings(".student-gender").html('Male');
-                    }
-                    selector.siblings(".student-email").text(data.email);
-                    selector.siblings(".student-phone").text(data.phone);
-                    $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
+                    $(this).find("select[name='gender']").html('Male');
+                }
+                $(this).find("input[name='email']").text(data.email);
+                $(this).find("input[name='phone']").text(data.phone);
+                $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
+                // }
+            },
+            error: function (response) {
+                alert(toJSON(response));
+                $("#update-notification").modal('show');
+                $("#update-notification .modal-body .col-md-12").empty();
+                $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
+                var i;
+                for (i = 1; i < response.length; i++) {
+                    $("#update-notification .modal-body .col-md-12").append('<p>' + response[i] + '</p>');
                 }
             }
         })
@@ -93,97 +95,31 @@ $(document).ready(function () {
 
     $(".delete-student").click(function () {
         var id = $(this).parent().siblings('td:first-of-type').text();
+        var action = '/students/' + id;
         $("#delete-student input[name='id']").val(id);
+        $("#delete-student form").attr('action', action);
     });
 
     $(".delete-department").click(function () {
         var id = $(this).parent().siblings('td:first-of-type').text();
+        var action = '/departments/' + id;
         $("#delete-department input[name='id']").val(id);
+        $("#delete-department form").attr('action', action);
     });
 
     $(".delete-result").click(function () {
         var id = $(this).parent().siblings('td:first-of-type').text();
+        var action = '/results/' + id;
         $("#delete-result input[name='id']").val(id);
+        $("#delete-result form").attr('action', action);
     });
 
     $(".delete-subject").click(function () {
         var id = $(this).parent().siblings('td:first-of-type').text();
+        var action = '/subjects/' + id;
         $("#delete-subject input[name='id']").val(id);
+        $("#delete-subject form").attr('action', action);
     });
-
-    $('.update-student').click(function () {
-        var selector = $("#edit-student");
-        var id = $(this).parent().siblings('td:first-of-type').text();
-        selector.find("input[name='id']").attr('value', id);
-
-        var name = $(this).parent().siblings('td:nth-of-type(2)').text();
-        selector.find("input[name='name']").attr('value', name);
-
-        var department = $(this).parent().siblings('td:nth-of-type(3)').text();
-        selector.find("select[name='department_id'] option").filter(function () {
-            return $(this).text() === department;
-        }).attr('selected', 'selected');
-
-        var email = $(this).parent().siblings('td:nth-of-type(4)').text();
-        selector.find("input[name='email']").attr('value', email);
-
-        var gender = $(this).parent().siblings('td:nth-of-type(5)').text();
-        if (gender === 'Female') {
-            selector.find("select[name='gender'] option[value=0]").attr('selected', 'selected');
-        } else {
-            selector.find("select[name='gender'] option[value=1]").attr('selected', 'selected');
-        }
-
-
-        var birthday = $(this).parent().siblings('td:nth-of-type(6)').text();
-        selector.find("input[name='birthday']").attr('value', birthday);
-
-        var address = $(this).parent().siblings('td:nth-of-type(7)').text();
-        selector.find("input[name='address']").attr('value', address);
-
-        var phone = $(this).parent().siblings('td:nth-of-type(8)').text();
-        selector.find("input[name='phone']").attr('value', phone);
-    });
-
-    $('.update-department').click(function () {
-        var selector = $("#edit-department");
-        var id = $(this).parent().siblings('td:first-of-type').text();
-        selector.find("input[name='id']").attr('value', id);
-
-        var name = $(this).parent().siblings('td:nth-of-type(2)').text();
-        selector.find("input[name='name']").attr('value', name);
-    });
-
-    $('.update-subject').click(function () {
-        var selector = $("#edit-subject");
-        var id = $(this).parent().siblings('td:first-of-type').text();
-        selector.find("input[name='id']").attr('value', id);
-
-        var name = $(this).parent().siblings('td:nth-of-type(2)').text();
-        selector.find("input[name='name']").attr('value', name);
-
-        var department = $(this).parent().siblings('td:nth-of-type(3)').text();
-        selector.find("select[name='department_id'] option[value='" + department + "']").attr('selected', 'selected');
-    });
-
-    $('.update-result').click(function () {
-        var selector = $("#edit-result");
-        var id = $(this).parent().siblings('td:first-of-type').text();
-        selector.find("input[name='id']").attr('value', id);
-
-        var student_id = $(this).parent().siblings('td:nth-of-type(2)').text();
-        selector.find("input[name='student_id']").attr('value', student_id);
-
-        var subject_id = $(this).parent().siblings('td:nth-of-type(3)').text();
-        selector.find("select[name='subject_id'] option[value='" + subject_id + "']").attr('selected', 'selected');
-
-        var mark = $(this).parent().siblings('td:nth-of-type(4)').text();
-        selector.find("input[name='mark']").attr('value', mark);
-    })
-
-    $(".massive-update button.btn-secondary").click(function () {
-        location.href = '/student';
-    })
 
     $(".result-subset").eq(0).find("option").each(function () {
         var option = $(this).val();

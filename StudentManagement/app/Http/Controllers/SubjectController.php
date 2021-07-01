@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectRequest;
+use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
@@ -11,23 +12,30 @@ class SubjectController extends Controller
 {
     protected $_subjectRepository;
     protected $_resultRepository;
+    protected $_departmentRepository;
 
-    public function __construct(SubjectRepositoryInterface $subjectRepository, ResultRepositoryInterface $resultRepository)
+    public function __construct(SubjectRepositoryInterface $subjectRepository,
+                                ResultRepositoryInterface $resultRepository,
+                                DepartmentRepositoryInterface $departmentRepository)
     {
         $this->_resultRepository = $resultRepository;
         $this->_subjectRepository = $subjectRepository;
+        $this->_departmentRepository = $departmentRepository;
     }
 
     public function index()
     {
         $subjects = $this->_subjectRepository->index();
 
-        return view('department', compact('subjects'));
+        return response()->view('subjects.index', compact('subjects'));
     }
 
     public function create()
     {
-        //
+        $subjects = $this->_subjectRepository->index();
+        $departments = $this->_departmentRepository->index();
+
+        return response()->view('subjects.create', compact('subjects', 'departments'));
     }
 
     /**
@@ -36,16 +44,13 @@ class SubjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SubjectRequest $request)
     {
-        $validator = $request->validated();
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->with('notification', 'Failed');
-        } else {
-            $this->_subjectRepository->createSubject($request->all());
 
-            return back()->with('notification', 'Added Successfully');
-        }
+        $this->_subjectRepository->createSubject($request->all());
+
+        return back()->with('notification', 'Added Successfully');
+
     }
 
     /**
@@ -56,7 +61,10 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $subject = $this->_subjectRepository->find($id);
+        $departments = $this->_departmentRepository->index();
+
+        return response()->view('subjects.show', compact('subject', 'departments'));
     }
 
     /**
@@ -67,46 +75,44 @@ class SubjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $subject = $this->_subjectRepository->find($id);
+        $departments = $this->_departmentRepository->index();
+
+        return response()->view('subjects.edit', compact('subject', 'departments'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\SubjectRequest $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(SubjectRequest $request, $id)
     {
-        $validator = $request->validated();
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->with('notification', 'Failed');
+        $result = $this->_subjectRepository->updateSubject($id, $request->all());
+        if ($result === false) {
+            return redirect()->back()->with('notification', 'Update Failed');
         } else {
-            $id = $request->id;
-            $result = $this->_subjectRepository->updateSubject($id, $request->all());
-            if ($result === false) {
-                return back()->with('notification', 'Update Failed');
-            } else {
-                return back()->with('notification', 'Update Successfully');
-            }
+            return redirect()->back()->with('notification', 'Update Successfully');
         }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
         $delete_result = $this->_resultRepository->deleteSubjectResult($id);
         $delete_subject = $this->_subjectRepository->deleteSubject($id);
         if ($delete_subject === true && $delete_result === true) {
-            return back()->with('notification', 'Delete Successfully');
+            return redirect('/subjects')->with('notification', 'Delete Successfully');
         } else {
-            return back()->with('notification', 'Delete Failed');
+            return redirect()->back()->with('notification', 'Delete Failed');
         }
     }
 }

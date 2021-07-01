@@ -75,7 +75,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
             if (in_array('mobiphone', $mobile_network)) {
                 $students = $students->toQuery()->where('phone', 'regexp', '^09[789][0-9]{7}$')->get();
             }
-        }else{
+        } else {
             if (in_array('viettel', $mobile_network) && in_array('vinaphone', $mobile_network)) {
                 $students = $students->toQuery()->orWhere('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->orWhere('phone', 'regexp', '^09[012][0-9]{7}$')->get();
             }
@@ -118,10 +118,32 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function getStudentIDToDismiss($dismiss_student)
     {
-        $student_id=[];
+        $student_id = [];
         for ($i = 0; $i < count($dismiss_student); $i++) {
             $id = $dismiss_student[$i]->student_id;
             array_push($student_id, $id);
+        }
+        return $student_id;
+    }
+
+    public function deleteDepartmentStudent($id)
+    {
+        $result = Student::where('department_id', $id);
+        if ($result) {
+            $result->delete();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getStudent($department_id)
+    {
+        $student_id = [];
+        $students = Student::where('department_id', $department_id)->get();
+        for ($i = 0; $i < count($students); $i++) {
+            array_push($student_id, $students[$i]->id);
         }
         return $student_id;
     }

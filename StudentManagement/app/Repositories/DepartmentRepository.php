@@ -31,7 +31,7 @@ class DepartmentRepository extends EloquentRepository implements DepartmentRepos
         return parent::update($id, $attribute);
     }
 
-    public function findSubject($id)
+    public function find($id)
     {
         return parent::find($id);
     }
