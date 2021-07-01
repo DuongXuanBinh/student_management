@@ -64,7 +64,7 @@ class StudentController extends Controller
     {
         $student = $this->_studentRepository->find($id);
 
-        return response()->view('students.show', compact('students'));
+        return response()->view('students.show', compact('student'));
     }
 
     /**
@@ -92,7 +92,7 @@ class StudentController extends Controller
     {
         $result = $this->_studentRepository->updateStudent($id, $request->all());
 
-        return $result;
+        dd($result);
     }
 
     public function destroy($id)
@@ -113,7 +113,7 @@ class StudentController extends Controller
         $students = $this->_studentRepository->filterStudent($request, $result_per_student, $subject_per_department);
         $request->flash();
 
-        return view('student', compact('students', 'departments'));
+        return view('students.index', compact('students', 'departments'));
     }
 
     public function indexMassiveUpdate(Request $request)

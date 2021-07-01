@@ -1,5 +1,3 @@
-import {toJSON} from "../../bower_components/moment/src/lib/moment/to-type";
-
 $(document).ready(function () {
     var count = $(".result-set .result-subset").length;
     var flag_filter = 0;
@@ -55,43 +53,41 @@ $(document).ready(function () {
 
     var student_id = $(".update-student-form input[name='id']").val();
 
-    $(".update-student-form").submit(function (e) {
-        e.preventDefault();
-        alert(student_id);
-        $.ajax({
-            type: "PUT",
-            url: "{{route('students/" + student_id + "')}}",
-            data: [$(this).serialize(), student_id],
-            success: function (data) {
-                alert('Failed');
-                $("#update-notification").modal('show');
-                $("#update-notification .modal-body .col-md-12").empty();
-                $(this).find("input[name='name']").text(data.name);
-                $(this).find("input[name='address']").text(data.address);
-                $(this).find("input[name='birthday']").text(data.birthday);
-                var department_name = $(this).find("option[value='" + data.department_id + "']").text();
-                $(this).find("select[name='department_id']").text(department_name);
-                if (data.gender === '0') {
-                    $(this).find("select[name='gender']").html('Female');
-                } else {
-                    $(this).find("select[name='gender']").html('Male');
-                }
-                $(this).find("input[name='email']").text(data.email);
-                $(this).find("input[name='phone']").text(data.phone);
-                $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
-            },
-            error: function (response) {
-                alert('1');
-                $("#update-notification").modal('show');
-                $("#update-notification .modal-body .col-md-12").empty();
-                $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
-                var i;
-                for (i = 1; i < response.length; i++) {
-                    $("#update-notification .modal-body .col-md-12").append('<p>' + response[i] + '</p>');
-                }
-            }
-        })
-    });
+    // $(".update-student-form").submit(function (e) {
+    //     e.preventDefault();
+    //     $.ajax({
+    //         type: "PUT",
+    //         url: "{{route('students/" + student_id + "')}}",
+    //         data: [$(this).serialize(), student_id],
+    //         success: function (data) {
+    //             alert('Failed');
+    //             $("#update-notification").modal('show');
+    //             $("#update-notification .modal-body .col-md-12").empty();
+    //             $(this).find("input[name='name']").text(data.name);
+    //             $(this).find("input[name='address']").text(data.address);
+    //             $(this).find("input[name='birthday']").text(data.birthday);
+    //             var department_name = $(this).find("option[value='" + data.department_id + "']").text();
+    //             $(this).find("select[name='department_id']").text(department_name);
+    //             if (data.gender === '0') {
+    //                 $(this).find("select[name='gender']").html('Female');
+    //             } else {
+    //                 $(this).find("select[name='gender']").html('Male');
+    //             }
+    //             $(this).find("input[name='email']").text(data.email);
+    //             $(this).find("input[name='phone']").text(data.phone);
+    //             $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
+    //         },
+    //         error: function (response) {
+    //             $("#update-notification").modal('show');
+    //             $("#update-notification .modal-body .col-md-12").empty();
+    //             $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
+    //             var i;
+    //             for (i = 1; i < response.length; i++) {
+    //                 $("#update-notification .modal-body .col-md-12").append('<p>' + response[i] + '</p>');
+    //             }
+    //         }
+    //     })
+    // });
 
     $(".delete-student").click(function () {
         var id = $(this).parent().siblings('td:first-of-type').text();

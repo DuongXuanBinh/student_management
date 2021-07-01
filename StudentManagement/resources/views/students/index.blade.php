@@ -59,7 +59,7 @@
                 </div>
                 <div class="row filter-student">
                     <div class="col-md-12">
-                        <form method="get" action="/student/filter">
+                        <form method="get" action="/students/filter">
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="age-range">Age Range: </label>

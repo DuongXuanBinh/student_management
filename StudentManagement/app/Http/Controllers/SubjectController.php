@@ -46,7 +46,6 @@ class SubjectController extends Controller
      */
     public function store(SubjectRequest $request)
     {
-
         $this->_subjectRepository->createSubject($request->all());
 
         return back()->with('notification', 'Added Successfully');

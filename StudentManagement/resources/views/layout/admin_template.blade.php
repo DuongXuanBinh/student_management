@@ -58,7 +58,24 @@ desired effect
 -->
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-
+    <div class="modal fade" id="update-notification" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     @if(session('notification'))
         <div class="modal fade" id="notification" tabindex="-1">
             <div class="modal-dialog">
