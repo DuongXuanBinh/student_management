@@ -56,11 +56,11 @@ class ResultController extends Controller
     {
         $subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
         if ($subject === null) {
-            return back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
+            return redirect()->back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
         }
         $this->_resultRepository->createResult($request->all());
 
-        return back()->with('notification', 'Added Successfully');
+        return redirect('/results')->with('notification', 'Added Successfully');
     }
 
 
@@ -95,7 +95,7 @@ class ResultController extends Controller
     {
         $result = $this->_resultRepository->updateResult($id, $request->all());
         if ($result === false) {
-            return redirect()->back()->with('notification', 'Update Failed');
+            return redirect('/results')->with('notification', 'Update Failed');
         } else {
             return redirect()->back()->with('notification', 'Update Successfully');
         }

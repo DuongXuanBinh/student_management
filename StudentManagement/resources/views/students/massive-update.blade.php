@@ -39,7 +39,7 @@
                 </div>
             </div>
         @endif
-        {{Form::open(['method'=>'get','url'=>'/student/massive-update-result','id'=>'massive-form'])}}
+        {{Form::open(['method'=>'get','url'=>'/students/massive-update-result','id'=>'massive-form'])}}
         <div class="result-set">
             @foreach($results as $result)
                 <div class="row result-subset">

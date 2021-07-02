@@ -1,7 +1,9 @@
 @extends('layout.admin_template')
 
 @section('content')
-
+    <div class="row">
+        <h3>Student List</h3>
+    </div>
     <div class="modal fade" id="delete-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -167,7 +169,7 @@
                             </a>
                         </td>
                         <td>
-                            <form action="student/view-massive-update" method="get">
+                            <form action="students/view-massive-update" method="get">
                                 <input type="hidden" name="id" value="{{$student->id}}">
                                 <input type="hidden" name="name" value="{{$student->name}}">
                                 <input type="hidden" name="department_id" value="{{$student->department_id}}">

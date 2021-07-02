@@ -12,24 +12,29 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::resource('students', \App\Http\Controllers\StudentController::class);
+Route::get('/',function (){
+    return view('layout.sign-in');
+});
+
 Route::prefix('/students')->group(function () {
-    Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent']);
-    Route::get('/view-massive-update', [\App\Http\Controllers\StudentController::class, 'indexMassiveUpdate']);
+    Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');
+    Route::get('/view-massive-update', [\App\Http\Controllers\StudentController::class, 'viewMassiveUpdate']);
     Route::get('/massive-update-result', [\App\Http\Controllers\ResultController::class, 'massiveUpdate']);
 });
 
-Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
-Route::resource('subjects', \App\Http\Controllers\SubjectController::class);
 Route::prefix('/departments')->group(function () {
     Route::get('/get-subject', [\App\Http\Controllers\SubjectController::class, 'getSubject']);
 });
 
-Route::resource('results', \App\Http\Controllers\ResultController::class);
 Route::prefix('/results')->group(function () {
     Route::get('/dismiss-student', [\App\Http\Controllers\StudentController::class, 'sendMailDismiss']);
 });
 
-
+Route::resources(['students' => \App\Http\Controllers\StudentController::class,
+    'departments' => \App\Http\Controllers\DepartmentController::class,
+    'subjects' => \App\Http\Controllers\SubjectController::class,
+    'results' => \App\Http\Controllers\ResultController::class,
+    'users' => \App\Http\Controllers\UserController::class
+]);
 
 

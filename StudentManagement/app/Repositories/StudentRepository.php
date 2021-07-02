@@ -55,6 +55,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
             ->whereYear('students.birthday', '<=', $from_year)
             ->whereYear('students.birthday', '>=', $to_year)
             ->orderBy('students.id', 'ASC')->distinct()->get();
+
         if (count($request->status) < 2) {
             $status = $request->status[0];
             if ($status === 'complete') {
@@ -89,8 +90,10 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
                 $students = $students->toQuery()->orWhere('phone', 'regexp', '^09[789][0-9]{7}$')->orWhere('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->get();
             }
         }
-
-        return $students->toQuery()->paginate(50)->withQueryString();
+        if (count($students) != 0) {
+            return $students->toQuery()->paginate(50)->withQueryString();
+        }
+        return false;
     }
 
 

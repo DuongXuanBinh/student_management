@@ -15,7 +15,7 @@ class Subject extends Model
     public function department(){
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
-    public function results(){
-        return $this->hasMany(Result::class, 'subject_id', 'id');
-    }
+//    public function results(){
+//        return $this->hasMany(, 'subject_id', 'id');
+//    }
 }

@@ -60,7 +60,7 @@ class DepartmentController extends Controller
     {
         $this->_departmentRepository->createDepartment($request->all());
 
-        return redirect()->back()->with('notification', 'Added successfully');
+        return redirect('/departments')->with('notification', 'Added successfully');
     }
 
     /**
@@ -100,9 +100,9 @@ class DepartmentController extends Controller
     {
         $result = $this->_departmentRepository->updateDepartment($id, $request->all());
         if ($result === false) {
-            return back()->with('notification', 'Update Failed');
+            return redirect()->back()->with('notification', 'Update Failed');
         } else {
-            return back()->with('notification', 'Update Successfully');
+            return redirect('/departments')->with('notification', 'Update Successfully');
         }
     }
 
@@ -126,7 +126,7 @@ class DepartmentController extends Controller
 
         $delete_department = $this->_departmentRepository->deleteDepartment($id);
         if ($delete_department === true) {
-            return redirect('/departments')->with('notification', 'Delete Successfully');
+            return redirect()->back()->with('notification', 'Delete Successfully');
         } else {
             return redirect()->back()->with('notification', 'Delete Failed');
         }

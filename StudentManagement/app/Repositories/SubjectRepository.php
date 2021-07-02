@@ -84,4 +84,10 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
 
         return $subject;
     }
+
+    public function getSubjectByDepartmentID($department_id){
+        $subject = Subject::where('department_id', '=', $department_id)->get();
+
+        return $subject;
+    }
 }

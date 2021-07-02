@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
 use App\Jobs\SendMailDismiss;
+use App\Models\Student;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
@@ -62,7 +63,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student = $this->_studentRepository->find($id);
+        $student = $this->_studentRepository->findStudentByID($id);
 
         return response()->view('students.show', compact('student'));
     }
@@ -75,7 +76,7 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $student = $this->_studentRepository->find($id);
+        $student = $this->_studentRepository->findStudentByID($id);
         $departments = $this->_departmentRepository->index();
 
         return response()->view('students.edit',compact('departments','student'));
@@ -92,7 +93,7 @@ class StudentController extends Controller
     {
         $result = $this->_studentRepository->updateStudent($id, $request->all());
 
-        dd($result);
+        return $result;
     }
 
     public function destroy($id)
@@ -100,9 +101,9 @@ class StudentController extends Controller
         $delete_result = $this->_resultRepository->deleteStudentResult($id);
         $delete_student = $this->_studentRepository->deleteStudent($id);
         if ($delete_result === true && $delete_student === true) {
-            return redirect('/students')->with('notification', 'Successfully deleted');
+            return redirect()->back()->with('notification', 'Successfully deleted');
         } else {
-            return back()->with('notification', 'Delete Failed');
+            return redirect()->back()->with('notification', 'Delete Failed');
         }
     }
 
@@ -112,21 +113,23 @@ class StudentController extends Controller
         $subject_per_department = $this->_subjectRepository->getSubjectQuantity();
         $students = $this->_studentRepository->filterStudent($request, $result_per_student, $subject_per_department);
         $request->flash();
-
-        return view('students.index', compact('students', 'departments'));
+        if($students){
+            return redirect()->back()->withInput()->with('students',$students);
+        }
+        return redirect()->back()->withInput()->with('failed','No record found');
     }
 
-    public function indexMassiveUpdate(Request $request)
+    public function viewMassiveUpdate(Request $request)
     {
         $department_id = $request->department_id;
         $student_id = $request->id;
         $student_name = $request->name;
-        $department = $this->_departmentRepository->findSubject($department_id);
+        $department = $this->_departmentRepository->find($department_id);
         $department_name = $department->name;
         $results = $this->_resultRepository->getResultByStudentID($student_id);
         $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
 
-        return view('massive-update', compact('student_id', 'student_name', 'department_name', 'results', 'subjects'));
+        return view('students.massive-update', compact('student_id', 'student_name', 'department_name', 'results', 'subjects'));
     }
 
     public function sendMailDismiss()
@@ -142,4 +145,5 @@ class StudentController extends Controller
 
         return redirect()->back()->with('notification', 'Send e-mail successfully');
     }
+
 }

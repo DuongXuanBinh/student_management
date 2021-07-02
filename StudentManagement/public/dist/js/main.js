@@ -16,6 +16,7 @@ $(document).ready(function () {
     $(".mobile-network").attr('disabled', true);
     $("button.filter-by").attr('disabled', true);
 
+
     $(".filter").click(function () {
         if (flag_filter === 0) {
             $(".filter-student").css("display", "block");
@@ -27,21 +28,21 @@ $(document).ready(function () {
     });
 
     $(".filter-student button[type='submit']").click(function () {
-        var age_from = $(".filter-student input[name='age_from']").text();
-        var age_to = $(".filter-student input[name='age_to']").text();
-        var mark_from = $(".filter-student input[name='mark_from']").text();
-        var mark_to = $(".filter-student input[name='mark_to']").text();
+        var age_from = $(".filter-student input[name='age_from']").val();
+        var age_to = $(".filter-student input[name='age_to']").val();
+        var mark_from = $(".filter-student input[name='mark_from']").val();
+        var mark_to = $(".filter-student input[name='mark_to']").val();
         if (age_from === '') {
-            $(".filter-student input[name='age_from']").val(0).css('color', 'transparent');
+            $(".filter-student input[name='age_from']").val('0').css('color', 'transparent');
         }
         if (age_to === '') {
-            $(".filter-student input[name='age_to']").val(100).css('color', 'transparent');
+            $(".filter-student input[name='age_to']").val('100').css('color', 'transparent');
         }
         if (mark_from === '') {
-            $(".filter-student input[name='mark_from']").val(0).css('color', 'transparent');
+            $(".filter-student input[name='mark_from']").val('0').css('color', 'transparent');
         }
         if (mark_to === '') {
-            $(".filter-student input[name='mark_to']").val(10).css('color', 'transparent');
+            $(".filter-student input[name='mark_to']").val('10').css('color', 'transparent');
         }
         if ($("#vinaphone").is(':unchecked') && $("#viettel").is(':unchecked') && $("#mobiphone").is(':unchecked')) {
             $("#vinaphone, #mobiphone, #viettel").attr('checked', 'checked').css('color', 'transparent');
@@ -51,43 +52,41 @@ $(document).ready(function () {
         }
     });
 
-    var student_id = $(".update-student-form input[name='id']").val();
-
-    // $(".update-student-form").submit(function (e) {
-    //     e.preventDefault();
-    //     $.ajax({
-    //         type: "PUT",
-    //         url: "{{route('students/" + student_id + "')}}",
-    //         data: [$(this).serialize(), student_id],
-    //         success: function (data) {
-    //             alert('Failed');
-    //             $("#update-notification").modal('show');
-    //             $("#update-notification .modal-body .col-md-12").empty();
-    //             $(this).find("input[name='name']").text(data.name);
-    //             $(this).find("input[name='address']").text(data.address);
-    //             $(this).find("input[name='birthday']").text(data.birthday);
-    //             var department_name = $(this).find("option[value='" + data.department_id + "']").text();
-    //             $(this).find("select[name='department_id']").text(department_name);
-    //             if (data.gender === '0') {
-    //                 $(this).find("select[name='gender']").html('Female');
-    //             } else {
-    //                 $(this).find("select[name='gender']").html('Male');
-    //             }
-    //             $(this).find("input[name='email']").text(data.email);
-    //             $(this).find("input[name='phone']").text(data.phone);
-    //             $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
-    //         },
-    //         error: function (response) {
-    //             $("#update-notification").modal('show');
-    //             $("#update-notification .modal-body .col-md-12").empty();
-    //             $("#update-notification .modal-body .col-md-12").append('<p>FAILED</p>')
-    //             var i;
-    //             for (i = 1; i < response.length; i++) {
-    //                 $("#update-notification .modal-body .col-md-12").append('<p>' + response[i] + '</p>');
-    //             }
-    //         }
-    //     })
-    // });
+    $(".update-student-form").submit(function (e) {
+        var _url = $(this).attr('action');
+        var _token = $('input[name="_token"]').val();
+        e.preventDefault();
+        $.ajax({
+            type: "put",
+            url: _url,
+            token: _token,
+            data: $(this).serialize(),
+            success: function (data) {
+                $("#update-notification").modal('show');
+                $("#update-notification .modal-body .col-md-12").empty();
+                $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
+                $(this).find("input[name='name']").text(data.name);
+                $(this).find("input[name='address']").text(data.address);
+                $(this).find("input[name='birthday']").text(data.birthday);
+                var department_name = $(this).find("option[value='" + data.department_id + "']").text();
+                $(this).find("select[name='department_id']").text(department_name);
+                if (data.gender === '0') {
+                    $(this).find("select[name='gender']").html('Female');
+                } else {
+                    $(this).find("select[name='gender']").html('Male');
+                }
+                $(this).find("input[name='email']").text(data.email);
+                $(this).find("input[name='phone']").text(data.phone);
+            },
+            error: function (xhr){
+                $("#update-notification").modal('show');
+                $("#update-notification .modal-body .col-md-12").empty();
+                $.each(xhr.responseJSON.errors, function (i, error) {
+                    $("#update-notification .modal-body .col-md-12").append('<p>'+ error +'</p>');
+                });
+            }
+        })
+    });
 
     $(".delete-student").click(function () {
         var id = $(this).parent().siblings('td:first-of-type').text();
@@ -179,6 +178,10 @@ $(document).ready(function () {
                 }
             });
         });
+    });
+
+    $(".massive-update button.btn-secondary").click(function (){
+       window.location.href = '/students';
     });
 
     $('.massive-update').on('click', '.delete-option', function () {

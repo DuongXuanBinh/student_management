@@ -38,17 +38,12 @@ class SubjectController extends Controller
         return response()->view('subjects.create', compact('subjects', 'departments'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(SubjectRequest $request)
     {
         $this->_subjectRepository->createSubject($request->all());
 
-        return back()->with('notification', 'Added Successfully');
+        return redirect('/subjects')->with('notification', 'Added Successfully');
 
     }
 
@@ -93,7 +88,7 @@ class SubjectController extends Controller
         if ($result === false) {
             return redirect()->back()->with('notification', 'Update Failed');
         } else {
-            return redirect()->back()->with('notification', 'Update Successfully');
+            return redirect('/subjects')->with('notification', 'Update Successfully');
         }
 
     }
