@@ -42,30 +42,30 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
     public function massiveUpdateResult(Request $request)
     {
-//        if ($request->id != null) {
-//            $id = [];
-//        } else {
-//            $id = $request->id;
-//        }
-//        $subject_id = $request->subject_id;
-//        $student_id = $request->student_id;
-//        $mark = $request->mark;
-//        for ($i = 0; $i < count($id); $i++) {
-//            $result = Result::find($id[$i]);
-//            $result->subject_id = $subject_id[$i];
-//            $result->student_id = $student_id[$i];
-//            $result->mark = $mark[$i];
-//            $result->save();
-//        };
-//        for ($j = count($id); $j < count($subject_id); $j++) {
-//            $result = Result::create([
-//                'subject_id' => $subject_id[$j],
-//                'student_id' => $student_id[$j],
-//                'mark' => $mark[$j]
-//            ]);
-//        }
-//
-//        return true;
+        if ($request->id != null) {
+            $id = [];
+        } else {
+            $id = $request->id;
+        }
+        $subject_id = $request->subject_id;
+        $student_id = $request->student_id;
+        $mark = $request->mark;
+        for ($i = 0; $i < count($id); $i++) {
+            $result = Result::find($id[$i]);
+            $result->subject_id = $subject_id[$i];
+            $result->student_id = $student_id[$i];
+            $result->mark = $mark[$i];
+            $result->save();
+        };
+        for ($j = count($id); $j < count($subject_id); $j++) {
+            $result = Result::create([
+                'subject_id' => $subject_id[$j],
+                'student_id' => $student_id[$j],
+                'mark' => $mark[$j]
+            ]);
+        }
+
+        return true;
     }
 
     /**

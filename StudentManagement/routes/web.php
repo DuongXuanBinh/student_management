@@ -20,6 +20,7 @@ Route::prefix('/students')->group(function () {
     Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');
     Route::get('/view-massive-update', [\App\Http\Controllers\StudentController::class, 'viewMassiveUpdate']);
     Route::get('/massive-update-result', [\App\Http\Controllers\ResultController::class, 'massiveUpdate']);
+    Route::get('/abc/{id}', [\App\Http\Controllers\StudentController::class, 'abc']);
 });
 
 Route::prefix('/departments')->group(function () {

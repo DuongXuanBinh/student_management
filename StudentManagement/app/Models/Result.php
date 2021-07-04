@@ -11,12 +11,4 @@ class Result extends Model
 
     protected $fillable = ['name', 'student_id', 'subject_id', 'mark'];
     public $timestamps = true;
-    public function student()
-    {
-        return $this->belongsToMany(Student::class, 'student_id', 'id');
-    }
-
-    public function subject(){
-        return $this->belongsTo(Subject::class, 'subject_id', 'id');
-    }
 }

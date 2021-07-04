@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResultRequest;
+use App\Models\Result;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
@@ -123,8 +124,9 @@ class ResultController extends Controller
         return $subject;
     }
 
-    public function massiveUpdate(Request $request)
+    public function massiveUpdate(ResultRequest $request)
     {
+
         $result = $this->_resultRepository->massiveUpdateResult($request);
         if ($result) {
             return back()->with('notification', 'Update result successfully');
