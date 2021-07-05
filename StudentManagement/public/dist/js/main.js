@@ -120,7 +120,7 @@ $(document).ready(function () {
     });
 
     $("button.add-button").on('click', function () {
-        var input = $(".subset-hidden").eq(0).clone().removeClass("subset-hidden");
+        var input = $(".subset-hidden").clone(true).find("input[name='mark[]']").val('').end().removeClass("subset-hidden");
         $(".result-set .result-subset select").each(function () {
             var prevVal = $(this).data("previous");
             $(input).find("option[value='" + prevVal + "']").show();
@@ -174,6 +174,8 @@ $(document).ready(function () {
     $(".result-set .result-subset select").each(function () {
         var value = $(this).val();
         $(this).data("previous", value)
+        $(this).find("option[value='" + value + "']").attr("selected","selected");
+
         $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
     })
 

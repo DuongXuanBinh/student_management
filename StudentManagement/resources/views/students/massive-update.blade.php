@@ -32,7 +32,7 @@
                 <p class="errorTxt"></p>
             </div>
         </div>
-        {{Form::open(['method'=>'get','url'=>'/students/massive-update-result','id'=>'massive-form'])}}
+        {{Form::open(['method'=>'get','url'=>'/results/massive-update-result','id'=>'massive-form'])}}
         <div class="result-set">
             @foreach($results as $result)
                 <div class="row result-subset">

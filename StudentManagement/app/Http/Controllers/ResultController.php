@@ -42,7 +42,7 @@ class ResultController extends Controller
     {
         $subjects = $this->_subjectRepository->index();
 
-        return response()->view('results.create',compact('subjects'));
+        return response()->view('results.create', compact('subjects'));
     }
 
     /**
@@ -67,7 +67,7 @@ class ResultController extends Controller
     {
         $result = $this->_resultRepository->find($id);
 
-        return response()->view('results.show',compact('result'));
+        return response()->view('results.show', compact('result'));
     }
 
     /**
@@ -80,7 +80,7 @@ class ResultController extends Controller
     {
         $result = $this->_resultRepository->find($id);
         $subjects = $this->_subjectRepository->index();
-        return response()->view('results.edit',compact('result','subjects'));
+        return response()->view('results.edit', compact('result', 'subjects'));
     }
 
     /**
@@ -127,11 +127,9 @@ class ResultController extends Controller
         $request->flash();
         $student_id = array_unique($request->student_id);
         $student = $this->_studentRepository->find($student_id[0]);
-        $result = $this->_resultRepository->massiveUpdateResult($request,$student);
-        if ($result) {
-            return redirect()->back()->with('notification', 'Update result successfully');
-        } else {
-            return redirect()->back()->with('notification', 'Failed');
-        }
+        $results = $this->_resultRepository->massiveUpdateResult($request, $student);
+
+        return redirect()->back()->with('notification', 'Update result successfully');
+
     }
 }

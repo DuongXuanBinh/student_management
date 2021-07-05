@@ -50,7 +50,8 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         }
         $student->subjects()->sync($subject);
 
-        return true;
+        $result = $this->getResultByStudentID($student->id);
+        return $result;
     }
 
     /**
