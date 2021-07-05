@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Result;
+use App\Models\Student;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,30 +41,14 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return parent::find($id);
     }
 
-    public function massiveUpdateResult(Request $request)
+    public function massiveUpdateResult(Request $request, Student $student)
     {
-        if ($request->id != null) {
-            $id = [];
-        } else {
-            $id = $request->id;
-        }
         $subject_id = $request->subject_id;
-        $student_id = $request->student_id;
         $mark = $request->mark;
-        for ($i = 0; $i < count($id); $i++) {
-            $result = Result::find($id[$i]);
-            $result->subject_id = $subject_id[$i];
-            $result->student_id = $student_id[$i];
-            $result->mark = $mark[$i];
-            $result->save();
-        };
-        for ($j = count($id); $j < count($subject_id); $j++) {
-            $result = Result::create([
-                'subject_id' => $subject_id[$j],
-                'student_id' => $student_id[$j],
-                'mark' => $mark[$j]
-            ]);
+        for($i = 0; $i<count($subject_id);$i++){
+            $subject[$subject_id[$i]] = ['mark'=>$mark[$i]];
         }
+        $student->subjects()->sync($subject);
 
         return true;
     }

@@ -6,6 +6,10 @@ $(document).ready(function () {
         $("button.add-button").attr('disabled', 'disabled');
     }
     var value_array = [];
+    $(".result-subset").eq(0).find("option").each(function () {
+        var option = $(this).val();
+        value_array.push(option);
+    })
     $(".result-subset").find("input[name='student_id']").attr("name", "student_id[]");
     $(".result-subset").find("select[name='subject_id']").attr("name", "subject_id[]");
     $(".result-subset").find("input[name='mark']").attr("name", "mark[]");
@@ -15,7 +19,6 @@ $(document).ready(function () {
     $(".range input").attr('disabled', true);
     $(".mobile-network").attr('disabled', true);
     $("button.filter-by").attr('disabled', true);
-
 
     $(".filter").click(function () {
         if (flag_filter === 0) {
@@ -78,11 +81,11 @@ $(document).ready(function () {
                 $(this).find("input[name='email']").text(data.email);
                 $(this).find("input[name='phone']").text(data.phone);
             },
-            error: function (xhr){
+            error: function (xhr) {
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
                 $.each(xhr.responseJSON.errors, function (i, error) {
-                    $("#update-notification .modal-body .col-md-12").append('<p>'+ error +'</p>');
+                    $("#update-notification .modal-body .col-md-12").append('<p>' + error + '</p>');
                 });
             }
         })
@@ -116,11 +119,6 @@ $(document).ready(function () {
         $("#delete-subject form").attr('action', action);
     });
 
-    $(".result-subset").eq(0).find("option").each(function () {
-        var option = $(this).val();
-        value_array.push(option);
-    })
-
     $("button.add-button").on('click', function () {
         var input = $(".subset-hidden").eq(0).clone().removeClass("subset-hidden");
         $(".result-set .result-subset select").each(function () {
@@ -145,7 +143,6 @@ $(document).ready(function () {
             });
             ++count;
             $(".add-button").attr('disabled', false);
-            $(".massive-update button[type='submit']").attr('disabled', false);
         }
         if (count === max_count) {
             $(".add-button").attr('disabled', true);
@@ -161,27 +158,10 @@ $(document).ready(function () {
             $(this).data("previous", value);
             $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
         });
-        $("#massive-form button[type='submit']").attr('disabled', 'disabled');
-        $("#massive-form").find("input[type='text']").keyup(function () {
-            $("#massive-form button[type='submit']").attr('disabled', false);
-            var value = $(this).val();
-            $("#massive-form button[type='submit']").click(function (e) {
-                if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)) {
-                    $("p.errorTxt").html("");
-                    $("#massive-form").submit();
-                } else if (value === '') {
-                    e.preventDefault();
-                    $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
-                } else {
-                    e.preventDefault();
-                    $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
-                }
-            });
-        });
     });
 
-    $(".massive-update button.btn-secondary").click(function (){
-       window.location.href = '/students';
+    $(".massive-update button.btn-secondary").click(function () {
+        window.location.href = '/students';
     });
 
     $('.massive-update').on('click', '.delete-option', function () {
@@ -189,12 +169,6 @@ $(document).ready(function () {
         $(".result-set .result-subset select").find("option[value='" + x + "']").show().attr('selected', false);
         $(this).parent().parent().remove();
         --count;
-        if (count < max_count) {
-            $(".add-button").attr('disabled', false);
-        }
-        if (count === 0) {
-            $(".massive-update button[type='submit']").attr('disabled', 'true');
-        }
     })
 
     $(".result-set .result-subset select").each(function () {
@@ -211,23 +185,6 @@ $(document).ready(function () {
         $(this).find("option[value='" + prevVal + "']").attr("selected", false).end().find("option[value='" + value + "']").attr('selected', 'selected');
         $(this).data("previous", value);
         $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
-    });
-
-    $("#massive-form").find("input[type='text']").keyup(function () {
-        $("#massive-form button[type='submit']").attr('disabled', false);
-        var value = $(this).val();
-        $("#massive-form button[type='submit']").click(function (e) {
-            if (parseFloat(value) === 0 || (parseFloat(value) && value <= 10 && value > -1)) {
-                $("p.errorTxt").html("");
-                $("#massive-form").submit();
-            } else if (value === '') {
-                e.preventDefault();
-                $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
-            } else {
-                e.preventDefault();
-                $("p.errorTxt").html("Mark is required field and must be number between 0 and 10");
-            }
-        });
     });
 })
 

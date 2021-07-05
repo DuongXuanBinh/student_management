@@ -20,7 +20,7 @@ class Results extends Migration
             $table->foreign('student_id')->references('id')->on('students');
             $table->unsignedBigInteger('subject_id');
             $table->foreign('subject_id')->references('id')->on('subjects');
-            $table->float('mark',4,2,true);
+            $table->double('mark',4,2,true);
             $table->timestamps();
         });
     }

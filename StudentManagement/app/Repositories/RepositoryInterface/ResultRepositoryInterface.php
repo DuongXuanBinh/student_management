@@ -4,6 +4,7 @@ namespace App\Repositories\RepositoryInterface;
 
 
 
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 interface ResultRepositoryInterface
@@ -14,7 +15,7 @@ interface ResultRepositoryInterface
      * @param $array
      * @return mixed
      */
-    public function massiveUpdateResult(Request $request);
+    public function massiveUpdateResult(Request $request, Student $student);
 
     public function getBadStudent($complete_student);
 
