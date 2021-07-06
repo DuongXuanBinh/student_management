@@ -30,31 +30,6 @@ $(document).ready(function () {
         }
     });
 
-    $(".filter-student button[type='submit']").click(function () {
-        var age_from = $(".filter-student input[name='age_from']").val();
-        var age_to = $(".filter-student input[name='age_to']").val();
-        var mark_from = $(".filter-student input[name='mark_from']").val();
-        var mark_to = $(".filter-student input[name='mark_to']").val();
-        if (age_from === '') {
-            $(".filter-student input[name='age_from']").val('0').css('color', 'transparent');
-        }
-        if (age_to === '') {
-            $(".filter-student input[name='age_to']").val('100').css('color', 'transparent');
-        }
-        if (mark_from === '') {
-            $(".filter-student input[name='mark_from']").val('0').css('color', 'transparent');
-        }
-        if (mark_to === '') {
-            $(".filter-student input[name='mark_to']").val('10').css('color', 'transparent');
-        }
-        if ($("#vinaphone").is(':unchecked') && $("#viettel").is(':unchecked') && $("#mobiphone").is(':unchecked')) {
-            $("#vinaphone, #mobiphone, #viettel").attr('checked', 'checked').css('color', 'transparent');
-        }
-        if ($("#complete").is(':unchecked') && $("#in-progress").is(':unchecked')) {
-            $("#complete, #in-progress").attr('checked', 'checked').css('color', 'transparent');
-        }
-    });
-
     $(".update-student-form").submit(function (e) {
         var _url = $(this).attr('action');
         var _token = $('input[name="_token"]').val();
@@ -67,7 +42,7 @@ $(document).ready(function () {
             success: function (data) {
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
-                $("#update-notification .modal-body .col-md-12").append('<p>Update Successful</p>');
+                $("#update-notification .modal-body .col-md-12").append('<p>Update Successfully</p>');
                 $(this).find("input[name='name']").text(data.name);
                 $(this).find("input[name='address']").text(data.address);
                 $(this).find("input[name='birthday']").text(data.birthday);
@@ -80,6 +55,28 @@ $(document).ready(function () {
                 }
                 $(this).find("input[name='email']").text(data.email);
                 $(this).find("input[name='phone']").text(data.phone);
+            },
+            error: function (xhr) {
+                $("#update-notification").modal('show');
+                $("#update-notification .modal-body .col-md-12").empty();
+                $.each(xhr.responseJSON.errors, function (i, error) {
+                    $("#update-notification .modal-body .col-md-12").append('<p>' + error + '</p>');
+                });
+            }
+        })
+    });
+
+    $("#massive-form").submit(function (e) {
+        var _url = $(this).attr('action');
+        e.preventDefault();
+        $.ajax({
+            type: "get",
+            url: _url,
+            data: $(this).serialize(),
+            success: function () {
+                $("#update-notification").modal('show');
+                $("#update-notification .modal-body .col-md-12").empty();
+                $("#update-notification .modal-body .col-md-12").append('<p>Update Successfully</p>');
             },
             error: function (xhr) {
                 $("#update-notification").modal('show');
@@ -174,8 +171,7 @@ $(document).ready(function () {
     $(".result-set .result-subset select").each(function () {
         var value = $(this).val();
         $(this).data("previous", value)
-        $(this).find("option[value='" + value + "']").attr("selected","selected");
-
+        $(this).find("option[value='" + value + "']").attr("selected", "selected");
         $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
     })
 
@@ -208,6 +204,41 @@ $(() => {
     $('#logreg-forms #cancel_reset').click(toggleResetPswd);
     $('#logreg-forms #btn-signup').click(toggleSignUp);
     $('#logreg-forms #cancel_signup').click(toggleSignUp);
+})
+
+$(".filter-student button[type='submit']").click(function () {
+
+    var age_from = $(".filter-student input[name='age_from']").val();
+    var age_to = $(".filter-student input[name='age_to']").val();
+    var mark_from = $(".filter-student input[name='mark_from']").val();
+    var mark_to = $(".filter-student input[name='mark_to']").val();
+    if (age_from === '') {
+        $(".filter-student input[name='age_from']").val('0').css('color', 'transparent');
+    }
+    if (age_to === '') {
+        $(".filter-student input[name='age_to']").val('100').css('color', 'transparent');
+    }
+    if (mark_from === '') {
+        $(".filter-student input[name='mark_from']").val('0').css('color', 'transparent');
+    }
+    if (mark_to === '') {
+        $(".filter-student input[name='mark_to']").val('10').css('color', 'transparent');
+    }
+    if ($("#vinaphone").is(':unchecked') && $("#viettel").is(':unchecked') && $("#mobiphone").is(':unchecked')) {
+        $("#vinaphone, #mobiphone, #viettel").prop('checked', 'checked').css('color', 'transparent');
+    }
+    if ($("#complete").is(':unchecked') && $("#in-progress").is(':unchecked')) {
+        $("#complete, #in-progress").prop('checked', 'checked').css('color', 'transparent');
+    }
+});
+
+$("input[type=checkbox]").click(function(){
+    var check = $(this).is(':checked');
+    if(check === true){
+        $(this).prop('checked','checked');
+    }else{
+        $(this).removeProp('checked');
+    }
 })
 
 

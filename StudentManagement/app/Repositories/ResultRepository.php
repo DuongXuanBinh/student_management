@@ -45,8 +45,8 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
     {
         $subject_id = $request->subject_id;
         $mark = $request->mark;
-        for($i = 0; $i<count($subject_id);$i++){
-            $subject[$subject_id[$i]] = ['mark'=>$mark[$i]];
+        for ($i = 0; $i < count($subject_id); $i++) {
+            $subject[$subject_id[$i]] = ['mark' => $mark[$i]];
         }
         $student->subjects()->sync($subject);
 
@@ -78,9 +78,9 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
      */
     public function deleteSubjectResult($id)
     {
-        if(is_array($id)){
+        if (is_array($id)) {
             $result = Result::whereIn('subject_id', $id);
-        }else{
+        } else {
             $result = Result::where('subject_id', $id);
         }
         if ($result) {
@@ -123,5 +123,17 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
             ->get();
 
         return $dismiss_student;
+    }
+
+    public function getStudentByMarkRange($from, $to)
+    {
+        $results = Result::select('student_id')->where('mark', '>=', $from)->where('mark', '<=', $to)->distinct()->get();
+        $student_id=[];
+        foreach ($results as $result){
+            array_push($student_id,$result->student_id);
+        }
+
+        return $student_id;
+
     }
 }

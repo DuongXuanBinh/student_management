@@ -4,7 +4,6 @@
     <div class="row">
         <h3>Student List</h3>
     </div>
-
     <div class="modal fade" id="delete-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -66,9 +65,9 @@
                                 </div>
                                 <div class="col-md-8">
                                     <label for="age-from">From: </label>
-                                    <input type="text" name="age_from">
+                                    <input type="text" name="age_from" value="{{old('age_from')}}">
                                     <label for="age-to">To: </label>
-                                    <input type="text" name="age_to">
+                                    <input type="text" name="age_to" value="{{old('age_to')}}">
                                 </div>
                             </div>
                             <div class="row">
@@ -77,9 +76,9 @@
                                 </div>
                                 <div class="col-md-8">
                                     <label for="mark-from">From: </label>
-                                    <input type="text" name="mark_from">
+                                    <input type="text" name="mark_from" value="{{old('mark_from')}}">
                                     <label for="mark-to">To: </label>
-                                    <input type="text" name="mark_to">
+                                    <input type="text" name="mark_to" value="{{old('mark_to')}}">
                                 </div>
                             </div>
                             <div class="row">
@@ -88,13 +87,13 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-check-input" type="checkbox" name="mobile_network[]" id="viettel"
-                                           value="viettel">
+                                           value="^09[3456]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[3456]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="inlineCheckbox1">Viettel</label>
                                     <input class="form-check-input" type="checkbox" name="mobile_network[]"
-                                           id="vinaphone" value="vinaphone">
+                                           id="vinaphone" value="^09[012]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[012]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="inlineCheckbox2">Vinaphone</label>
                                     <input class="form-check-input" type="checkbox" name="mobile_network[]"
-                                           id="mobiphone" value="mobiphone">
+                                           id="mobiphone" value="^09[789]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[789]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="inlineCheckbox3">Mobiphone</label>
                                 </div>
                             </div>
@@ -104,10 +103,10 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-check-input" type="checkbox" name="status[]" id="complete"
-                                           value="complete">
+                                           value="1" @if(old('status') != null) {{in_array(1, old('status')) == true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="complete">Complete</label>
                                     <input class="form-check-input" type="checkbox" name="status[]" id="in-progress"
-                                           value="in-progress">
+                                           value="2" @if(old('status') != null) {{in_array(2, old('status')) == true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="in-progress">In-progress</label>
                                 </div>
                             </div>

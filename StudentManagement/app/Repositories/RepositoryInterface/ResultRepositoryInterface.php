@@ -26,4 +26,6 @@ interface ResultRepositoryInterface
     public function getResultByStudentID($id);
 
     public function getResultQuantity();
+
+    public function getStudentByMarkRange($from, $to);
 }

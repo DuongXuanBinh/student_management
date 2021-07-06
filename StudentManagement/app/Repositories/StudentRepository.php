@@ -40,60 +40,42 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return parent::find($id);
     }
 
-    public function filterStudent(Request $request, $result_per_student, $subject_per_department)
+    public function filterStudent(Request $request, $result_per_student, $subject_per_department, $student_by_mark)
     {
         $age_from = $request->age_from;
         $age_to = $request->age_to;
         $this_year = Carbon::now()->format('Y');
         $from_year = $this_year - $age_from;
         $to_year = $this_year - $age_to;
-        $mark_from = $request->mark_from;
-        $mark_to = $request->mark_to;
         $mobile_network = $request->mobile_network;
-        $students = Student::join('results', 'students.id', 'results.student_id')
-            ->select('students.*')->where('results.mark', '>=', $mark_from)->where('results.mark', '<=', $mark_to)
-            ->whereYear('students.birthday', '<=', $from_year)
-            ->whereYear('students.birthday', '>=', $to_year)
-            ->orderBy('students.id', 'ASC')->distinct()->get();
-
-        if (count($request->status) < 2) {
-            $status = $request->status[0];
-            if ($status === 'complete') {
-                $student_ID = $this->checkCompletion(1, $result_per_student, $subject_per_department);
-                $students = $students->toQuery()->whereIn('students.id', $student_ID)->get();
-            } else if ($status === 'in-progress') {
-                $student_ID = $this->checkCompletion(2, $result_per_student, $subject_per_department);
-                $students = $students->toQuery()->whereIn('students.id', $student_ID)->get();
-            }
-        }
-        if (count($mobile_network) === 1) {
-            if (in_array('viettel', $mobile_network)) {
-                $students = $students->toQuery()->where('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->get();
-            }
-            if (in_array('vinaphone', $mobile_network)) {
-                $students = $students->toQuery()->where('phone', 'regexp', '^09[012][0-9]{7}$')->get();
-            }
-            if (in_array('mobiphone', $mobile_network)) {
-                $students = $students->toQuery()->where('phone', 'regexp', '^09[789][0-9]{7}$')->get();
-            }
+        $status = $request->status;
+        $complete = $this->checkCompletion(1, $result_per_student, $subject_per_department);
+        $in_progress = $this->checkCompletion(2, $result_per_student, $subject_per_department);
+        $students = Student::whereIn('id', $student_by_mark)
+            ->whereYear('birthday', '<=', $from_year)
+            ->whereYear('birthday', '>=', $to_year)
+            ->when($mobile_network, function ($query) use ($mobile_network) {
+                for ($i = 0; $i < count($mobile_network); $i++) {
+                    if ($i > 0) {
+                        $query->orWhere('phone', 'regexp', $mobile_network[$i]);
+                    } else {
+                        $query->where('phone', 'regexp', $mobile_network[$i]);
+                    }
+                }
+            })
+            ->when(count($status) == 1, function ($query) use ($status, $complete, $in_progress) {
+                if ($status[0] == 1) {
+                    $query->whereIn('id', $complete);
+                } else {
+                    $query->whereIn('id', $in_progress);
+                }
+            })
+            ->orderBy('id', 'ASC')->paginate(50)->withQueryString();
+        if (count($students) == 0) {
+            return false;
         } else {
-            if (in_array('viettel', $mobile_network) && in_array('vinaphone', $mobile_network)) {
-                $students = $students->toQuery()->orWhere('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->orWhere('phone', 'regexp', '^09[012][0-9]{7}$')->get();
-            }
-            if (in_array('vinaphone', $mobile_network) && in_array('mobiphone', $mobile_network)) {
-                $students = $students->toQuery()->orWhere('phone', 'regexp', '^09[012][0-9]{7}$')->orWhere('phone', 'regexp', '^09[789][0-9]{7}$')->get();
-            }
-            if (in_array('mobiphone', $mobile_network) && in_array('vinaphone', $mobile_network)) {
-                $students = $students->toQuery()->orWhere('phone', 'regexp', '^09[789][0-9]{7}$')->orWhere('phone', 'regexp', '^09[012][0-9]{7}$')->get();
-            }
-            if (in_array('mobiphone', $mobile_network) && in_array('viettel', $mobile_network)) {
-                $students = $students->toQuery()->orWhere('phone', 'regexp', '^09[789][0-9]{7}$')->orWhere('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->get();
-            }
+            return $students;
         }
-        if (count($students) != 0) {
-            return $students->toQuery()->paginate(50)->withQueryString();
-        }
-        return false;
     }
 
 
