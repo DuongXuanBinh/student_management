@@ -20,8 +20,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->foreign('email')->references('email')->on('students');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password',60);
-            $table->string('user_type')->default(1);
+            $table->string('password');
+            $table->string('role')->default(1);
+            $table->rememberToken()->nullable();
             $table->timestamps();
         });
     }
