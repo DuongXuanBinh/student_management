@@ -4,7 +4,7 @@
         {{Form::hidden('id')}}
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('name','Name')}}
+                {{Form::label('name',__('Name'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('name')}}
@@ -13,7 +13,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-7">
-            {{Form::button('ADD',['class'=>'btn btn-primary','type'=>'submit'])}}
+            {{Form::button(__('ADD'),['class'=>'btn btn-primary','type'=>'submit'])}}
         </div>
     </div>
     {{Form::close()}}
@@ -23,7 +23,7 @@
         {{Form::hidden('id')}}
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('name','Name')}}
+                {{Form::label('name',__('Name'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('name')}}
@@ -32,7 +32,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-7">
-            {{Form::button('UPDATE',['class'=>'btn btn-primary','type'=>'submit'])}}
+            {{Form::button(__('UPDATE'),['class'=>'btn btn-primary','type'=>'submit'])}}
         </div>
     </div>
     {{Form::close()}}

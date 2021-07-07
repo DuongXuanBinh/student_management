@@ -13,7 +13,7 @@
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-            <span class="sr-only">Toggle navigation</span>
+            <span class="sr-only">{{__('Toggle navigation')}}</span>
         </a>
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
@@ -26,7 +26,7 @@
                         <span class="label label-success">4</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 4 messages</li>
+                        <li class="header">{{__('You have 4 messages')}}</li>
                         <li>
                             <!-- inner menu: contains the messages -->
                             <ul class="menu">
@@ -38,11 +38,11 @@
                                         </div>
                                         <!-- Message title and timestamp -->
                                         <h4>
-                                            Support Team
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                            {{__('Support Team')}}
+                                            <small><i class="fa fa-clock-o"></i> {{__(":min mins",['min'=>'5'])}}</small>
                                         </h4>
                                         <!-- The message -->
-                                        <p>Why not buy a new awesome theme?</p>
+                                        <p>{{__('Why not buy a new awesome theme?')}}</p>
                                     </a>
                                 </li>
                                 <!-- end message -->

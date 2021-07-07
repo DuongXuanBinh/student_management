@@ -61,7 +61,7 @@ desired effect
     <div class="modal fade" id="update-notification" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">Notification</h4>
+                <div class="modal-header">{{__('Notification')}}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -71,7 +71,7 @@ desired effect
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@ desired effect
         <div class="modal fade" id="notification" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">Notification</h4>
+                    <div class="modal-header">{{__('Notification')}}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -90,7 +90,7 @@ desired effect
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@ desired effect
         <div class="modal fade" id="notification" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">Notification</h4>
+                    <div class="modal-header">{{__('Notification')}}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -114,7 +114,7 @@ desired effect
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
                     </div>
                 </div>
             </div>
@@ -154,28 +154,28 @@ desired effect
         <div class="tab-content">
             <!-- Home tab content -->
             <div class="tab-pane active" id="control-sidebar-home-tab">
-                <h3 class="control-sidebar-heading">Recent Activity</h3>
+                <h3 class="control-sidebar-heading">{{__('Recent Activity')}}</h3>
                 <ul class="control-sidebar-menu">
                     <li>
-                        <a href="javascript:;">
+                        <a>
                             <i class="menu-icon fa fa-birthday-cake bg-red"></i>
 
                             <div class="menu-info">
-                                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                                <h4 class="control-sidebar-subheading">{{__('Langdon\'s Birthday')}}</h4>
 
-                                <p>Will be 23 on April 24th</p>
+                                <p>{{__('Will be 23 on April 24th')}}</p>
                             </div>
                         </a>
                     </li>
                 </ul>
                 <!-- /.control-sidebar-menu -->
 
-                <h3 class="control-sidebar-heading">Tasks Progress</h3>
+                <h3 class="control-sidebar-heading">{{__('Tasks Progress')}}</h3>
                 <ul class="control-sidebar-menu">
                     <li>
                         <a href="javascript:;">
                             <h4 class="control-sidebar-subheading">
-                                Custom Template Design
+                                {{__('Custom Template Design')}}
                                 <span class="pull-right-container">
                     <span class="label label-danger pull-right">70%</span>
                   </span>
@@ -192,21 +192,21 @@ desired effect
             </div>
             <!-- /.tab-pane -->
             <!-- Stats tab content -->
-            <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+            <div class="tab-pane" id="control-sidebar-stats-tab">{{__('Stats Tab Content')}}</div>
             <!-- /.tab-pane -->
             <!-- Settings tab content -->
             <div class="tab-pane" id="control-sidebar-settings-tab">
                 <form method="post">
-                    <h3 class="control-sidebar-heading">General Settings</h3>
+                    <h3 class="control-sidebar-heading">{{__('General Settings')}}</h3>
 
                     <div class="form-group">
                         <label class="control-sidebar-subheading">
-                            Report panel usage
+                            {{__('Report panel usage')}}
                             <input type="checkbox" class="pull-right" checked>
                         </label>
 
                         <p>
-                            Some information about this general settings option
+                            {{__('Some information about this general settings option')}}
                         </p>
                     </div>
                     <!-- /.form-group -->

@@ -8,7 +8,11 @@ use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
+use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -16,16 +20,19 @@ class StudentController extends Controller
     protected $_resultRepository;
     protected $_departmentRepository;
     protected $_subjectRepository;
+    protected $_userRepository;
 
     public function __construct(StudentRepositoryInterface $studentRepository,
                                 ResultRepositoryInterface $resultRepository,
                                 DepartmentRepositoryInterface $departmentRepository,
-                                SubjectRepositoryInterface $subjectRepository)
+                                SubjectRepositoryInterface $subjectRepository,
+                                UserRepositoryInterface $userRepository)
     {
         $this->_studentRepository = $studentRepository;
         $this->_resultRepository = $resultRepository;
         $this->_departmentRepository = $departmentRepository;
         $this->_subjectRepository = $subjectRepository;
+        $this->_userRepository = $userRepository;
     }
 
     public function index()
@@ -49,8 +56,19 @@ class StudentController extends Controller
 
     public function store(StudentRequest $request)
     {
-        $this->_studentRepository->createNewStudent($request->all());
-
+        $student = $this->_studentRepository->createNewStudent($request->all());
+        $password = Str::random(8);
+        $user = [
+            'student_id' => $student->id,
+            'email' => $student->email,
+            'password' => Hash::make($password)
+        ];
+        $this->_userRepository->createUser($user);
+        Mail::send('mail.account_mail',compact('student','password'),function ($message) use ($student){
+            $message->from('xuanbinh1011@gmail.com','ABC University');
+            $message->to($student->email,$student->name);
+            $message->subject('Account Generation');
+        });
         return redirect()->back()->with('notification', 'Successfully added');
     }
 

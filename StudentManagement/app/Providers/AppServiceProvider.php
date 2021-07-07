@@ -30,7 +30,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\RepositoryInterface\DepartmentRepositoryInterface::class,
             \App\Repositories\DepartmentRepository::class
         );
-
+        $this->app->singleton(
+            \App\Repositories\RepositoryInterface\UserRepositoryInterface::class,
+            \App\Repositories\UserRepository::class
+        );
     }
 
     /**

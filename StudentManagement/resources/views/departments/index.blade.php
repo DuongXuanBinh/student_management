@@ -9,7 +9,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete Department</h4>
+                    <h4 class="modal-title">{{__('Delete Department')}}</h4>
                 </div>
                 <form action="/" method="post">
                     @csrf
@@ -18,13 +18,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" name="id">
-                                <p>Are you sure to delete this department?</p>
+                                <p>{{__('Are you sure to delete this department?')}}</p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
+                        <button type="submit" class="btn btn-primary">{{__('Delete')}}</button>
                     </div>
                 </form>
             </div>
@@ -49,7 +49,7 @@
             <table class="table table-striped table-department">
                 <tr>
                     <th>id</th>
-                    <th>Department name</th>
+                    <th>{{__('Department name')}}</th>
                     <th></th>
                 </tr>
                 @foreach($departments as $department)

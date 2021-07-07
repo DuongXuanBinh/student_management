@@ -42,7 +42,7 @@ class SendMailDismiss implements ShouldQueue
                 ->where('students.id','=',$student_id)->first();
             $results = Result::join('subjects','subjects.id','results.subject_id')->where('student_id','=',$student_id)->get();
             $gpa = Result::select(DB::raw('avg(mark) as average_mark'))->where('student_id','=',$student_id)->first();
-            Mail::send('mail_dismiss',['student'=>$student,'department'=>$department,'results'=>$results,'gpa'=>$gpa],function ($message) use ($student) {
+            Mail::send('mail.mail_dismiss',['student'=>$student,'department'=>$department,'results'=>$results,'gpa'=>$gpa],function ($message) use ($student) {
                 $message->from('xuanbinh1011@gmail.com','ABC University');
                 $message->to($student->email);
                 $message->subject('Mail of Dismissal');
