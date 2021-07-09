@@ -4,7 +4,7 @@
         {{Form::hidden('id')}}
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('name',__('Name'))}}
+                {{Form::label('name',__('Department Name'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('name')}}

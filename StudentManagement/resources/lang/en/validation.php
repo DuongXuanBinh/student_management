@@ -150,6 +150,15 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name'=>'Name',
+        'email'=>'Email',
+        'birthday'=>'Birthday',
+        'address'=>'Address',
+        'phone'=>'Phone',
+        'mark.*'=>'Mark',
+        'student_id.*'=>'Student ID',
+        'subject_id.*' => 'Subject ID'
+    ],
 
 ];

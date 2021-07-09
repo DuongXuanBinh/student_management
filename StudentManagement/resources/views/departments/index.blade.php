@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <h3>Department List</h3>
+        <h3>{{__('Department List')}}</h3>
     </div>
 
     <div class="modal fade" id="delete-department" tabindex="-1">

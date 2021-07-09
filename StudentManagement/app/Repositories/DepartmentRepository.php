@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Department;
 use App\Models\Subject;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 
@@ -36,4 +37,5 @@ class DepartmentRepository extends EloquentRepository implements DepartmentRepos
     {
         return parent::find($id);
     }
+
 }

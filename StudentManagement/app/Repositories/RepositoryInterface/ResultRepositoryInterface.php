@@ -28,4 +28,6 @@ interface ResultRepositoryInterface
     public function getResultQuantity();
 
     public function getStudentByMarkRange($from, $to);
+
+    public function getGPA($id);
 }

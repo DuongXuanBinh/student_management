@@ -30,12 +30,12 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">HEADER</li>
+            <li class="header">{{__('HEADER')}}</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="{{(request()->segment(1)=='students') ? 'active' : ''}}"><a href="/students"><i class="fa fa-link"></i> <span>Students</span></a></li>
-            <li class="{{(request()->segment(1)=='departments') ? 'active' : ''}}"><a href="/departments" ><i class="fa fa-link"></i> <span>Departments</span></a></li>
-            <li class="{{(request()->segment(1)=='subjects') ? 'active' : ''}}"><a href="/subjects"><i class="fa fa-link"></i> <span>Subjects</span></a></li>
-            <li class="{{(request()->segment(1)=='results') ? 'active' : ''}}"><a href="/results"><i class="fa fa-link"></i> <span>Results</span></a></li>
+            <li class="{{(request()->segment(1)=='students') ? 'active' : ''}}"><a href="/students"><i class="fa fa-link"></i> <span>{{__('Students')}}</span></a></li>
+            <li class="{{(request()->segment(1)=='departments') ? 'active' : ''}}"><a href="/departments" ><i class="fa fa-link"></i> <span>{{__('Departments')}}</span></a></li>
+            <li class="{{(request()->segment(1)=='subjects') ? 'active' : ''}}"><a href="/subjects"><i class="fa fa-link"></i> <span>{{__('Subjects')}}</span></a></li>
+            <li class="{{(request()->segment(1)=='results') ? 'active' : ''}}"><a href="/results"><i class="fa fa-link"></i> <span>{{__('Results')}}</span></a></li>
 {{--            <li class="treeview">--}}
 {{--                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>--}}
 {{--                    <span class="pull-right-container">--}}

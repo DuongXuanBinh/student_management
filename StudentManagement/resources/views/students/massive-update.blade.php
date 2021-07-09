@@ -1,17 +1,14 @@
 @extends('layout.admin_template')
 
 @section('content')
-    <!--    --><?php
-    //    dd(old('mark'), old('subject_id'));
-    //    ?>
     <div class="massive-update">
         <div class="row">
             <div class="col-md-12">
                 <table>
                     <tr>
-                        <th>Student ID</th>
-                        <th>Student name</th>
-                        <th>Department</th>
+                        <th>{{__('Student ID')}}</th>
+                        <th>{{__('Name')}}</th>
+                        <th>{{__("Department")}}</th>
                     </tr>
                     <tr>
                         <td>{{$student_id}}</td>
@@ -24,7 +21,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <button class="add-button">+ Add Subject</button>
+                <button class="add-button">+ {{__('Add Subject')}}</button>
             </div>
         </div>
         <div class="row">
@@ -40,13 +37,13 @@
                         {{Form::hidden('id',$result->id)}}
                         {{Form::hidden('student_id',$student_id)}}
                         <div class="col-md-2">
-                            {{Form::label('subject_id','Subject')}}
+                            {{Form::label('subject_id',__('Subject'))}}
                         </div>
                         <div class="col-md-4">
                             {{Form::select('subject_id',$subjects->pluck('name','id'),$result->subject_id)}}
                         </div>
                         <div class="col-md-2">
-                            {{Form::label('mark','Mark')}}
+                            {{Form::label('mark',__('Mark'))}}
                         </div>
                         <div class="col-md-4">
                             {{Form::text('mark',$result->mark)}}
@@ -63,8 +60,8 @@
             @endforeach
         </div>
         <div class="row">
-            {{Form::button('Submit',['class'=>'btn btn-primary','type'=>'submit'])}}
-            {{Form::button('Cancel',['class'=>'btn btn-secondary'])}}
+            {{Form::button(__('Submit'),['class'=>'btn btn-primary','type'=>'submit'])}}
+            {{Form::button(__('Cancel'),['class'=>'btn btn-secondary'])}}
         </div>
         {{Form::close()}}
         {{--        form to append    --}}
@@ -72,13 +69,13 @@
             <div class="col-md-12">
                 {{Form::hidden('student_id[]',$student_id)}}
                 <div class="col-md-2">
-                    {{Form::label('subject_id','Subject')}}
+                    {{Form::label('subject_id',__('Subject'))}}
                 </div>
                 <div class="col-md-4">
                     {{Form::select('subject_id[]',$subjects->pluck('name','id'))}}
                 </div>
                 <div class="col-md-2">
-                    {{Form::label('mark','Mark')}}
+                    {{Form::label('mark',__('Mark'))}}
                 </div>
                 <div class="col-md-4">
                     {{Form::text('mark[]')}}

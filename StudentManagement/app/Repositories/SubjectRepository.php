@@ -60,7 +60,7 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
      * @param $id
      * @return mixed
      */
-    public function getSubject($id)
+    public function getSubjectID($id)
     {
         $subject_id = [];
         $result = Subject::select('id')->where('department_id', '=', $id)->get();

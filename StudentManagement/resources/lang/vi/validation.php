@@ -149,6 +149,15 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name'=>'Tên',
+        'email'=>'Email',
+        'birthday'=>'Ngày sinh',
+        'address'=>'Địa chỉ',
+        'phone'=>'Số điện thoại',
+        'mark.*'=>'Điểm',
+        'student_id.*'=>'Mã sinh viên',
+        'subject_id.*'=>'Mã môn học'
+    ],
 
 ];

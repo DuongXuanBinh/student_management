@@ -25,13 +25,13 @@
             </span>
             @enderror
             <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> {{ __('Sign in') }}</button>
-            <a href="#" id="forgot_pswd">{{ __('Forgot password') }}</a>
+            <a href="{{ route('password.request') }}" id="forgot_pswd">{{ __('Forgot password') }}</a>
             <!-- <p>Don't have an account!</p>  -->
             {{--            <button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fas fa-user-plus"></i> Sign up New Account</button>--}}
         </form>
 
         <form action="/reset/password/" class="form-reset">
-            <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required=""
+            <input type="email" id="resetEmail" class="form-control" placeholder="{{__('Email Address')}}" required=""
                    autofocus="">
             <button class="btn btn-primary btn-block" type="submit">{{__('Reset Password')}}</button>
             <a href="{{ route('password.request') }}" id="cancel_reset"><i class="fas fa-angle-left"></i>{{__('Back')}}</a>

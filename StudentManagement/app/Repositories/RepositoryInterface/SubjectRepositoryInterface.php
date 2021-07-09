@@ -6,7 +6,7 @@ interface SubjectRepositoryInterface
 {
     public function deleteDepartmentSubject($id);
 
-    public function getSubject($id);
+    public function getSubjectID($id);
 
     public function getSubjectQuantity();
 

@@ -1,13 +1,12 @@
-@extends('layout.admin_template')
+@extends('layout.user_template')
 
 @section('content')
     <div>
-        <h3>{{__('Update Department')}}</h3>
+        <h3>{{__('Update Profile')}}</h3>
     </div>
-
     <div class="row">
         <div class="col-md-6">
-            @include('departments.form_department')
+            @include('users.form_student')
         </div>
     </div>
 @endsection

@@ -15,4 +15,6 @@ interface StudentRepositoryInterface
     public function deleteDepartmentStudent($id);
 
     public function getStudent($department_id);
+
+    public function getDepartment($student_id);
 }

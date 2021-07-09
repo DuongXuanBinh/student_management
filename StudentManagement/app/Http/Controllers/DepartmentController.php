@@ -114,7 +114,7 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        $subjects = $this->_subjectRepository->getSubject($id);
+        $subjects = $this->_subjectRepository->getSubjectID($id);
         if (count($subjects) != 0) {
             $this->_resultRepository->deleteSubjectResult($subjects);
             $this->_subjectRepository->deleteDepartmentSubject($id);

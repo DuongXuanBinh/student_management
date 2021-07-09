@@ -102,6 +102,15 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         $result = Result::select('results.*', 'subjects.name')
             ->join('subjects', 'subjects.id', 'results.subject_id')
             ->where('student_id', '=', $id)->get();
+
+        return $result;
+    }
+
+    public function getGPA($id)
+    {
+        $result = Result::select(DB::raw(' AVG(mark) as GPA'))
+            ->where('student_id',$id)
+            ->groupBy('student_id')->first();
         return $result;
     }
 
@@ -134,6 +143,9 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         }
 
         return $student_id;
+    }
+
+    public function enrollSubject(){
 
     }
 }

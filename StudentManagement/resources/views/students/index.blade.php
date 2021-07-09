@@ -2,13 +2,13 @@
 
 @section('content')
     <div class="row">
-        <h3>Student List</h3>
+        <h3>{{__('Student List')}}</h3>
     </div>
     <div class="modal fade" id="delete-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete Student</h4>
+                    <h4 class="modal-title">{{__('Delete Student')}}</h4>
                 </div>
                 <form method="post" action="/">
                     @csrf
@@ -17,13 +17,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" name="id">
-                                <p>Are you sure to delete this student?</p>
+                                <p>{{__('Are you sure to delete this student?')}}</p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
+                        <button type="submit" class="btn btn-primary">{{__('Delete')}}</button>
                     </div>
                 </form>
             </div>
@@ -53,7 +53,7 @@
                                 <path
                                     d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/>
                             </svg>
-                            Filter</a>
+                            {{__('Filter')}}</a>
                     </div>
                 </div>
                 <div class="row filter-student">
@@ -61,29 +61,29 @@
                         <form method="get" action="/students/filter">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="age-range">Age Range: </label>
+                                    <label for="age-range">{{__('Age Range')}}:</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <label for="age-from">From: </label>
+                                    <label for="age-from">{{__('From')}}: </label>
                                     <input type="text" name="age_from" value="{{old('age_from')}}">
-                                    <label for="age-to">To: </label>
+                                    <label for="age-to">{{__('To')}}: </label>
                                     <input type="text" name="age_to" value="{{old('age_to')}}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="mark-range">Mark Range: </label>
+                                    <label for="mark-range">{{__('Mark Range')}}: </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <label for="mark-from">From: </label>
+                                    <label for="mark-from">{{__('From')}}: </label>
                                     <input type="text" name="mark_from" value="{{old('mark_from')}}">
-                                    <label for="mark-to">To: </label>
+                                    <label for="mark-to">{{__('To')}}: </label>
                                     <input type="text" name="mark_to" value="{{old('mark_to')}}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="mark-range">Mobile Number: </label>
+                                    <label for="mark-range">{{__('Mobile Number')}}: </label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-check-input" type="checkbox" name="mobile_network[]" id="viettel"
@@ -99,21 +99,21 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label>Status: </label>
+                                    <label>{{__('Status')}}: </label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-check-input" type="checkbox" name="status[]" id="complete"
                                            value="1" @if(old('status') != null) {{in_array(1, old('status')) == true ? 'checked' :''}} @endif>
-                                    <label class="form-check-label" for="complete">Complete</label>
+                                    <label class="form-check-label" for="complete">{{__('Complete')}}</label>
                                     <input class="form-check-input" type="checkbox" name="status[]" id="in-progress"
                                            value="2" @if(old('status') != null) {{in_array(2, old('status')) == true ? 'checked' :''}} @endif>
-                                    <label class="form-check-label" for="in-progress">In-progress</label>
+                                    <label class="form-check-label" for="in-progress">{{__('In-progress')}}</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4"></div>
                                 <div class="col-md-8">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">{{__('Submit')}}</button>
                                 </div>
                             </div>
                         </form>
@@ -129,13 +129,13 @@
                 <thead>
                 <tr>
                     <th>id</th>
-                    <th>name</th>
-                    <th>department</th>
-                    <th>email</th>
-                    <th>gender</th>
-                    <th>birthday</th>
-                    <th>address</th>
-                    <th>phone</th>
+                    <th>{{__('Name')}}</th>
+                    <th>{{__("Department")}}</th>
+                    <th>{{__('Email')}}</th>
+                    <th>{{__('Gender')}}</th>
+                    <th>{{__('Birthday')}}</th>
+                    <th>{{__('Address')}}</th>
+                    <th>{{__('Phone')}}</th>
                     <th style="width: 45px"></th>
                     <th></th>
                 </tr>
@@ -143,7 +143,7 @@
                 <tbody>
                 @if(session('failed'))
                     <tr>
-                        <td colspan="10">No record found</td>
+                        <td colspan="10">{{__('No record found')}}</td>
                     </tr>
                 @else
                     @foreach($students as $student)
@@ -179,7 +179,7 @@
                                     <input type="hidden" name="id" value="{{$student->id}}">
                                     <input type="hidden" name="name" value="{{$student->name}}">
                                     <input type="hidden" name="department_id" value="{{$student->department_id}}">
-                                    <button type="submit">Update Result</button>
+                                    <button type="submit">{{__('Update Result')}}</button>
                                 </form>
                             </td>
                         </tr>

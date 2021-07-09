@@ -133,4 +133,11 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return $student_id;
     }
 
+    public function getDepartment($student_id)
+    {
+        $department_id = Student::select('department_id')->where('id',$student_id)->first();
+
+        return $department_id;
+    }
+
 }

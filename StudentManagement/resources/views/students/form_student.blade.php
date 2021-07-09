@@ -4,7 +4,7 @@
         <div class="col-md-12">
             {{Form::hidden('id')}}
             <div class="col-md-4">
-                {{Form::label('name','Name')}}
+                {{Form::label('name',__('Name'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('name',old('name'))}}
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('department_id','Department')}}
+                {{Form::label('department_id',__('Department'))}}
             </div>
             <div class="col-md-8">
                 {{Form::select('department_id',$departments->pluck('name','id'))}}
@@ -24,7 +24,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('email','Email')}}
+                {{Form::label('email',__('Email'))}}
             </div>
             <div class="col-md-8">
                 {{Form::email('email',old('email'))}}
@@ -34,17 +34,17 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('gender','Gender')}}
+                {{Form::label('gender',__('Gender'))}}
             </div>
             <div class="col-md-8">
-                {{Form::select('gender',['0'=> 'Female','1' => 'Male'])}}
+                {{Form::select('gender',['0'=> __('Female'),'1' => __('Male')])}}
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('birthday','Birthday')}}
+                {{Form::label('birthday',__('Birthday'))}}
             </div>
             <div class="col-md-8">
                 {{Form::date('birthday',old('birthday'))}}
@@ -54,7 +54,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('address','Address')}}
+                {{Form::label('address',__('Address'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('address',old('address'))}}
@@ -64,7 +64,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('phone','Phone Number')}}
+                {{Form::label('phone',__('Phone Number'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('phone',old('phone'))}}
@@ -73,7 +73,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-7">
-            {{Form::button('ADD',['class'=>'btn btn-primary','type'=>'submit'])}}
+            {{Form::button(__('ADD'),['class'=>'btn btn-primary','type'=>'submit'])}}
         </div>
     </div>
     {{Form::close()}}
@@ -83,7 +83,7 @@
         {{Form::hidden('id')}}
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('name','Name')}}
+                {{Form::label('name',__('Name'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('name',old('name'))}}
@@ -93,7 +93,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('department_id','Department')}}
+                {{Form::label('department_id',__('Department'))}}
             </div>
             <div class="col-md-8">
                 {{Form::select('department_id',$departments->pluck('name','id'))}}
@@ -103,7 +103,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('email','Email')}}
+                {{Form::label('email',__('Email'))}}
             </div>
             <div class="col-md-8">
                 {{Form::email('email',old('email'))}}
@@ -113,17 +113,17 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('gender','Gender')}}
+                {{Form::label('gender',__('Gender'))}}
             </div>
             <div class="col-md-8">
-                {{Form::select('gender',['0'=> 'Female','1' => 'Male'])}}
+                {{Form::select('gender',['0'=> __('Female'),'1' => __('Male')])}}
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('birthday','Birthday')}}
+                {{Form::label('birthday',__('Birthday'))}}
             </div>
             <div class="col-md-8">
                 {{Form::date('birthday',old('birthday'))}}
@@ -133,7 +133,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('address','Address')}}
+                {{Form::label('address',__('Address'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('address',old('address'))}}
@@ -143,7 +143,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-4">
-                {{Form::label('phone','Phone Number')}}
+                {{Form::label('phone',__('Phone Number'))}}
             </div>
             <div class="col-md-8">
                 {{Form::text('phone',old('phone'))}}
@@ -152,7 +152,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-7">
-            {{Form::button('UPDATE',['class'=>'btn btn-primary','type'=>'submit'])}}
+            {{Form::button(__('UPDATE'),['class'=>'btn btn-primary','type'=>'submit'])}}
         </div>
     </div>
     {{Form::close()}}

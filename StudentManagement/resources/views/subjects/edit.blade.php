@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <h3>Update Subject</h3>
+        <h3>{{__('Update Subject')}}</h3>
     </div>
     <div class="row">
         <div class="col-md-6">

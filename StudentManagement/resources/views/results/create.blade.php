@@ -2,7 +2,7 @@
 
 @section('content')
     <div>
-        <h3>Add Result</h3>
+        <h3>{{__('Add Result')}}</h3>
     </div>
     <div class="row">
         <div class="col-md-6">

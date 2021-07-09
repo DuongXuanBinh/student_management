@@ -92,6 +92,7 @@ class ResultController extends Controller
      */
     public function update(ResultRequest $request, $id)
     {
+        dd($request->all());
         $result = $this->_resultRepository->updateResult($id, $request->all());
         if ($result === false) {
             return redirect('/results')->with('notification', 'Update Failed');

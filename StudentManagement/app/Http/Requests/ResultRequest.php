@@ -41,13 +41,13 @@ class ResultRequest extends FormRequest
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'mark.*.numeric' => 'Mark must be number',
-            'mark.*.min' => 'Mark must be greater or equal to 0',
-            'mark.*.max' => 'Mark must be less than or equal to 10',
-            'mark.*.required' => 'Mark is required field'
-        ];
-    }
+//    public function messages()
+//    {
+//        return [
+//            'mark.*.numeric' => 'Mark must be number',
+//            'mark.*.min' => 'Mark must be greater or equal to 0',
+//            'mark.*.max' => 'Mark must be less than or equal to 10',
+//            'mark.*.required' => 'Mark is required field'
+//        ];
+//    }
 }
