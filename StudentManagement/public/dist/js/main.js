@@ -184,6 +184,13 @@ $(document).ready(function () {
         $(this).data("previous", value);
         $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
     });
+
+    var a = $("#enroll-subject option").length;
+    if(a === 0){
+        $("#enroll-subject button").attr('disabled','disabled');
+    }else{
+        $("#enroll-subject button").attr('disabled',false);
+    }
 })
 
 function toggleResetPswd(e) {
@@ -239,7 +246,11 @@ $("input[type=checkbox]").click(function(){
     }else{
         $(this).removeProp('checked');
     }
-})
+});
+
+
+
+
 
 
 

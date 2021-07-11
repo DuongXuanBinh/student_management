@@ -8,7 +8,10 @@ interface SubjectRepositoryInterface
 
     public function getSubjectID($id);
 
+    public function getEnrollableSubject($id, array $studied_subject);
+
     public function getSubjectQuantity();
 
     public function getSubjectByDepartment($department_id,$subject_id);
+
 }

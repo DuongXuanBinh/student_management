@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['middleware' => 'locale'], function () {
     Route::get('/', function () {
+//        Role::create(['name'=>'admin']);
+//        Role::create(['name'=>'student']);
+//        $p1 = Permission::create(['name'=>'view student list']);
+//        $p2 = Permission::create(['name'=>'edit student list']);
+//        $p1->assignRole('admin');
+//        $p1->assignRole('student');
+//        $p2->assignRole('admin');
         return view('welcome');
     });
-    Route::get('/change-language/{language}', [\App\Http\Controllers\UserController::class, 'changeLanguage'])->name('change-language');
+    Route::get('/change-language/{language}', [\App\Http\Controllers\HomeController::class, 'changeLanguage'])->name('change-language');
 
     require __DIR__ . '/auth.php';
     Auth::routes();
@@ -48,9 +57,11 @@ Route::group(['middleware' => 'locale'], function () {
             ]);
         });
         Route::group(['middleware' => 'role:student'], function () {
-            Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'edit', 'update']);
+            Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'update']);
             Route::prefix('/users')->group(function(){
                 Route::get('/result/{id}',[\App\Http\Controllers\UserController::class,'getResult'])->name('users.result');
+                Route::get('/edit/{id}',[\App\Http\Controllers\UserController::class,'edit'])->name('users.edit');
+                Route::post('/result/enroll',[\App\Http\Controllers\UserController::class,'enroll'])->name('users.enroll');
             });
         });
     });

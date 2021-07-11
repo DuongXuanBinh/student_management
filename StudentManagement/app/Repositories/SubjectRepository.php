@@ -71,6 +71,14 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
         return $subject_id;
     }
 
+    public function getEnrollableSubject($id, array $studied_subject)
+    {
+        $result = Subject::select('id','name')->where('department_id', '=', $id)->
+            whereNotIn('name',$studied_subject)->get();
+
+        return $result;
+    }
+
     public function getSubjectQuantity()
     {
         $num_of_subject = Subject::select('department_id', DB::raw('count(*) as num_of_subject'))

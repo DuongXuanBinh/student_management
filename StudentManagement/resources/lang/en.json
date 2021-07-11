@@ -121,5 +121,6 @@
     "Update Failed": "Update Failed",
     "Delete Successfully": "Delete Successfully",
     "Delete Failed": "Delete Failed",
-    "Enroll": "ENROLL"
+    "Enroll": "ENROLL",
+    "Enroll Successfully": "Enroll Successfully"
 }

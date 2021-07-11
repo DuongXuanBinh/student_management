@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class StudentRepository extends EloquentRepository implements StudentRepositoryInterface
@@ -17,7 +18,9 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function index()
     {
-        return parent::getAll();
+        $student = Student::select('students.*',DB::raw('departments.name as department'))->join('departments','departments.id','students.department_id')->orderBy('students.id')->paginate(50);
+
+        return $student;
     }
 
     public function createNewStudent(array $attribute)

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Session;
+
 
 class HomeController extends Controller
 {
@@ -26,11 +25,19 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         if($user->hasRole('admin')){
             return redirect('/students');
+        }else{
+            $user->assignRole('student');
+            return redirect('/users/');
         }
-        return redirect('/users/');
+    }
+
+    public function changeLanguage($language)
+    {
+        Session::put('website_language', $language);
+
+        return redirect()->back();
     }
 
 }

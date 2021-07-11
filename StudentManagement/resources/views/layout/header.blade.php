@@ -143,7 +143,7 @@
                         <!-- The user image in the navbar-->
                         <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs">{{ucfirst(Auth::user()->student->name)}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
@@ -180,6 +180,9 @@
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"
                                    class="btn btn-default btn-flat">{{__('Sign out')}}</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </div>
                         </li>
                     </ul>

@@ -32,13 +32,15 @@
                 <label style="font-weight:bold" >{{__('Enroll')}}</label>
             </div>
             <div class="row col-md-12">
-                <form action="">
-                    <select name="name[]" id="">
+                <form action="{{route('users.enroll')}}" method="post" id="enroll-subject">
+                    @csrf
+                    <input type="hidden" name="id" value="{{$student->id}}">
+                    <select name="name">
                         @foreach($enrollable_subjects as $enrollable_subject)
-                            <option value="{{$enrollable_subject}}">{{$enrollable_subject}}</option>
-                            <input type="hidden" name="mark[]" value="0">
+                            <option value="{{$enrollable_subject->id}}">{{$enrollable_subject->name}}</option>
                         @endforeach
                     </select>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         </div>

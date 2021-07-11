@@ -4,7 +4,7 @@
     <div>
         <h3>{{__('My Profile')}}</h3>
     </div>
-    <table class="table table-striped table-student">
+    <table class="table table-striped" style="margin-top: 50px; width: 80%">
         <thead>
         <tr>
             <th>id</th>
@@ -29,7 +29,7 @@
             <td class="student-address">{{$student->address}}</td>
             <td class="student-phone">{{$student->phone}}</td>
             <td>
-                <a href="/users/{{$student->id}}/edit" class="update-student">
+                <a href="/users/edit/{{$student->id}}" class="update-student">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-pencil" viewBox="0 0 16 16">
                         <path

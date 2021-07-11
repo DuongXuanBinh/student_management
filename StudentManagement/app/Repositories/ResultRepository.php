@@ -145,7 +145,11 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return $student_id;
     }
 
-    public function enrollSubject(){
+    public function enrollSubject(Request $request){
+        Result::create(['student_id'=>$request->id,
+           'subject_id' => $request->name,
+           'mark' => 0
+        ]);
 
     }
 }

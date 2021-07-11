@@ -30,4 +30,6 @@ interface ResultRepositoryInterface
     public function getStudentByMarkRange($from, $to);
 
     public function getGPA($id);
+
+    public function enrollSubject(Request $request);
 }

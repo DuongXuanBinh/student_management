@@ -18,6 +18,11 @@
     z-index: 1200;
 }
 
+#enroll-subject select{
+    width: 200px;
+    margin-right: 15px;
+}
+
 table th{
     text-transform: uppercase;
 }

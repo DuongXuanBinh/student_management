@@ -11,7 +11,6 @@ use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -99,21 +98,27 @@ class UserController extends Controller
         $gpa = $this->_resultRepository->getGPA($id);
         $student = $this->_studentRepository->findStudentById($id);
         $department_id = $this->_studentRepository->getDepartment($id)->department_id;
-//        $subject = $this->_subjectRepository->getSubject($department_id);
         $studied_subject = [];
-        foreach ($results as $result){
-            array_push($studied_subject,$result->name);
+        foreach ($results as $result) {
+            array_push($studied_subject, $result->name);
         }
-        $enrollable_subjects = array_values(array_diff($subject,$studied_subject));
+        $enrollable_subjects = $this->_subjectRepository->getEnrollableSubject($department_id,$studied_subject);
 
-        return view('users.user_result',compact('results','gpa','student','enrollable_subjects'));
+        return view('users.user_result', compact('results', 'gpa', 'student', 'enrollable_subjects'));
 
     }
 
-    public function changeLanguage($language)
+    public function studentList()
     {
-        Session::put('website_language', $language);
+        $students = $this->_studentRepository->index();
 
-        return redirect()->back();
+        return response()->view('students.index', compact('students'));
     }
+
+    public function enroll(Request $request){
+        $this->_resultRepository->enrollSubject($request);
+
+        return back()->with('notification','Enroll Successfully');
+    }
+
 }
