@@ -137,7 +137,6 @@ class StudentController extends Controller
             return redirect()->back()->withInput()->with('notification', 'No record found');
         }
         return response()->view('students.index', compact('students'));
-
     }
 
     public function viewMassiveUpdate(Request $request)

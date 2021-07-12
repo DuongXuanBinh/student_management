@@ -214,7 +214,6 @@ $(() => {
 })
 
 $(".filter-student button[type='submit']").click(function () {
-
     var age_from = $(".filter-student input[name='age_from']").val();
     var age_to = $(".filter-student input[name='age_to']").val();
     var mark_from = $(".filter-student input[name='mark_from']").val();

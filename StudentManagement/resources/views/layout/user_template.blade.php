@@ -266,7 +266,7 @@ desired effect
                             <!-- The user image in the navbar-->
                             <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">{{$student->name}}</span>
+                            <span class="hidden-xs">{{ucfirst(Auth::user()->student->name)}}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
@@ -333,9 +333,9 @@ desired effect
                     <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>{{$student->name}}</p>
+                    <p>{{ucfirst(Auth::user()->student->name)}}</p>
                     <!-- Status -->
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    <a href="#"><i class="fa fa-circle text-success"></i> {{__('Online')}}</a>
                 </div>
             </div>
 
@@ -355,9 +355,9 @@ desired effect
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">{{__('HEADER')}}</li>
                 <!-- Optionally, you can add icons to the links -->
-                <li class="{{request()->segment(2) === 'result' ? '' :'active'}}"><a href="{{route('users.index')}}"><i class="fa fa-link"></i> <span>{{__('My Profile')}}</span></a></li>
-                <li class="{{request()->segment(2) === 'result' ? 'active' :''}}"><a href="{{route('users.result',['id'=>$student->id])}}"><i class="fa fa-link"></i> <span>{{__("My Result")}}</span></a></li>
-                <li class="{{(request()->segment(1)=='students') ? 'active' : ''}}"><a href="{{route('students.index')}}"><i class="fa fa-link"></i> <span>{{__('Student List')}}</span></a></li>
+                <li class="{{Route::currentRouteName() === 'users.index' ? 'active' :''}}"><a href="{{route('users.index')}}"><i class="fa fa-link"></i> <span>{{__('My Profile')}}</span></a></li>
+                <li class="{{Route::currentRouteName() === 'users.result' ? 'active' :''}}"><a href="{{route('users.result')}}"><i class="fa fa-link"></i> <span>{{__("My Result")}}</span></a></li>
+                <li class="{{request()->segment(1) === 'students' ? 'active' : ''}}"><a href="{{route('students.index')}}"><i class="fa fa-link"></i> <span>{{__('Student List')}}</span></a></li>
             </ul>
             <!-- /.sidebar-menu -->
         </section>
@@ -466,8 +466,12 @@ desired effect
 
 <!-- jQuery 3 -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript"
+        src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <script src="dist/js/main.js"></script>

@@ -20,16 +20,16 @@
         </thead>
         <tbody>
         <tr class="student-details">
-            <td class="student-id">{{$student->id}}</td>
-            <td class="student-name">{{$student->name}}</td>
-            <td class="student-department">{{$student->department->name}}</td>
-            <td class="student-email">{{$student->email}}</td>
-            <td class="student-gender">{{$student->gender === 0 ? __("Female") : __('Male')}}</td>
-            <td class="student-birthday">{{$student->birthday}}</td>
-            <td class="student-address">{{$student->address}}</td>
-            <td class="student-phone">{{$student->phone}}</td>
+            <td class="student-id">{{$user->id}}</td>
+            <td class="student-name">{{$user->name}}</td>
+            <td class="student-department">{{$user->department->name}}</td>
+            <td class="student-email">{{$user->email}}</td>
+            <td class="student-gender">{{$user->gender === 0 ? __("Female") : __('Male')}}</td>
+            <td class="student-birthday">{{$user->birthday}}</td>
+            <td class="student-address">{{$user->address}}</td>
+            <td class="student-phone">{{$user->phone}}</td>
             <td>
-                <a href="/users/edit/{{$student->id}}" class="update-student">
+                <a href="/users/edit" class="update-student">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-pencil" viewBox="0 0 16 16">
                         <path

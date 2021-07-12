@@ -41,10 +41,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $student_id = Auth::id();
-        $student = $this->_studentRepository->findStudentById($student_id);
+        $student_id = Auth::user();
+        $id = $student_id->student->id;
+        $user = $this->_studentRepository->findStudentById($id);
 
-        return response()->view('users.index', compact('student'));
+        return response()->view('users.index', compact('user'));
     }
 
 
@@ -54,12 +55,13 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        $student = $this->_studentRepository->findStudentByID($id);
+        $id = Auth::user()->student->id;
+        $user = $this->_studentRepository->findStudentByID($id);
         $departments = $this->_departmentRepository->index();
 
-        return response()->view('users.edit', compact('departments', 'student'));
+        return response()->view('users.edit', compact('departments', 'user'));
     }
 
     /**
@@ -92,11 +94,12 @@ class UserController extends Controller
         return $user;
     }
 
-    public function getResult($id)
+    public function getResult()
     {
+        $id = Auth::user()->student->id;
         $results = $this->_resultRepository->getResultByStudentID($id);
         $gpa = $this->_resultRepository->getGPA($id);
-        $student = $this->_studentRepository->findStudentById($id);
+        $user = $this->_studentRepository->findStudentById($id);
         $department_id = $this->_studentRepository->getDepartment($id)->department_id;
         $studied_subject = [];
         foreach ($results as $result) {
@@ -104,15 +107,8 @@ class UserController extends Controller
         }
         $enrollable_subjects = $this->_subjectRepository->getEnrollableSubject($department_id,$studied_subject);
 
-        return view('users.user_result', compact('results', 'gpa', 'student', 'enrollable_subjects'));
+        return view('users.user_result', compact('results', 'gpa', 'user', 'enrollable_subjects'));
 
-    }
-
-    public function studentList()
-    {
-        $students = $this->_studentRepository->index();
-
-        return response()->view('students.index', compact('students'));
     }
 
     public function enroll(Request $request){

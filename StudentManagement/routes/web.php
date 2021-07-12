@@ -24,6 +24,7 @@ Route::group(['middleware' => 'locale'], function () {
 //        $p1->assignRole('admin');
 //        $p1->assignRole('student');
 //        $p2->assignRole('admin');
+
         return view('welcome');
     });
     Route::get('/change-language/{language}', [\App\Http\Controllers\HomeController::class, 'changeLanguage'])->name('change-language');
@@ -59,10 +60,14 @@ Route::group(['middleware' => 'locale'], function () {
         Route::group(['middleware' => 'role:student'], function () {
             Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'update']);
             Route::prefix('/users')->group(function(){
-                Route::get('/result/{id}',[\App\Http\Controllers\UserController::class,'getResult'])->name('users.result');
-                Route::get('/edit/{id}',[\App\Http\Controllers\UserController::class,'edit'])->name('users.edit');
+                Route::get('/result',[\App\Http\Controllers\UserController::class,'getResult'])->name('users.result');
+                Route::get('/edit',[\App\Http\Controllers\UserController::class,'edit'])->name('users.edit');
                 Route::post('/result/enroll',[\App\Http\Controllers\UserController::class,'enroll'])->name('users.enroll');
             });
+        });
+        Route::group(['middleware'=>'role:student|admin'],function(){
+            Route::resource('students',\App\Http\Controllers\StudentController::class)->only(['index']);
+            Route::get('/students/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');
         });
     });
 });

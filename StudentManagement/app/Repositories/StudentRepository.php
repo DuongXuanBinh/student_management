@@ -18,7 +18,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function index()
     {
-        $student = Student::select('students.*',DB::raw('departments.name as department'))->join('departments','departments.id','students.department_id')->orderBy('students.id')->paginate(50);
+        $student = Student::select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')->orderBy('students.id')->paginate(50);
 
         return $student;
     }
@@ -54,26 +54,27 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $status = $request->status;
         $complete = $this->checkCompletion(1, $result_per_student, $subject_per_department);
         $in_progress = $this->checkCompletion(2, $result_per_student, $subject_per_department);
-        $students = Student::whereIn('id', $student_by_mark)
-            ->whereYear('birthday', '<=', $from_year)
-            ->whereYear('birthday', '>=', $to_year)
+        $students = Student::select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')
+            ->whereIn('students.id', $student_by_mark)
+            ->whereYear('students.birthday', '<=', $from_year)
+            ->whereYear('students.birthday', '>=', $to_year)
             ->when($mobile_network, function ($query) use ($mobile_network) {
                 for ($i = 0; $i < count($mobile_network); $i++) {
                     if ($i > 0) {
-                        $query->orWhere('phone', 'regexp', $mobile_network[$i]);
+                        $query->orWhere('students.phone', 'regexp', $mobile_network[$i]);
                     } else {
-                        $query->where('phone', 'regexp', $mobile_network[$i]);
+                        $query->where('students.phone', 'regexp', $mobile_network[$i]);
                     }
                 }
             })
             ->when(count($status) == 1, function ($query) use ($status, $complete, $in_progress) {
                 if ($status[0] == 1) {
-                    $query->whereIn('id', $complete);
+                    $query->whereIn('students.id', $complete);
                 } else {
-                    $query->whereIn('id', $in_progress);
+                    $query->whereIn('students.id', $in_progress);
                 }
             })
-            ->orderBy('id', 'ASC')->paginate(50)->withQueryString();
+            ->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
         if (count($students) == 0) {
             return false;
         } else {
@@ -138,7 +139,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function getDepartment($student_id)
     {
-        $department_id = Student::select('department_id')->where('id',$student_id)->first();
+        $department_id = Student::select('department_id')->where('id', $student_id)->first();
 
         return $department_id;
     }

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Result;
-use App\Models\Subject;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Seeder;
 

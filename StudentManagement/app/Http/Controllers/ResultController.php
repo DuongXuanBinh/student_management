@@ -24,12 +24,14 @@ class ResultController extends Controller
 
     /**
      * Show result list
-     * @return \Illuminate\Http\Response
+     *
      */
     public function index()
     {
         $results = $this->_resultRepository->index();
-
+        if(request()->segment(1) == 'api'){
+            return $results;
+        }
         return response()->view('results.index', compact('results'));
     }
 

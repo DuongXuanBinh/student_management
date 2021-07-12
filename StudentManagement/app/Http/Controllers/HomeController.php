@@ -25,12 +25,13 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if($user->hasRole('admin')){
+//        $user->assignRole('admin');
+        if ($user->hasRole('admin')) {
             return redirect('/students');
-        }else{
-            $user->assignRole('student');
-            return redirect('/users/');
         }
+        $user->assignRole('student');
+        return redirect('/users/');
+
     }
 
     public function changeLanguage($language)

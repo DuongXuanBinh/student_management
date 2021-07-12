@@ -12,7 +12,7 @@
             <div class="pull-left info">
                 <p>{{ucfirst(Auth::user()->student->name)}}</p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                <a href="#"><i class="fa fa-circle text-success"></i>{{__('Online')}}</a>
             </div>
         </div>
 
