@@ -29,16 +29,13 @@ class ResultController extends Controller
     public function index()
     {
         $results = $this->_resultRepository->index();
-        if(request()->segment(1) == 'api'){
-            return $results;
-        }
+
         return response()->view('results.index', compact('results'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -94,7 +91,6 @@ class ResultController extends Controller
      */
     public function update(ResultRequest $request, $id)
     {
-        dd($request->all());
         $result = $this->_resultRepository->updateResult($id, $request->all());
         if ($result === false) {
             return redirect('/results')->with('notification', 'Update Failed');

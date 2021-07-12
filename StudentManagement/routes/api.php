@@ -18,11 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('results',\App\Http\Controllers\ResultController::class);
+Route::apiResource('results',\App\Http\Controllers\Api\ResultController::class);
 
-//Route::group(['middleware'=>'auth:api'], function(){
-//   Route::resource('results',\App\Http\Controllers\ResultController::class);
+Route::group(['middleware'=>'auth:api'], function(){
 //    Route::get('/dismiss-student', [\App\Http\Controllers\StudentController::class, 'sendMailDismiss']);
 //    Route::get('/massive-update-result', [\App\Http\Controllers\ResultController::class, 'massiveUpdate']);
-//});
+});
 
