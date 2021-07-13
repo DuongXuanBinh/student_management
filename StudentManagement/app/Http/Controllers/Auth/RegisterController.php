@@ -45,26 +45,32 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
+        $student_id = $data['student_id'];
+        $email = $data['email'];
         return Validator::make($data, [
-            'email'=>'required|exists:students.email',
-            'password'=>'required|string|min:8'
+            'student_id' => 'required|exists:students,id',
+            'email' => ['required', Rule::unique('users')->where(function ($query) use ($student_id, $email) {
+                $query->where('email',$email)->where('student_id',$student_id);
+            })],
+            'password' => 'required|string|min:8'
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\Models\User
      */
     protected function create(array $data)
     {
         return User::create([
+            'student_id' => $data['student_id'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);

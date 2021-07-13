@@ -206,6 +206,10 @@ input[type=checkbox]{
     color: white;
 }
 
+a.facebook-btn, a.google-btn{
+    display: inline !important;
+}
+
 .modal-body .row {
     width: 80%;
     margin: 10px auto;
