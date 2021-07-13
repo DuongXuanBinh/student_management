@@ -124,10 +124,9 @@ class ResultController extends Controller
     public function massiveUpdate(ResultRequest $request)
     {
         $student_id = array_unique($request->student_id);
-        $student = $this->_studentRepository->find($student_id[0]);
+        $student = $this->_studentRepository->findStudentById($student_id[0]);
         $results = $this->_resultRepository->massiveUpdateResult($request, $student);
 
         return $results;
-
     }
 }

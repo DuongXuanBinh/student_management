@@ -41,8 +41,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $student_id = Auth::user();
-        $id = $student_id->student->id;
+        $email = Auth::user()->email;
+        $id = $this->_studentRepository->getIDByMail($email);
         $user = $this->_studentRepository->findStudentById($id);
 
         return response()->view('users.index', compact('user'));
@@ -57,8 +57,9 @@ class UserController extends Controller
      */
     public function edit()
     {
-        $id = Auth::user()->student->id;
-        $user = $this->_studentRepository->findStudentByID($id);
+        $email = Auth::user()->email;
+        $id = $this->_studentRepository->getIDByMail($email);
+        $user = $this->_studentRepository->findStudentById($id);
         $departments = $this->_departmentRepository->index();
 
         return response()->view('users.edit', compact('departments', 'user'));
@@ -84,9 +85,8 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function createUser(Request $request, $id)
+    public function createUser(Request $request)
     {
-        $details['student_id'] = $id;
         $details['email'] = $request->email;
         $details['password'] = Str::random(10);
         $user = $this->_userRepository->createUser($details);
@@ -96,7 +96,8 @@ class UserController extends Controller
 
     public function getResult()
     {
-        $id = Auth::user()->student->id;
+        $email = Auth::user()->email;
+        $id = $this->_studentRepository->getIDByMail($email);
         $results = $this->_resultRepository->getResultByStudentID($id);
         $gpa = $this->_resultRepository->getGPA($id);
         $user = $this->_studentRepository->findStudentById($id);

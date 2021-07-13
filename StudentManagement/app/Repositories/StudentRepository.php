@@ -144,4 +144,11 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return $department_id;
     }
 
+    public function getIDByMail($email)
+    {
+        $student_id = Student::select('id')->where('email',$email)->first()->id;
+
+        return $student_id;
+    }
+
 }

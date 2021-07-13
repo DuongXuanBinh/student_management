@@ -8,8 +8,8 @@
             <div class="social-login">
                 <button class="btn facebook-btn social-btn" type="button"><span><i class="fab fa-facebook-f"></i> {{ __('Sign in with') }} Facebook</span>
                 </button>
-                <button class="btn google-btn social-btn" type="button"><span><i class="fab fa-google-plus-g"></i> {{ __('Sign in with') }} Google+</span>
-                </button>
+                <a href="/auth/redirect/google" class="btn google-btn social-btn" type="button"><span><i class="fab fa-google-plus-g"></i> {{ __('Sign in with') }} Google+</span>
+                </a>
             </div>
             <p style="text-align:center"> {{ __('OR') }} </p>
             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="{{ __('Email Address') }}">

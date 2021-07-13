@@ -39,6 +39,7 @@ $(document).ready(function () {
             url: _url,
             token: _token,
             data: $(this).serialize(),
+            dataType: JSON,
             success: function (data) {
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
@@ -70,7 +71,7 @@ $(document).ready(function () {
         var _url = $(this).attr('action');
         e.preventDefault();
         $.ajax({
-            type: "get",
+            type: "put",
             url: _url,
             data: $(this).serialize(),
             success: function () {
@@ -246,6 +247,11 @@ $("input[type=checkbox]").click(function(){
         $(this).removeProp('checked');
     }
 });
+
+// $(".google-btn").click(function(){
+//    window.location.href = "/auth/redirect/google";
+// });
+
 
 
 

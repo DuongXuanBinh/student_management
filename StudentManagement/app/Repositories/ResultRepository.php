@@ -49,8 +49,8 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
             $subject[$subject_id[$i]] = ['mark' => $mark[$i]];
         }
         $student->subjects()->sync($subject);
-
         $result = $this->getResultByStudentID($student->id);
+
         return $result;
     }
 
@@ -109,7 +109,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
     public function getGPA($id)
     {
         $result = Result::select(DB::raw(' AVG(mark) as GPA'))
-            ->where('student_id',$id)
+            ->where('student_id', $id)
             ->groupBy('student_id')->first();
         return $result;
     }
@@ -137,18 +137,19 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
     public function getStudentByMarkRange($from, $to)
     {
         $results = Result::select('student_id')->where('mark', '>=', $from)->where('mark', '<=', $to)->distinct()->get();
-        $student_id=[];
-        foreach ($results as $result){
-            array_push($student_id,$result->student_id);
+        $student_id = [];
+        foreach ($results as $result) {
+            array_push($student_id, $result->student_id);
         }
 
         return $student_id;
     }
 
-    public function enrollSubject(Request $request){
-        Result::create(['student_id'=>$request->id,
-           'subject_id' => $request->name,
-           'mark' => 0
+    public function enrollSubject(Request $request)
+    {
+        Result::create(['student_id' => $request->id,
+            'subject_id' => $request->name,
+            'mark' => 0
         ]);
 
     }

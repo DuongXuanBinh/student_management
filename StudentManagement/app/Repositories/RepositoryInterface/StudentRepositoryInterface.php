@@ -17,4 +17,6 @@ interface StudentRepositoryInterface
     public function getStudent($department_id);
 
     public function getDepartment($student_id);
+
+    public function getIDByMail($email);
 }

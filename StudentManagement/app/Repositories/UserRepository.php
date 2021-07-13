@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
-use Illuminate\Support\Facades\App;
+use App\Models\User;
 
 class UserRepository extends EloquentRepository implements UserRepositoryInterface
 {
@@ -12,14 +12,20 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         return \App\Models\User::class;
     }
 
-    public function updateProfile()
-    {
-
-    }
-
     public function createUser(array $attribute)
     {
         return parent::create($attribute);
+    }
+
+    public function checkSNS($type, $email)
+    {
+        $user = User::where('sns_type', $type)->where('email',$email)->first();
+        if ($user === null) {
+            $user = false;
+
+            return $user;
+        }
+        return $user;
     }
 
 }

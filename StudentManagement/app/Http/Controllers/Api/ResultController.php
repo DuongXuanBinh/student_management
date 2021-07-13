@@ -77,7 +77,8 @@ class ResultController extends Controller
      */
     public function update(Request $request, Result $result)
     {
-        return $result->updateResut($request->all());
+        $result->update($request->all());
+        return $result;
     }
 
     /**
@@ -88,5 +89,14 @@ class ResultController extends Controller
     public function destroy(Result $result)
     {
         $result->delete();
+    }
+
+    public function massiveUpdate(Request $request)
+    {
+        $student_id = array_unique($request->student_id);
+        $student = $this->_studentRepository->findStudentById($student_id[0]);
+        $results = $this->_resultRepository->massiveUpdateResult($request, $student);
+
+        return $results;
     }
 }
