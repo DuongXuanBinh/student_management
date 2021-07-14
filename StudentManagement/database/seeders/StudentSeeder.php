@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use App\Models\Student;
 use Illuminate\Database\Seeder;
 

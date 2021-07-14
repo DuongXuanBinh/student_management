@@ -21,7 +21,7 @@ class User extends Authenticatable
         'student_id',
         'email',
         'password',
-        'sns_type'
+        'provider'
     ];
 
     /**

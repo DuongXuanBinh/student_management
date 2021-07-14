@@ -90,7 +90,6 @@ class SubjectController extends Controller
         } else {
             return redirect('/subjects')->with('notification', 'Update Successfully');
         }
-
     }
 
     /**

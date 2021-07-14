@@ -20,8 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->foreign('email')->references('email')->on('students');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('sns_type')->nullable();
+            $table->string('password')->default(NULL);
+            $table->string('provider')->nullable();
             $table->timestamps();
         });
     }

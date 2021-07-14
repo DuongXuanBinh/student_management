@@ -12,7 +12,7 @@ class SocialController extends Controller
     protected $_userRepository;
     protected $_studentRepository;
 
-    public function __constructor(UserRepositoryInterface $userRepository,
+    public function __construct(UserRepositoryInterface $userRepository,
                                   StudentRepositoryInterface $studentRepository)
     {
         $this->_userRepository = $userRepository;
@@ -35,13 +35,13 @@ class SocialController extends Controller
 
     public function createUser($info, $provider)
     {
-        $user = $this->_userRepository->checkSNS($provider, $info->email);
+        $user = $this->_userRepository->checkProvider($provider, $info->email);
         $student_id = $this->_studentRepository->getIDByMail($info->email);
         if (!$user) {
             $user = User::create([
                 'student_id' => $student_id,
                 'email' => $info->email,
-                'sns_type' => $provider
+                'provider' => $provider
             ]);
         }
 

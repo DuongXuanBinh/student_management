@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
-use App\Models\User;
 
 class UserRepository extends EloquentRepository implements UserRepositoryInterface
 {
@@ -17,9 +16,9 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         return parent::create($attribute);
     }
 
-    public function checkSNS($type, $email)
+    public function checkProvider($type, $email)
     {
-        $user = User::where('sns_type', $type)->where('email',$email)->first();
+        $user = $this->_model->where('provider', $type)->where('email',$email)->first();
         if ($user === null) {
             $user = false;
 

@@ -9,7 +9,7 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'department_id', 'email', 'gender', 'birthday', 'address', 'phone','sns_type'];
+    protected $fillable = ['name', 'department_id', 'email', 'gender', 'birthday', 'address', 'phone'];
     public $timestamps = true;
 
     public function subjects()

@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Models\Result;
 use App\Models\Student;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use Illuminate\Http\Request;
@@ -61,7 +60,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
      */
     public function deleteStudentResult($id)
     {
-        $result = Result::where('student_id', '=', $id);
+        $result = $this->_model->where('student_id', '=', $id);
         if ($result) {
             $result->delete();
 
@@ -79,9 +78,9 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
     public function deleteSubjectResult($id)
     {
         if (is_array($id)) {
-            $result = Result::whereIn('subject_id', $id);
+            $result = $this->_model->whereIn('subject_id', $id);
         } else {
-            $result = Result::where('subject_id', $id);
+            $result = $this->_model->where('subject_id', $id);
         }
         if ($result) {
             $result->delete();
@@ -99,7 +98,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
      */
     public function getResultByStudentID($id)
     {
-        $result = Result::select('results.*', 'subjects.name')
+        $result = $this->_model->select('results.*', 'subjects.name')
             ->join('subjects', 'subjects.id', 'results.subject_id')
             ->where('student_id', '=', $id)->get();
 
@@ -108,7 +107,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
     public function getGPA($id)
     {
-        $result = Result::select(DB::raw(' AVG(mark) as GPA'))
+        $result = $this->_model->select(DB::raw(' AVG(mark) as GPA'))
             ->where('student_id', $id)
             ->groupBy('student_id')->first();
         return $result;
@@ -116,7 +115,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
     public function getResultQuantity()
     {
-        $result = Result::select('student_id', 'department_id', DB::raw('count(mark) as num_of_result'))
+        $result = $this->_model->select('student_id', 'department_id', DB::raw('count(mark) as num_of_result'))
             ->join('students', 'students.id', 'results.student_id')
             ->groupBy('student_id', 'department_id')
             ->orderBy('student_id', 'asc')->get();
@@ -126,7 +125,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
     public function getBadStudent($complete_student)
     {
-        $dismiss_student = Result::select('student_id', DB::raw('avg(mark) as average_mark'))
+        $dismiss_student = $this->_model->select('student_id', DB::raw('avg(mark) as average_mark'))
             ->whereIn('student_id', $complete_student)
             ->groupBy('student_id')->having('average_mark', '<', 5)
             ->get();
@@ -136,7 +135,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
     public function getStudentByMarkRange($from, $to)
     {
-        $results = Result::select('student_id')->where('mark', '>=', $from)->where('mark', '<=', $to)->distinct()->get();
+        $results = $this->_model->select('student_id')->where('mark', '>=', $from)->where('mark', '<=', $to)->distinct()->get();
         $student_id = [];
         foreach ($results as $result) {
             array_push($student_id, $result->student_id);
@@ -147,7 +146,7 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
     public function enrollSubject(Request $request)
     {
-        Result::create(['student_id' => $request->id,
+        $this->_model->create(['student_id' => $request->id,
             'subject_id' => $request->name,
             'mark' => 0
         ]);

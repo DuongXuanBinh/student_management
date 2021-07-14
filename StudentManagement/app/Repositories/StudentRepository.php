@@ -2,12 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Models\Student;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 
 class StudentRepository extends EloquentRepository implements StudentRepositoryInterface
 {
@@ -18,9 +16,8 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function index()
     {
-        $student = Student::select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')->orderBy('students.id')->paginate(50);
+        return $this->_model->select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')->orderBy('students.id')->paginate(50);
 
-        return $student;
     }
 
     public function createNewStudent(array $attribute)
@@ -54,7 +51,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $status = $request->status;
         $complete = $this->checkCompletion(1, $result_per_student, $subject_per_department);
         $in_progress = $this->checkCompletion(2, $result_per_student, $subject_per_department);
-        $students = Student::select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')
+        $students = $this->_model->select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')
             ->whereIn('students.id', $student_by_mark)
             ->whereYear('students.birthday', '<=', $from_year)
             ->whereYear('students.birthday', '>=', $to_year)
@@ -117,7 +114,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function deleteDepartmentStudent($id)
     {
-        $result = Student::where('department_id', $id);
+        $result = $this->_model->where('department_id', $id);
         if ($result) {
             $result->delete();
 
@@ -130,7 +127,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function getStudent($department_id)
     {
         $student_id = [];
-        $students = Student::where('department_id', $department_id)->get();
+        $students = $this->_model->where('department_id', $department_id)->get();
         for ($i = 0; $i < count($students); $i++) {
             array_push($student_id, $students[$i]->id);
         }
@@ -139,14 +136,14 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function getDepartment($student_id)
     {
-        $department_id = Student::select('department_id')->where('id', $student_id)->first();
+        $department_id = $this->_model->select('department_id')->where('id', $student_id)->first();
 
         return $department_id;
     }
 
     public function getIDByMail($email)
     {
-        $student_id = Student::select('id')->where('email',$email)->first()->id;
+        $student_id = $this->_model->select('id')->where('email',$email)->first()->id;
 
         return $student_id;
     }
