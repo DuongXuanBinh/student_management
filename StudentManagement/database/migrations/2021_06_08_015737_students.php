@@ -23,6 +23,7 @@ class Students extends Migration
             $table->date('birthday');
             $table->string('address');
             $table->string('phone')->unique();
+            $table->string('slug');
             $table->timestamps();
         });
     }

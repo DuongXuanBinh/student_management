@@ -14,11 +14,12 @@ class Student extends Model
 
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class,'results','student_id','subject_id')->withPivot('mark');
+        return $this->belongsToMany(Subject::class, 'results', 'student_id', 'subject_id')->withPivot('mark');
     }
 
     public function department()
     {
         return $this->belongsTo(Department::class);
     }
+
 }

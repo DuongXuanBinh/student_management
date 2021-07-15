@@ -85,6 +85,7 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
 
         return $num_of_subject;
     }
+
     public function getSubjectByDepartment($department_id,$subject_id)
     {
         $subject = $this->_model->where('department_id', '=', $department_id)->where('id', '=', $subject_id)->first();

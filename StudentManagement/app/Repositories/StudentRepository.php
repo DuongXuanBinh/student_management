@@ -55,7 +55,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
             ->whereIn('students.id', $student_by_mark)
             ->whereYear('students.birthday', '<=', $from_year)
             ->whereYear('students.birthday', '>=', $to_year)
-            ->when($mobile_network, function ($query) use ($mobile_network) {
+            ->where(function ($query) use ($mobile_network) {
                 for ($i = 0; $i < count($mobile_network); $i++) {
                     if ($i > 0) {
                         $query->orWhere('students.phone', 'regexp', $mobile_network[$i]);
@@ -64,12 +64,13 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
                     }
                 }
             })
-            ->when(count($status) == 1, function ($query) use ($status, $complete, $in_progress) {
-                if ($status[0] == 1) {
-                    $query->whereIn('students.id', $complete);
-                } else {
-                    $query->whereIn('students.id', $in_progress);
-                }
+            ->where(function ($query) use ($status, $complete, $in_progress) {
+                if (count($status) === 1)
+                    if ($status[0] == 1) {
+                        $query->whereIn('students.id', $complete);
+                    } else {
+                        $query->whereIn('students.id', $in_progress);
+                    }
             })
             ->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
         if (count($students) == 0) {
@@ -83,19 +84,21 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     /**Function to check student's completion
      * $type = 1 => completed or 2 => incomplete
      * @param $type
+     * @param $result_of_student
+     * @param $num_of_subject
      * @return array
      */
     public function checkCompletion($type, $result_of_student, $num_of_subject)
     {
-        $check_complete = array();
+        $check_complete = [];
         for ($i = 0; $i < count($result_of_student); $i++) {
-            $department_id = $result_of_student[$i]->department_id;
-            $num_of_result = $result_of_student[$i]->num_of_result;
+            $department_id = $result_of_student[$i]['department_id'];
+            $num_of_result = $result_of_student[$i]['num_of_result'];
             for ($j = 0; $j < count($num_of_subject); $j++) {
-                if ($type == 1 && $department_id == $num_of_subject[$j]->department_id && $num_of_result == $num_of_subject[$j]->num_of_subject) {
-                    array_push($check_complete, $result_of_student[$i]->student_id);
-                } elseif ($type == 2 && $department_id === $num_of_subject[$j]->department_id && $num_of_result < $num_of_subject[$j]->num_of_subject) {
-                    array_push($check_complete, $result_of_student[$i]->student_id);
+                if ($type == 1 && $department_id == $num_of_subject[$j]['department_id'] && $num_of_result == $num_of_subject[$j]['num_of_subject']) {
+                    array_push($check_complete, $result_of_student[$i]['student_id']);
+                } elseif ($type == 2 && $department_id == $num_of_subject[$j]['department_id'] && $num_of_result < $num_of_subject[$j]['num_of_subject']) {
+                    array_push($check_complete, $result_of_student[$i]['student_id']);
                 }
             }
         }
@@ -137,13 +140,12 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function getDepartment($student_id)
     {
         $department_id = $this->_model->select('department_id')->where('id', $student_id)->first();
-
         return $department_id;
     }
 
     public function getIDByMail($email)
     {
-        $student_id = $this->_model->select('id')->where('email',$email)->first()->id;
+        $student_id = $this->_model->select('id')->where('email', $email)->first()->id;
 
         return $student_id;
     }

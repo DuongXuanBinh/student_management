@@ -119,7 +119,6 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
             ->join('students', 'students.id', 'results.student_id')
             ->groupBy('student_id', 'department_id')
             ->orderBy('student_id', 'asc')->get();
-
         return $result;
     }
 

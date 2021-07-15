@@ -4,7 +4,7 @@
     <div>
         <h3>{{__('My Profile')}}</h3>
     </div>
-    <table class="table table-striped" style="margin-top: 50px; width: 80%">
+    <table class="table table-striped" style="margin-top: 50px;">
         <thead>
         <tr>
             <th>id</th>

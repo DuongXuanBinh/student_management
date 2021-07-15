@@ -90,7 +90,6 @@ abstract class EloquentRepository implements RepositoryInterface
     public function delete($id)
     {
         $result = $this->find($id);
-
         if ($result) {
             $result->delete();
 
