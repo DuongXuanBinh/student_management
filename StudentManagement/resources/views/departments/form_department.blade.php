@@ -18,7 +18,7 @@
     </div>
     {{Form::close()}}
 @else
-    {{Form::model($department,array('route'=>array('departments.update',$department->id),'method'=>'put','class'=>'form-layout'))}}
+    {{Form::model($department,array('route'=>array('departments.update',$department->slug),'method'=>'put','class'=>'form-layout'))}}
     <div class="row">
         {{Form::hidden('id')}}
         <div class="col-md-12">

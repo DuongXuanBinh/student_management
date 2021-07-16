@@ -76,7 +76,7 @@ class UserController extends Controller
     {
         $this->_studentRepository->updateStudent($id, $request->all());
 
-        return redirect('/users')->with('notification', 'Update Successfully');
+        return redirect('/user')->with('notification', 'Update Successfully');
     }
 
     /**

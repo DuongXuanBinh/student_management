@@ -21,19 +21,23 @@ class DepartmentRepository extends EloquentRepository implements DepartmentRepos
         return parent::create($attribute);
     }
 
-    public function deleteDepartment($id)
+    public function deleteDepartment($slug)
     {
-        return parent::delete($id);
+        return parent::delete($slug);
     }
 
-    public function updateDepartment($id, array $attribute)
+    public function updateDepartment($slug, array $attribute)
     {
-        return parent::update($id, $attribute);
+        return parent::update($slug, $attribute);
     }
 
-    public function find($id)
+    public function find($slug)
     {
-        return parent::find($id);
+        return parent::find($slug);
+    }
+
+    public function findByID($id){
+        return $this->_model->where('id',$id)->firstOrFail();
     }
 
 }

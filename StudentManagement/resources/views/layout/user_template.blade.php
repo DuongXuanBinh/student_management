@@ -355,8 +355,8 @@ desired effect
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">{{__('HEADER')}}</li>
                 <!-- Optionally, you can add icons to the links -->
-                <li class="{{Route::currentRouteName() === 'users.index' ? 'active' :''}}"><a href="{{route('users.index')}}"><i class="fa fa-link"></i> <span>{{__('My Profile')}}</span></a></li>
-                <li class="{{Route::currentRouteName() === 'users.result' ? 'active' :''}}"><a href="{{route('users.result')}}"><i class="fa fa-link"></i> <span>{{__("My Result")}}</span></a></li>
+                <li class="{{Route::currentRouteName() === 'user.index' ? 'active' :''}}"><a href="{{route('user.index')}}"><i class="fa fa-link"></i> <span>{{__('My Profile')}}</span></a></li>
+                <li class="{{Route::currentRouteName() === 'user.result' ? 'active' :''}}"><a href="{{route('user.result')}}"><i class="fa fa-link"></i> <span>{{__("My Result")}}</span></a></li>
                 <li class="{{request()->segment(1) === 'students' ? 'active' : ''}}"><a href="{{route('students.index')}}"><i class="fa fa-link"></i> <span>{{__('Student List')}}</span></a></li>
             </ul>
             <!-- /.sidebar-menu -->

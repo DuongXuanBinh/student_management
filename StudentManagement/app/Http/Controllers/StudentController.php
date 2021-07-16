@@ -10,6 +10,7 @@ use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -78,9 +79,9 @@ class StudentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $student = $this->_studentRepository->findStudentByID($id);
+        $student = $this->_studentRepository->findStudent($slug);
 
         return response()->view('students.show', compact('student'));
     }
@@ -91,9 +92,9 @@ class StudentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        $student = $this->_studentRepository->findStudentByID($id);
+        $student = $this->_studentRepository->findStudent($slug);
         $departments = $this->_departmentRepository->index();
 
         return response()->view('students.edit', compact('departments', 'student'));
@@ -106,20 +107,24 @@ class StudentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StudentRequest $request, $id)
+    public function update(StudentRequest $request, $slug)
     {
-        $result = $this->_studentRepository->updateStudent($id, $request->all());
+        $result = $this->_studentRepository->updateStudent($slug, $request->all());
 
         return $result;
     }
 
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $delete_result = $this->_resultRepository->deleteStudentResult($id);
-        $delete_student = $this->_studentRepository->deleteStudent($id);
-        if ($delete_result === true && $delete_student === true) {
+        $id = $this->_studentRepository->findStudent($slug)->id;
+        DB::beginTransaction();
+        try {
+            $this->_resultRepository->deleteStudentResult($id);
+            $this->_studentRepository->deleteStudent($id);
+            DB::commit();
             return redirect()->back()->with('notification', 'Successfully deleted');
-        } else {
+        } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('notification', 'Delete Failed');
         }
     }
@@ -139,12 +144,13 @@ class StudentController extends Controller
         return response()->view('students.index', compact('students'));
     }
 
-    public function viewMassiveUpdate(Request $request)
+    public function viewMassiveUpdate($slug)
     {
-        $department_id = $request->department_id;
-        $student_id = $request->id;
-        $student_name = $request->name;
-        $department = $this->_departmentRepository->find($department_id);
+        $student = $this->_studentRepository->findStudent($slug);
+        $department_id = $student->department_id;
+        $student_id = $student->id;
+        $student_name = $student->name;
+        $department = $this->_departmentRepository->findByID($department_id);
         $department_name = $department->name;
         $results = $this->_resultRepository->getResultByStudentID($student_id);
         $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
@@ -165,5 +171,4 @@ class StudentController extends Controller
 
         return redirect()->back()->with('notification', 'Send e-mail successfully');
     }
-
 }

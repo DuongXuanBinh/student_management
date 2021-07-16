@@ -1,4 +1,4 @@
-{{Form::model($user,array('route'=>array('users.update',$user->id),'class'=>'form-layout','method'=>'put'))}}
+{{Form::model($user,array('route'=>array('user.update',$user->slug),'class'=>'form-layout','method'=>'put'))}}
 <div class="row">
     {{Form::hidden('id')}}
     <div class="col-md-12">

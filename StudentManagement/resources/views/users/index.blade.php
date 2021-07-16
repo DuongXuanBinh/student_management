@@ -29,7 +29,7 @@
             <td class="student-address">{{$user->address}}</td>
             <td class="student-phone">{{$user->phone}}</td>
             <td>
-                <a href="/users/edit" class="update-student">
+                <a href="/user/{{$user->slug}}/edit" class="update-student">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-pencil" viewBox="0 0 16 16">
                         <path

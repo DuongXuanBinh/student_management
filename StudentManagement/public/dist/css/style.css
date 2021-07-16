@@ -240,11 +240,9 @@ body {
     padding-right: 0 !important;
 }
 
-.modal-open {
-    overflow: visible !important;
-}
-
-
+/*.modal-open {*/
+/*    overflow: visible !important;*/
+/*}*/
 #logreg-forms {
     width: 412px;
     margin: 10vh auto;

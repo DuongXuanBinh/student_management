@@ -62,9 +62,9 @@ class ResultController extends Controller
     }
 
 
-    public function show($id)
+    public function show($slug)
     {
-        $result = $this->_resultRepository->find($id);
+        $result = $this->_resultRepository->find($slug);
 
         return response()->view('results.show', compact('result'));
     }
@@ -75,9 +75,9 @@ class ResultController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        $result = $this->_resultRepository->find($id);
+        $result = $this->_resultRepository->find($slug);
         $subjects = $this->_subjectRepository->index();
         return response()->view('results.edit', compact('result', 'subjects'));
     }
@@ -89,9 +89,9 @@ class ResultController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ResultRequest $request, $id)
+    public function update(ResultRequest $request, $slug)
     {
-        $result = $this->_resultRepository->updateResult($id, $request->all());
+        $result = $this->_resultRepository->updateResult($slug, $request->all());
         if ($result === false) {
             return redirect('/results')->with('notification', 'Update Failed');
         } else {

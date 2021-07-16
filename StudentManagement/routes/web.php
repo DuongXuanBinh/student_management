@@ -32,7 +32,7 @@ Route::group(['middleware' => 'locale'], function () {
         Route::group(['middleware' => 'role:admin'], function () {
             Route::prefix('/students')->group(function () {
                 Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');
-                Route::get('/view-massive-update', [\App\Http\Controllers\StudentController::class, 'viewMassiveUpdate']);
+                Route::get('/{slug}/view-massive-update', [\App\Http\Controllers\StudentController::class, 'viewMassiveUpdate'])->name('students.massive-update');
             });
 
             Route::prefix('/departments')->group(function () {
@@ -51,12 +51,12 @@ Route::group(['middleware' => 'locale'], function () {
             ]);
         });
         Route::group(['middleware' => 'role:student'], function () {
-            Route::prefix('/users')->group(function(){
-                Route::get('/result',[\App\Http\Controllers\UserController::class,'getResult'])->name('users.result');
-                Route::get('/edit',[\App\Http\Controllers\UserController::class,'edit'])->name('users.edit');
-                Route::post('/result/enroll',[\App\Http\Controllers\UserController::class,'enroll'])->name('users.enroll');
+            Route::prefix('/user')->group(function(){
+                Route::get('/result',[\App\Http\Controllers\UserController::class,'getResult'])->name('user.result');
+                Route::get('/{slug}/edit',[\App\Http\Controllers\UserController::class,'edit'])->name('user.edit');
+                Route::post('/result/enroll',[\App\Http\Controllers\UserController::class,'enroll'])->name('user.enroll');
             });
-            Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'update']);
+            Route::resource('user', \App\Http\Controllers\UserController::class)->only(['index', 'update']);
         });
         Route::group(['middleware'=>'role:student|admin'],function(){
             Route::get('/students/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');

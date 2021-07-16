@@ -13,7 +13,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="hidden" name="id">
+                            <input type="hidden" name="slug">
                             <p>{{__("Are you sure to send mail of dismiss all the student with GPA under 5?")}}</p>
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                     <a>
                         <button class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
                     </a>
-                    <a href="/result/dismiss-student">
+                    <a href="/results/dismiss-student">
                         <button class="btn btn-primary">{{__('Submit')}}</button>
                     </a>
                 </div>
@@ -84,8 +84,9 @@
                         <td>{{$result->student_id}}</td>
                         <td>{{$result->subject_id}}</td>
                         <td>{{$result->mark}}</td>
+                        <input type="hidden" name="slug" value="{{$result->slug}}">
                         <td>
-                            <a href="/results/{{$result->id}}/edit" class="update-result">
+                            <a href="/results/{{$result->slug}}/edit" class="update-result">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path

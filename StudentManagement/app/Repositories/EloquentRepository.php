@@ -47,11 +47,9 @@ abstract class EloquentRepository implements RepositoryInterface
      * @param $id
      * @return mixed|void
      */
-    public function find($id)
+    public function find($slug)
     {
-        $result = $this->_model->find($id);
-
-        return $result;
+        return $this->_model->where('slug',$slug)->firstOrFail();
     }
 
     /**Create
@@ -60,9 +58,7 @@ abstract class EloquentRepository implements RepositoryInterface
      */
     public function create(array $attribute)
     {
-        $result = $this->_model->create($attribute);
-
-        return $result;
+        return $this->_model->create($attribute);
     }
 
     /**Update
@@ -70,9 +66,9 @@ abstract class EloquentRepository implements RepositoryInterface
      * @param array $attribute
      * @return mixed|void
      */
-    public function update($id, array $attribute)
+    public function update($slug, array $attribute)
     {
-        $result = $this->find($id);
+        $result = $this->find($slug);
 
         if ($result) {
             $result->update($attribute);
@@ -90,6 +86,7 @@ abstract class EloquentRepository implements RepositoryInterface
     public function delete($id)
     {
         $result = $this->find($id);
+
         if ($result) {
             $result->delete();
 

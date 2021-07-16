@@ -22,19 +22,19 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
         return parent::create($attribute);
     }
 
-    public function deleteSubject($id)
+    public function deleteSubject($slug)
     {
-        return parent::delete($id);
+        return parent::delete($slug);
     }
 
-    public function updateSubject($id, array $attribute)
+    public function updateSubject($slug, array $attribute)
     {
-        return parent::update($id, $attribute);
+        return parent::update($slug, $attribute);
     }
 
-    public function find($id)
+    public function find($slug)
     {
-        return parent::find($id);
+        return parent::find($slug);
     }
 
     /**

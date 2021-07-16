@@ -39,7 +39,6 @@ $(document).ready(function () {
             url: _url,
             token: _token,
             data: $(this).serialize(),
-            dataType: JSON,
             success: function (data) {
                 $("#update-notification").modal('show');
                 $("#update-notification .modal-body .col-md-12").empty();
@@ -90,30 +89,30 @@ $(document).ready(function () {
     });
 
     $(".delete-student").click(function () {
-        var id = $(this).parent().siblings('td:first-of-type').text();
+        var id = $(this).parent().siblings('input[type="hidden"]').val();
         var action = '/students/' + id;
-        $("#delete-student input[name='id']").val(id);
+        $("#delete-student input[name='slug']").val(id);
         $("#delete-student form").attr('action', action);
     });
 
     $(".delete-department").click(function () {
-        var id = $(this).parent().siblings('td:first-of-type').text();
+        var id = $(this).parent().siblings('input[type="hidden"]').val();
         var action = '/departments/' + id;
-        $("#delete-department input[name='id']").val(id);
+        $("#delete-department input[name='slug']").val(id);
         $("#delete-department form").attr('action', action);
     });
 
     $(".delete-result").click(function () {
-        var id = $(this).parent().siblings('td:first-of-type').text();
+        var id = $(this).parent().siblings('input[type="hidden"]').val();
         var action = '/results/' + id;
-        $("#delete-result input[name='id']").val(id);
+        $("#delete-result input[name='slug']").val(id);
         $("#delete-result form").attr('action', action);
     });
 
     $(".delete-subject").click(function () {
-        var id = $(this).parent().siblings('td:first-of-type').text();
+        var id = $(this).parent().siblings('input[type="hidden"]').val();
         var action = '/subjects/' + id;
-        $("#delete-subject input[name='id']").val(id);
+        $("#delete-subject input[name='slug']").val(id);
         $("#delete-subject form").attr('action', action);
     });
 

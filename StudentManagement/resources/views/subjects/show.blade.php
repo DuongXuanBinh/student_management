@@ -16,7 +16,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="hidden" name="id">
+                                <input type="hidden" name="slug">
                                 <p>{{__('Are you sure to delete this subject?')}}</p>
                             </div>
                         </div>
@@ -54,8 +54,9 @@
                     <td>{{$subject->id}}</td>
                     <td>{{$subject->name}}</td>
                     <td>{{$subject->department->name}}</td>
+                    <input type="hidden" name="slug" value="{{$student->slug}}">
                     <td>
-                        <a href="subjects/{{$subject->id}}/edit" class="update-subject">
+                        <a href="subjects/{{$subject->slug}}/edit" class="update-subject">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-pencil" viewBox="0 0 16 16">
                                 <path

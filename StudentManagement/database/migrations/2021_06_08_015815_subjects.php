@@ -19,6 +19,7 @@ class Subjects extends Migration
              $table->string('name');
              $table->unsignedBigInteger('department_id');
              $table->foreign('department_id')->references('id')->on('departments');
+             $table->string('slug');
              $table->timestamps();
         });
     }

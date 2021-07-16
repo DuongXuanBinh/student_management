@@ -38,9 +38,10 @@
     </div>
     {{Form::close()}}
 @else
-    {{Form::model($result,array('route'=>array('results.update',$result->id),'class'=>'form-layout','method'=>'put'))}}
+    {{Form::model($result,array('route'=>array('results.update',$result->slug),'class'=>'form-layout','method'=>'put'))}}
     <div class="row">
         {{Form::hidden('id')}}
+        {{Form::hidden('slug',$result->slug)}}
         <div class="col-md-12">
             <div class="col-md-4">
                 {{Form::label('student_id',__('Student ID'))}}

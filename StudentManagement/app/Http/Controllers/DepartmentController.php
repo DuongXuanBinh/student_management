@@ -7,6 +7,7 @@ use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -66,12 +67,12 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return
+     * @param $slug
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $department = $this->_departmentRepository->find($id);
+        $department = $this->_departmentRepository->find($slug);
 
         return response()->view('departments.show', compact('department'));
 
@@ -80,12 +81,12 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return
+     * @param $slug
+     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        $department = $this->_departmentRepository->find($id);
+        $department = $this->_departmentRepository->find($slug);
 
         return response()->view('departments.edit', compact('department'));
     }
@@ -96,9 +97,9 @@ class DepartmentController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(DepartmentRequest $request, $id)
+    public function update(DepartmentRequest $request, $slug)
     {
-        $result = $this->_departmentRepository->updateDepartment($id, $request->all());
+        $result = $this->_departmentRepository->updateDepartment($slug, $request->all());
         if ($result === false) {
             return redirect()->back()->with('notification', 'Update Failed');
         } else {
@@ -112,22 +113,25 @@ class DepartmentController extends Controller
      * @param int $id
      * @return
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
+        $id = $this->_departmentRepository->find($slug)->id;
         $subjects = $this->_subjectRepository->getSubjectID($id);
-        if (count($subjects) != 0) {
-            $this->_resultRepository->deleteSubjectResult($subjects);
-            $this->_subjectRepository->deleteDepartmentSubject($id);
-        }
         $students = $this->_studentRepository->getStudent($id);
-        if (count($students) != 0) {
-            $this->_studentRepository->deleteDepartmentStudent($id);
-        }
-
-        $delete_department = $this->_departmentRepository->deleteDepartment($id);
-        if ($delete_department === true) {
+        DB::beginTransaction();
+        try {
+            if (count($subjects) != 0) {
+                $this->_resultRepository->deleteSubjectResult($subjects);
+                $this->_subjectRepository->deleteDepartmentSubject($id);
+            }
+            if (count($students) != 0) {
+                $this->_studentRepository->deleteDepartmentStudent($id);
+            }
+            $this->_departmentRepository->deleteDepartment($slug);
+            DB::commit();
             return redirect()->back()->with('notification', 'Delete Successfully');
-        } else {
+        } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('notification', 'Delete Failed');
         }
     }

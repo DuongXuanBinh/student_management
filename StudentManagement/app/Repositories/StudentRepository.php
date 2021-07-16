@@ -25,19 +25,19 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return parent::create($attribute);
     }
 
-    public function deleteStudent($id)
+    public function deleteStudent($slug)
     {
-        return parent::delete($id);
+        return parent::delete($slug);
     }
 
-    public function updateStudent($id, array $attribute)
+    public function updateStudent($slug, array $attribute)
     {
-        return parent::update($id, $attribute);
+        return parent::update($slug, $attribute);
     }
 
-    public function findStudentById($id)
+    public function findStudent($slug)
     {
-        return parent::find($id);
+        return parent::find($slug);
     }
 
     public function filterStudent(Request $request, $result_per_student, $subject_per_department, $student_by_mark)
@@ -115,9 +115,9 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return $student_id;
     }
 
-    public function deleteDepartmentStudent($id)
+    public function deleteDepartmentStudent($department_id)
     {
-        $result = $this->_model->where('department_id', $id);
+        $result = $this->_model->where('department_id', $department_id);
         if ($result) {
             $result->delete();
 
@@ -148,6 +148,11 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $student_id = $this->_model->select('id')->where('email', $email)->first()->id;
 
         return $student_id;
+    }
+
+    public function findStudentByID($id)
+    {
+        return $this->_model->where('id',$id)->firstOrFail();
     }
 
 }

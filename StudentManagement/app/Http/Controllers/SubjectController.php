@@ -53,9 +53,9 @@ class SubjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $subject = $this->_subjectRepository->find($id);
+        $subject = $this->_subjectRepository->find($slug);
         $departments = $this->_departmentRepository->index();
 
         return response()->view('subjects.show', compact('subject', 'departments'));
@@ -67,9 +67,9 @@ class SubjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        $subject = $this->_subjectRepository->find($id);
+        $subject = $this->_subjectRepository->find($slug);
         $departments = $this->_departmentRepository->index();
 
         return response()->view('subjects.edit', compact('subject', 'departments'));
@@ -82,9 +82,9 @@ class SubjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SubjectRequest $request, $id)
+    public function update(SubjectRequest $request, $slug)
     {
-        $result = $this->_subjectRepository->updateSubject($id, $request->all());
+        $result = $this->_subjectRepository->updateSubject($slug, $request->all());
         if ($result === false) {
             return redirect()->back()->with('notification', 'Update Failed');
         } else {
@@ -98,10 +98,11 @@ class SubjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
+        $id = $this->_subjectRepository->find($slug)->id;
         $delete_result = $this->_resultRepository->deleteSubjectResult($id);
-        $delete_subject = $this->_subjectRepository->deleteSubject($id);
+        $delete_subject = $this->_subjectRepository->deleteSubject($slug);
         if ($delete_subject === true && $delete_result === true) {
             return redirect('/subjects')->with('notification', 'Delete Successfully');
         } else {

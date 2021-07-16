@@ -32,7 +32,7 @@
                 <label style="font-weight:bold" >{{__('Enroll')}}</label>
             </div>
             <div class="row col-md-12">
-                <form action="{{route('users.enroll')}}" method="post" id="enroll-subject">
+                <form action="{{route('user.enroll')}}" method="post" id="enroll-subject">
                     @csrf
                     <input type="hidden" name="id" value="{{$user->id}}">
                     <select name="name">

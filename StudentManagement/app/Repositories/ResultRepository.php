@@ -25,19 +25,19 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return parent::create($attribute);
     }
 
-    public function deleteResult($id)
+    public function deleteResult($slug)
     {
-        return parent::delete($id);
+        return parent::delete($slug);
     }
 
-    public function updateResult($id, array $attribute)
+    public function updateResult($slug, array $attribute)
     {
-        return parent::update($id, $attribute);
+        return parent::update($slug, $attribute);
     }
 
-    public function find($id)
+    public function find($slug)
     {
-        return parent::find($id);
+        return parent::find($slug);
     }
 
     public function massiveUpdateResult(Request $request, Student $student)
@@ -87,7 +87,6 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
 
             return true;
         }
-
         return false;
     }
 

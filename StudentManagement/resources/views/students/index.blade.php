@@ -15,7 +15,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="hidden" name="id">
+                                <input type="hidden" name="slug">
                                 <p>{{__('Are you sure to delete this student?')}}</p>
                             </div>
                         </div>
@@ -161,9 +161,10 @@
                             <td class="student-birthday">{{$student->birthday}}</td>
                             <td class="student-address">{{$student->address}}</td>
                             <td class="student-phone">{{$student->phone}}</td>
+                            <input type="hidden" name="slug" value={{$student->slug}}>
                             @role('admin')
                             <td>
-                                <a href="/students/{{$student->id}}/edit" class="update-student">
+                                <a href="/students/{{$student->slug}}/edit" class="update-student">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                          fill="currentColor"
                                          class="bi bi-pencil" viewBox="0 0 16 16">
@@ -183,13 +184,7 @@
                                 </a>
                             </td>
                             <td>
-                                <form action="students/view-massive-update" method="get">
-                                    <input type="hidden" name="id" value="{{$student->id}}">
-                                    <input type="hidden" name="name" value="{{$student->name}}">
-                                    <input type="hidden" name="department_id"
-                                           value="{{$student->department_id}}">
-                                    <button type="submit">{{__('Update Result')}}</button>
-                                </form>
+                                <a href="{{route('students.massive-update',[$student->slug])}}"><button type="submit">{{__('Update Result')}}</button></a>
                             </td>
                             @endrole
                         </tr>
