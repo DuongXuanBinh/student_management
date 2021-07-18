@@ -7,7 +7,7 @@
                 {{Form::label('student_id',__('Student ID'))}}
             </div>
             <div class="col-md-8">
-                {{Form::text('student_id[]')}}
+                {{Form::text('student_id')}}
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
                 {{Form::label('subject_id',__('Subject'))}}
             </div>
             <div class="col-md-8">
-                {{Form::select('subject_id[]',$subjects->pluck('name','id'))}}
+                {{Form::select('subject_id',$subjects->pluck('name','id'))}}
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
                 {{Form::label('mark',__('Mark'))}}
             </div>
             <div class="col-md-8">
-                {{Form::text('mark[]')}}
+                {{Form::text('mark')}}
             </div>
         </div>
     </div>
@@ -47,7 +47,7 @@
                 {{Form::label('student_id',__('Student ID'))}}
             </div>
             <div class="col-md-8">
-                {{Form::text('student_id[]')}}
+                {{Form::text('student_id')}}
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
                 {{Form::label('subject_id',__('Subject'))}}
             </div>
             <div class="col-md-8">
-                {{Form::select('subject_id[]',$subjects->pluck('name','id'))}}
+                {{Form::select('subject_id',$subjects->pluck('name','id'))}}
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
                 {{Form::label('mark',__('Mark'))}}
             </div>
             <div class="col-md-8">
-                {{Form::text('mark[]')}}
+                {{Form::text('mark')}}
             </div>
         </div>
     </div>

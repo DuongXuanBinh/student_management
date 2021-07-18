@@ -45,7 +45,8 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         $subject_id = $request->subject_id;
         $mark = $request->mark;
         for ($i = 0; $i < count($subject_id); $i++) {
-            $subject[$subject_id[$i]] = ['mark' => $mark[$i]];
+            $subject[$subject_id[$i]] = ['mark' => $mark[$i],
+                                         'slug' => $student->id.'-'.$subject_id[$i].'-'.$mark[$i]];
         }
         $student->subjects()->sync($subject);
         $result = $this->getResultByStudentID($student->id);

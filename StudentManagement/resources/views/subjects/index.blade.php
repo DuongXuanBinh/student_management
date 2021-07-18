@@ -77,6 +77,9 @@
                     </tr>
                 @endforeach
             </table>
+            <div style="text-align: center">
+                {{$subjects->links()}}
+            </div>
         </div>
     </div>
 @endsection

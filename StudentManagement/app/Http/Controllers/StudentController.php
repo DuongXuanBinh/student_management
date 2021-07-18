@@ -120,7 +120,7 @@ class StudentController extends Controller
         DB::beginTransaction();
         try {
             $this->_resultRepository->deleteStudentResult($id);
-            $this->_studentRepository->deleteStudent($id);
+            $this->_studentRepository->deleteStudent($slug);
             DB::commit();
             return redirect()->back()->with('notification', 'Successfully deleted');
         } catch (\Exception $e) {
@@ -163,6 +163,9 @@ class StudentController extends Controller
         $result_per_student = $this->_resultRepository->getResultQuantity();
         $subject_per_department = $this->_subjectRepository->getSubjectQuantity();
         $complete_student = $this->_studentRepository->checkCompletion(1, $result_per_student, $subject_per_department);
+        if(count($complete_student) === 0){
+            return redirect()->back()->with('notification', 'No student with GPA under 5 this time');
+        }
         $bad_student = $this->_resultRepository->getBadStudent($complete_student);
 
         $student_id = $this->_studentRepository->getStudentIDToDismiss($bad_student);

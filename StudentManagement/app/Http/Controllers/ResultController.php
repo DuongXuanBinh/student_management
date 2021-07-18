@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResultRequest;
+use App\Http\Requests\ResultRequest2;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
@@ -50,7 +51,7 @@ class ResultController extends Controller
      * @param ResultRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ResultRequest $request)
+    public function store(ResultRequest2 $request)
     {
         $subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
         if ($subject === null) {
@@ -72,7 +73,7 @@ class ResultController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param $slug
      * @return \Illuminate\Http\Response
      */
     public function edit($slug)
@@ -85,17 +86,17 @@ class ResultController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param ResultRequest $request
-     * @param $id
+     * @param ResultRequest2 $request
+     * @param $slug
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ResultRequest $request, $slug)
+    public function update(ResultRequest2 $request, $slug)
     {
         $result = $this->_resultRepository->updateResult($slug, $request->all());
         if ($result === false) {
             return redirect('/results')->with('notification', 'Update Failed');
         } else {
-            return redirect()->back()->with('notification', 'Update Successfully');
+            return redirect('/results')->with('notification', 'Update Successfully');
         }
     }
 
@@ -124,7 +125,7 @@ class ResultController extends Controller
     public function massiveUpdate(ResultRequest $request)
     {
         $student_id = array_unique($request->student_id);
-        $student = $this->_studentRepository->findStudentById($student_id[0]);
+        $student = $this->_studentRepository->findStudentByID($student_id[0]);
         $results = $this->_resultRepository->massiveUpdateResult($request, $student);
 
         return $results;

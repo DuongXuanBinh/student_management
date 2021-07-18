@@ -17,7 +17,7 @@ class Result extends Model
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom(['id','subject_id'])
+            ->generateSlugsFrom(['student_id','subject_id','mark'])
             ->saveSlugsTo('slug');
     }
 
