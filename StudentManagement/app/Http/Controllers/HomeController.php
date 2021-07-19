@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-
 
 class HomeController extends Controller
 {
@@ -33,12 +31,4 @@ class HomeController extends Controller
         return redirect('/user/');
 
     }
-
-    public function changeLanguage($language)
-    {
-        Session::put('website_language', $language);
-
-        return redirect()->back();
-    }
-
 }

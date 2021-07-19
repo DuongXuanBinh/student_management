@@ -36,11 +36,11 @@ class StudentController extends Controller
         $this->_userRepository = $userRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $students = $this->_studentRepository->index();
+        $students = $this->_studentRepository->filterStudent($request->all());
 
-        return response()->view('students.index', compact('students'));
+        return response()->view('students.index',compact('students'));
     }
 
     /**
@@ -127,21 +127,6 @@ class StudentController extends Controller
             DB::rollBack();
             return redirect()->back()->with('notification', 'Delete Failed');
         }
-    }
-
-    public function filterStudent(Request $request)
-    {
-        $mark_from = $request->mark_from;
-        $mark_to = $request->mark_to;
-        $result_per_student = $this->_resultRepository->getResultQuantity();
-        $subject_per_department = $this->_subjectRepository->getSubjectQuantity();
-        $studentID_by_mark = $this->_resultRepository->getStudentByMarkRange($mark_from, $mark_to);
-        $students = $this->_studentRepository->filterStudent($request, $result_per_student, $subject_per_department, $studentID_by_mark);
-        $request->flash();
-        if (!$students) {
-            return redirect()->back()->withInput()->with('notification', 'No record found');
-        }
-        return response()->view('students.index', compact('students'));
     }
 
     public function viewMassiveUpdate($slug)

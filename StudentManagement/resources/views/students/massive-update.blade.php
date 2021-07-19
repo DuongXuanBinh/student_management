@@ -1,6 +1,9 @@
 @extends('layout.admin_template')
 
 @section('content')
+    <?php
+    $subjects = $subjects->pluck('name','id');
+    ?>
     <div class="massive-update">
         <div class="row">
             <div class="col-md-12">
@@ -29,7 +32,7 @@
                 <p class="errorTxt"></p>
             </div>
         </div>
-        {{Form::open(['method'=>'put','url'=>'/results/massive-update-result','id'=>'massive-form'])}}
+        {{Form::open(['method'=>'put','route'=>'results.massive-update','id'=>'massive-form'])}}
         <div class="result-set">
             @foreach($results as $result)
                 <div class="row result-subset">
@@ -40,7 +43,7 @@
                             {{Form::label('subject_id',__('Subject'))}}
                         </div>
                         <div class="col-md-4">
-                            {{Form::select('subject_id',$subjects->pluck('name','id'),$result->subject_id)}}
+                            {{Form::select('subject_id', $subjects, $result->subject_id)}}
                         </div>
                         <div class="col-md-2">
                             {{Form::label('mark',__('Mark'))}}

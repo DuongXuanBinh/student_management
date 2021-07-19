@@ -24,7 +24,7 @@ class SubjectFactory extends Factory
     {
         return [
             'name' => $this->faker->jobTitle,
-            'department_id' => Department::pluck('id')->random(),
+            'department_id' => 1,
         ];
     }
 }

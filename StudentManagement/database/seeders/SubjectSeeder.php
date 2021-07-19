@@ -15,15 +15,6 @@ class SubjectSeeder extends Seeder
      */
     public function run()
     {
-        $subjects = Subject::factory()->count(50)->make();
-        foreach ($subjects as $subject) {
-            repeat:
-            try {
-                $subject->save();
-            } catch (QueryException $e) {
-                $subject = Subject::factory()->make();
-                goto repeat;
-            }
-        }
+        $subjects = Subject::factory()->count(10)->make();
     }
 }

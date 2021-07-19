@@ -32,21 +32,10 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">{{__('HEADER')}}</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="{{(request()->segment(1)=='students') ? 'active' : ''}}"><a href="/students"><i class="fa fa-link"></i> <span>{{__('Students')}}</span></a></li>
-            <li class="{{(request()->segment(1)=='departments') ? 'active' : ''}}"><a href="/departments" ><i class="fa fa-link"></i> <span>{{__('Departments')}}</span></a></li>
-            <li class="{{(request()->segment(1)=='subjects') ? 'active' : ''}}"><a href="/subjects"><i class="fa fa-link"></i> <span>{{__('Subjects')}}</span></a></li>
-            <li class="{{(request()->segment(1)=='results') ? 'active' : ''}}"><a href="/results"><i class="fa fa-link"></i> <span>{{__('Results')}}</span></a></li>
-{{--            <li class="treeview">--}}
-{{--                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>--}}
-{{--                    <span class="pull-right-container">--}}
-{{--                <i class="fa fa-angle-left pull-right"></i>--}}
-{{--              </span>--}}
-{{--                </a>--}}
-{{--                <ul class="treeview-menu">--}}
-{{--                    <li><a href="#">Link in level 2</a></li>--}}
-{{--                    <li><a href="#">Link in level 2</a></li>--}}
-{{--                </ul>--}}
-{{--            </li>--}}
+            <li class="{{(request()->segment(1)=='students') ? 'active' : ''}}"><a href="{{ route('students.index') }}"><i class="fa fa-link"></i> <span>{{__('Students')}}</span></a></li>
+            <li class="{{(request()->segment(1)=='departments') ? 'active' : ''}}"><a href="{{ route('departments.index') }}" ><i class="fa fa-link"></i> <span>{{__('Departments')}}</span></a></li>
+            <li class="{{(request()->segment(1)=='subjects') ? 'active' : ''}}"><a href="{{ route('subjects.index') }}"><i class="fa fa-link"></i> <span>{{__('Subjects')}}</span></a></li>
+            <li class="{{(request()->segment(1)=='results') ? 'active' : ''}}"><a href="{{ route('results.index') }}"><i class="fa fa-link"></i> <span>{{__('Results')}}</span></a></li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>

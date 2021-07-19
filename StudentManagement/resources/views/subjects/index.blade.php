@@ -32,7 +32,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a href="subjects/create" class="add-subject">
+            <a href="{{ route('subjects.create') }}" class="add-subject">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-plus-square" viewBox="0 0 16 16">
                     <path
@@ -57,7 +57,7 @@
                         <td>{{$subject->department->name}}</td>
                         <input type="hidden" name="slug" value="{{$subject->slug}}">
                         <td>
-                            <a href="subjects/{{$subject->slug}}/edit" class="update-subject">
+                            <a href="{{ route('subjects.edit',[$subject->slug]) }}" class="update-subject">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path

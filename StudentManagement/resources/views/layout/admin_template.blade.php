@@ -174,7 +174,7 @@ desired effect
                 <h3 class="control-sidebar-heading">{{__('Tasks Progress')}}</h3>
                 <ul class="control-sidebar-menu">
                     <li>
-                        <a href="javascript:;">
+                        <a href="">
                             <h4 class="control-sidebar-subheading">
                                 {{__('Custom Template Design')}}
                                 <span class="pull-right-container">

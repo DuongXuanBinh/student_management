@@ -11,6 +11,7 @@ use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -116,6 +117,13 @@ class UserController extends Controller
         $this->_resultRepository->enrollSubject($request);
 
         return back()->with('notification','Enroll Successfully');
+    }
+
+    public function changeLanguage($language)
+    {
+        Session::put('website_language', $language);
+
+        return redirect()->back();
     }
 
 }

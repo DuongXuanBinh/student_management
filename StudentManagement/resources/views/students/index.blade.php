@@ -33,7 +33,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row col-md-6">
-                <a href="/students/create" class="add-student">
+                @role('admin')
+                <a href="{{ route('students.create') }}" class="add-student">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-plus-square" viewBox="0 0 16 16">
                         <path
@@ -42,6 +43,7 @@
                             d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
                 </a>
+                @endrole
             </div>
             <div class="row col-md-6">
                 <div class="row">
@@ -58,16 +60,16 @@
                 </div>
                 <div class="row filter-student">
                     <div class="col-md-12">
-                        <form method="get" action="/students/filter">
+                        <form method="get" action="{{ route('students.index') }}">
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="age-range">{{__('Age Range')}}:</label>
                                 </div>
                                 <div class="col-md-8">
                                     <label for="age-from">{{__('From')}}: </label>
-                                    <input type="text" name="age_from" value="{{old('age_from')}}">
+                                    <input type="text" id="age-from" name="age_from" value="{{old('age_from')}}">
                                     <label for="age-to">{{__('To')}}: </label>
-                                    <input type="text" name="age_to" value="{{old('age_to')}}">
+                                    <input type="text" id="age-to" name="age_to" value="{{old('age_to')}}">
                                 </div>
                             </div>
                             <div class="row">
@@ -76,28 +78,28 @@
                                 </div>
                                 <div class="col-md-8">
                                     <label for="mark-from">{{__('From')}}: </label>
-                                    <input type="text" name="mark_from" value="{{old('mark_from')}}">
+                                    <input type="text" id="mark-from" name="mark_from" value="{{old('mark_from')}}">
                                     <label for="mark-to">{{__('To')}}: </label>
-                                    <input type="text" name="mark_to" value="{{old('mark_to')}}">
+                                    <input type="text" id="mark-to" name="mark_to" value="{{old('mark_to')}}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="mark-range">{{__('Mobile Number')}}: </label>
+                                    <label for="mobile-number">{{__('Mobile Number')}}: </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-check-input" type="checkbox" name="mobile_network[]"
+                                    <input class="form-check-input" type="checkbox" name="mobile-number[]"
                                            id="viettel"
-                                           value="^09[3456]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[3456]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
-                                    <label class="form-check-label" for="inlineCheckbox1">Viettel</label>
-                                    <input class="form-check-input" type="checkbox" name="mobile_network[]"
+                                           value="viettel" @if(old('mobile_network') != null) {{in_array('^09[3456]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
+                                    <label class="form-check-label" for="viettel">Viettel</label>
+                                    <input class="form-check-input" type="checkbox" name="mobile-number[]"
                                            id="vinaphone"
-                                           value="^09[012]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[012]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
-                                    <label class="form-check-label" for="inlineCheckbox2">Vinaphone</label>
-                                    <input class="form-check-input" type="checkbox" name="mobile_network[]"
+                                           value="" @if(old('mobile_network') != null) {{in_array('^09[012]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
+                                    <label class="form-check-label" for="vinaphone">Vinaphone</label>
+                                    <input class="form-check-input" type="checkbox" name="mobile-number[]"
                                            id="mobiphone"
                                            value="^09[789]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[789]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
-                                    <label class="form-check-label" for="inlineCheckbox3">Mobiphone</label>
+                                    <label class="form-check-label" for="mobiphone">Mobiphone</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -164,7 +166,7 @@
                             <input type="hidden" name="slug" value={{$student->slug}}>
                             @role('admin')
                             <td>
-                                <a href="/students/{{$student->slug}}/edit" class="update-student">
+                                <a href="{{ route('students.edit',[$student->slug]) }}" class="update-student">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                          fill="currentColor"
                                          class="bi bi-pencil" viewBox="0 0 16 16">
@@ -184,7 +186,9 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="{{route('students.massive-update',[$student->slug])}}"><button type="submit">{{__('Update Result')}}</button></a>
+                                <a href="{{route('students.massive-update',[$student->slug])}}">
+                                    <button type="submit">{{__('Update Result')}}</button>
+                                </a>
                             </td>
                             @endrole
                         </tr>

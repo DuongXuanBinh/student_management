@@ -5,6 +5,32 @@
         <h3>{{__('Result List')}}</h3>
     </div>
 
+    <div class="modal fade" id="dismiss-student" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{__('Dismiss Student')}}t</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="hidden" name="slug">
+                            <p>{{__("Are you sure to send mail of dismiss all the student with GPA under 5?")}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a>
+                        <button class="btn btn-secondary" data-dismiss="modal">{{__('Cancel')}}</button>
+                    </a>
+                    <a href="{{ route('students.dismiss') }}">
+                        <button class="btn btn-primary">{{__('Submit')}}</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="delete-result" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -33,7 +59,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <a data-toggle="modal" href="/results/create" class="add-result">
+            <a data-toggle="modal" href="{{ route('results.create') }}" class="add-result">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-plus-square" viewBox="0 0 16 16">
                     <path
@@ -60,7 +86,7 @@
                     <td>{{$result->mark}}</td>
                     <input type="hidden" name="slug" value="{{$result->slug}}">
                     <td>
-                        <a href="/results/{{$result->slug}}/edit" class="update-result">
+                        <a href="{{ route('results.edit',[$result->slug]) }}" class="update-result">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-pencil" viewBox="0 0 16 16">
                                 <path

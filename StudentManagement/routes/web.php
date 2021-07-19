@@ -1,8 +1,14 @@
 <?php
 
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SocialController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ResultController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,49 +24,48 @@ Route::group(['middleware' => 'locale'], function () {
     Route::get('/', function () {
         return view('welcome');
     });
-    Route::get('/change-language/{language}', [\App\Http\Controllers\HomeController::class, 'changeLanguage'])->name('change-language');
-    Route::get('callback/{provider}',[\App\Http\Controllers\SocialController::class,'callback']);
-    Route::get('/auth/redirect/{provider}',[\App\Http\Controllers\SocialController::class,'redirect'])->name('login.sns');
+    Route::get('/change-language/{language}', [UserController::class, 'changeLanguage'])->name('change-language');
+    Route::get('callback/{provider}',[SocialController::class,'callback']);
+    Route::get('/auth/redirect/{provider}',[SocialController::class,'redirect'])->name('login.sns');
 
     require __DIR__ . '/auth.php';
     Auth::routes();
     Route::group(['middleware' => 'auth'], function () {
-        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('dashboard');
         Route::group(['middleware' => 'role:admin'], function () {
             Route::prefix('/students')->group(function () {
-                Route::get('/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');
-                Route::get('/{slug}/view-massive-update', [\App\Http\Controllers\StudentController::class, 'viewMassiveUpdate'])->name('students.massive-update');
+                Route::get('/{slug}/results', [StudentController::class, 'viewMassiveUpdate'])->name('students.massive-update');
             });
 
             Route::prefix('/departments')->group(function () {
-                Route::get('/get-subject', [\App\Http\Controllers\SubjectController::class, 'getSubject']);
+                Route::get('/get-subject', [SubjectController::class, 'getSubject']);
             });
 
             Route::prefix('/results')->group(function () {
-                Route::get('/dismiss-student', [\App\Http\Controllers\StudentController::class, 'sendMailDismiss']);
-                Route::put('/massive-update-result', [\App\Http\Controllers\ResultController::class, 'massiveUpdate']);
+                Route::get('/dismiss-student', [StudentController::class, 'sendMailDismiss'])->name('students.dismiss');
+                Route::put('/massive-update', [ResultController::class, 'massiveUpdate'])->name('results.massive-update');
             });
 
-            Route::resources(['students' => \App\Http\Controllers\StudentController::class,
-                'departments' => \App\Http\Controllers\DepartmentController::class,
-                'subjects' => \App\Http\Controllers\SubjectController::class,
-                'results' => \App\Http\Controllers\ResultController::class,
+            Route::resources(['students' => StudentController::class,
+                'departments' => DepartmentController::class,
+                'subjects' => SubjectController::class,
+                'results' => ResultController::class,
             ]);
         });
         Route::group(['middleware' => 'role:student'], function () {
             Route::prefix('/user')->group(function(){
-                Route::get('/result',[\App\Http\Controllers\UserController::class,'getResult'])->name('user.result');
-                Route::get('/{slug}/edit',[\App\Http\Controllers\UserController::class,'edit'])->name('user.edit');
-                Route::post('/result/enroll',[\App\Http\Controllers\UserController::class,'enroll'])->name('user.enroll');
+                Route::get('/result',[UserController::class,'getResult'])->name('user.result');
+                Route::get('/{slug}/edit',[UserController::class,'edit'])->name('user.edit');
+                Route::post('/result/enroll',[UserController::class,'enroll'])->name('user.enroll');
             });
-            Route::resource('user', \App\Http\Controllers\UserController::class)->only(['index', 'update']);
+            Route::resource('user', UserController::class)->only(['index', 'update']);
         });
         Route::group(['middleware'=>'role:student|admin'],function(){
-            Route::get('/students/filter', [\App\Http\Controllers\StudentController::class, 'filterStudent'])->name('student.filter');
-            Route::resource('students',\App\Http\Controllers\StudentController::class)->only(['index']);
+            Route::get('/students/filter', [StudentController::class, 'filterStudent'])->name('student.filter');
+            Route::resource('students',StudentController::class)->only(['index']);
         });
     });
 });

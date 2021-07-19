@@ -14,10 +14,9 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return \App\Models\Student::class;
     }
 
-    public function index()
+    public function index(array $data)
     {
-        return $this->_model->select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')->orderBy('students.id')->paginate(50);
-
+        return $this->filterStudent($data);
     }
 
     public function createNewStudent(array $attribute)
@@ -40,44 +39,46 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return parent::find($slug);
     }
 
-    public function filterStudent(Request $request, $result_per_student, $subject_per_department, $student_by_mark)
+    public function filterStudent($data)
     {
-        $age_from = $request->age_from;
-        $age_to = $request->age_to;
-        $this_year = Carbon::now()->format('Y');
-        $from_year = $this_year - $age_from;
-        $to_year = $this_year - $age_to;
-        $mobile_network = $request->mobile_network;
-        $status = $request->status;
-        $complete = $this->checkCompletion(1, $result_per_student, $subject_per_department);
-        $in_progress = $this->checkCompletion(2, $result_per_student, $subject_per_department);
-        $students = $this->_model->select('students.*', DB::raw('departments.name as department'))->join('departments', 'departments.id', 'students.department_id')
-            ->whereIn('students.id', $student_by_mark)
-            ->whereYear('students.birthday', '<=', $from_year)
-            ->whereYear('students.birthday', '>=', $to_year)
-            ->where(function ($query) use ($mobile_network) {
-                for ($i = 0; $i < count($mobile_network); $i++) {
-                    if ($i > 0) {
-                        $query->orWhere('students.phone', 'regexp', $mobile_network[$i]);
-                    } else {
-                        $query->where('students.phone', 'regexp', $mobile_network[$i]);
-                    }
-                }
-            })
-            ->where(function ($query) use ($status, $complete, $in_progress) {
-                if (count($status) === 1)
-                    if ($status[0] == 1) {
-                        $query->whereIn('students.id', $complete);
-                    } else {
-                        $query->whereIn('students.id', $in_progress);
-                    }
-            })
-            ->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
-        if (count($students) == 0) {
-            return false;
-        } else {
-            return $students;
+        $current_year = Carbon::now()->format('Y');
+        $students = $this->_model->with(['department' => function($query) {
+            $query->select('name');
+        }]);
+        if(array_key_exists('age_from',$data)){
+            $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
         }
+        if(array_key_exists('age_to',$data)){
+            $students->whereYear('students.birthday', '>=', $current_year - $data['age_to']);
+        }
+//        if(array_key_exists('mark_from',$data)){
+//            $students->whereHas('department')->whereHas('subjects')->whereHas('results')->where('mark','>=',$data['mark_from']);
+//        }
+//        if(array_key_exists('mark_to',$data)){
+//            $students->whereHas('department')->whereHas('subjects')->whereHas('results')->where('mark','>=',$data['mark_to']);
+//        }
+//            ->whereIn('students.id', $student_by_mark)
+//            ->whereYear('students.birthday', '>=', $to_year)
+//            ->where(function ($query) use ($mobile_network) {
+//                for ($i = 0; $i < count($mobile_network); $i++) {
+//                    if ($i > 0) {
+//                        $query->orWhere('students.phone', 'regexp', $mobile_network[$i]);
+//                    } else {
+//                        $query->where('students.phone', 'regexp', $mobile_network[$i]);
+//                    }
+//                }
+//            })
+//            ->where(function ($query) use ($status, $complete, $in_progress) {
+//                if (count($status) === 1) {
+//                    if ($status[0] == 1) {
+//                        $query->whereIn('students.id', $complete);
+//                    } else {
+//                        $query->whereIn('students.id', $in_progress);
+//                    }
+//                }
+//
+//            })
+        return $students->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
     }
 
 

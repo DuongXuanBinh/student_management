@@ -90,7 +90,7 @@
                                 {{__('Hello')}}, {{ucfirst(Auth::user()->student->name)}}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{Auth::user()->hasRole('admin') ? '/students' : '/users'}}">{{__('Main Page')}}</a>
+                                <a class="dropdown-item" href="{{Auth::user()->hasRole('admin') ? route('students.index') : route('user.index')}}">{{__('Main Page')}}</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

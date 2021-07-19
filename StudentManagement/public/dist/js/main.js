@@ -66,27 +66,27 @@ $(document).ready(function () {
         })
     });
 
-    $("#massive-form").submit(function (e) {
-        var _url = $(this).attr('action');
-        e.preventDefault();
-        $.ajax({
-            type: "put",
-            url: _url,
-            data: $(this).serialize(),
-            success: function () {
-                $("#update-notification").modal('show');
-                $("#update-notification .modal-body .col-md-12").empty();
-                $("#update-notification .modal-body .col-md-12").append('<p>Update Successfully</p>');
-            },
-            error: function (xhr) {
-                $("#update-notification").modal('show');
-                $("#update-notification .modal-body .col-md-12").empty();
-                $.each(xhr.responseJSON.errors, function (i, error) {
-                    $("#update-notification .modal-body .col-md-12").append('<p>' + error + '</p>');
-                });
-            }
-        })
-    });
+    // $("#massive-form").submit(function (e) {
+    //     var _url = $(this).attr('action');
+    //     e.preventDefault();
+    //     $.ajax({
+    //         type: "put",
+    //         url: _url,
+    //         data: $(this).serialize(),
+    //         success: function () {
+    //             $("#update-notification").modal('show');
+    //             $("#update-notification .modal-body .col-md-12").empty();
+    //             $("#update-notification .modal-body .col-md-12").append('<p>Update Successfully</p>');
+    //         },
+    //         error: function (xhr) {
+    //             $("#update-notification").modal('show');
+    //             $("#update-notification .modal-body .col-md-12").empty();
+    //             $.each(xhr.responseJSON.errors, function (i, error) {
+    //                 $("#update-notification .modal-body .col-md-12").append('<p>' + error + '</p>');
+    //             });
+    //         }
+    //     })
+    // });
 
     $(".delete-student").click(function () {
         var id = $(this).parent().siblings('input[type="hidden"]').val();
@@ -212,31 +212,6 @@ $(() => {
     $('#logreg-forms #btn-signup').click(toggleSignUp);
     $('#logreg-forms #cancel_signup').click(toggleSignUp);
 })
-
-$(".filter-student button[type='submit']").click(function () {
-    var age_from = $(".filter-student input[name='age_from']").val();
-    var age_to = $(".filter-student input[name='age_to']").val();
-    var mark_from = $(".filter-student input[name='mark_from']").val();
-    var mark_to = $(".filter-student input[name='mark_to']").val();
-    if (age_from === '') {
-        $(".filter-student input[name='age_from']").val('0').css('color', 'transparent');
-    }
-    if (age_to === '') {
-        $(".filter-student input[name='age_to']").val('100').css('color', 'transparent');
-    }
-    if (mark_from === '') {
-        $(".filter-student input[name='mark_from']").val('0').css('color', 'transparent');
-    }
-    if (mark_to === '') {
-        $(".filter-student input[name='mark_to']").val('10').css('color', 'transparent');
-    }
-    if ($("#vinaphone").is(':unchecked') && $("#viettel").is(':unchecked') && $("#mobiphone").is(':unchecked')) {
-        $("#vinaphone, #mobiphone, #viettel").prop('checked', 'checked').css('color', 'transparent');
-    }
-    if ($("#complete").is(':unchecked') && $("#in-progress").is(':unchecked')) {
-        $("#complete, #in-progress").prop('checked', 'checked').css('color', 'transparent');
-    }
-});
 
 $("input[type=checkbox]").click(function(){
     var check = $(this).is(':checked');

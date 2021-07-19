@@ -1,5 +1,5 @@
 @if(request()->segment(2) == 'create')
-    {{Form::open(['method'=>'post','url'=>'subjects/','class'=>'form-layout'])}}
+    {{Form::open(['method'=>'post','route'=>'subjects.create','class'=>'form-layout'])}}
     <div class="row">
         {{Form::hidden('id')}}
         <div class="col-md-12">

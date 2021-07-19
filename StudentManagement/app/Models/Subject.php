@@ -24,6 +24,11 @@ class Subject extends Model
         return $this->belongsToMany(Student::class);
     }
 
+    public function results()
+    {
+        return $this->belongsToMany(Result::class, 'results', 'id', 'subject_id');
+    }
+
     public function user()
     {
         return $this->hasOne(User::class);
