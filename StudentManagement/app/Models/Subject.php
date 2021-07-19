@@ -26,7 +26,7 @@ class Subject extends Model
 
     public function results()
     {
-        return $this->belongsToMany(Result::class, 'results', 'id', 'subject_id');
+        return $this->belongsToMany(Student::class, 'results', 'subject_id', 'student_id')->withPivot('mark','slug');
     }
 
     public function user()

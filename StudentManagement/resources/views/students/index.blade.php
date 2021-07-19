@@ -157,7 +157,7 @@
                         <tr class="student-details">
                             <td class="student-id">{{$student->id}}</td>
                             <td class="student-name">{{$student->name}}</td>
-                            <td class="student-department">{{$student->department}}</td>
+                            <td class="student-department">{{$student->department->name}}</td>
                             <td class="student-email">{{$student->email}}</td>
                             <td class="student-gender">{{$student->gender === 0 ? 'Female' : 'Male'}}</td>
                             <td class="student-birthday">{{$student->birthday}}</td>

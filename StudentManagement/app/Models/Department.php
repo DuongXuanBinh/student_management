@@ -16,7 +16,7 @@ class Department extends Model
 
     public function subjects()
     {
-        return $this->hasMany(Subject::class, 'subject_id', 'id');
+        return $this->hasMany(Subject::class, 'department_id', 'id');
     }
 
     public function students()

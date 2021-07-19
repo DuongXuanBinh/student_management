@@ -42,18 +42,41 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function filterStudent($data)
     {
         $current_year = Carbon::now()->format('Y');
-        $students = $this->_model->with(['department' => function($query) {
-            $query->select('name');
+        $students = $this->_model->with(['department' => function ($query) {
+            $query->select('id', 'name');
         }]);
-        if(array_key_exists('age_from',$data)){
-            $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
+        if (array_key_exists('age_from', $data)) {
+            if (!is_null($data['age_from'])) {
+                $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
+            }
         }
-        if(array_key_exists('age_to',$data)){
-            $students->whereYear('students.birthday', '>=', $current_year - $data['age_to']);
+        if (array_key_exists('age_to', $data)) {
+            if (!is_null($data['age_to'])) {
+                $students->whereYear('students.birthday', '>=', $current_year - $data['age_to']);
+            }
         }
-//        if(array_key_exists('mark_from',$data)){
-//            $students->whereHas('department')->whereHas('subjects')->whereHas('results')->where('mark','>=',$data['mark_from']);
-//        }
+        if (array_key_exists('mark_from', $data)) {
+            if (!is_null($data['mark_from'])) {
+                $students->whereHas('department', function ($q) use ($data) {
+                    $q->whereHas('subjects', function ($q) use ($data) {
+                        $q->whereHas('results', function ($q) use ($data) {
+                            $q->where('mark', '>=', $data['mark_from']);
+                        });
+                    });
+                });
+            }
+        }
+        if (array_key_exists('mark_to', $data)) {
+            if (!is_null($data['mark_to'])) {
+                $students->whereHas('department', function ($q) use ($data) {
+                    $q->whereHas('subjects', function ($q) use ($data) {
+                        $q->whereHas('results', function ($q) use ($data) {
+                            $q->where('mark', '>=', $data['mark_to']);
+                        });
+                    });
+                });
+            }
+        }
 //        if(array_key_exists('mark_to',$data)){
 //            $students->whereHas('department')->whereHas('subjects')->whereHas('results')->where('mark','>=',$data['mark_to']);
 //        }
@@ -78,6 +101,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 //                }
 //
 //            })
+
         return $students->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
     }
 
@@ -153,7 +177,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function findStudentByID($id)
     {
-        return $this->_model->where('id',$id)->firstOrFail();
+        return $this->_model->where('id', $id)->firstOrFail();
     }
 
 }
