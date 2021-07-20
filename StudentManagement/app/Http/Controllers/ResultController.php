@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ResultRequest;
 use App\Http\Requests\ResultRequest2;
+use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
@@ -13,11 +14,14 @@ class ResultController extends Controller
     protected $_resultRepository;
     protected $_subjectRepository;
     protected $_studentRepository;
+    protected $_departmentRepository;
 
     public function __construct(ResultRepositoryInterface $resultRepository,
                                 SubjectRepositoryInterface $subjectRepository,
-                                StudentRepositoryInterface $studentRepository)
+                                StudentRepositoryInterface $studentRepository,
+                                DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->_departmentRepository = $departmentRepository;
         $this->_resultRepository = $resultRepository;
         $this->_subjectRepository = $subjectRepository;
         $this->_studentRepository = $studentRepository;
@@ -126,8 +130,13 @@ class ResultController extends Controller
     {
         $student_id = array_unique($request->student_id);
         $student = $this->_studentRepository->findStudentByID($student_id[0]);
+        $department_id = $student->department_id;
+        $department = $this->_departmentRepository->findByID($department_id);
+        $department_name = $department->name;
         $results = $this->_resultRepository->massiveUpdateResult($request, $student);
+        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
 
-        return $results;
+        return redirect()->back()->with('student', $student)->with('subjects', $subjects)->with('department_name', $department_name)->with('results', $results)->with('subjects', $subjects)
+            ->with('notification', 'Update Successfully');
     }
 }

@@ -88,17 +88,17 @@
                                     <label for="mobile-number">{{__('Mobile Number')}}: </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-check-input" type="checkbox" name="mobile-number[]"
+                                    <input class="form-check-input" type="checkbox" name="mobile_network[]"
                                            id="viettel"
-                                           value="viettel" @if(old('mobile_network') != null) {{in_array('^09[3456]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
+                                           value="viettel" @if(old('mobile_network') != null) {{in_array('viettel',old('mobile_network')) === true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="viettel">Viettel</label>
-                                    <input class="form-check-input" type="checkbox" name="mobile-number[]"
+                                    <input class="form-check-input" type="checkbox" name="mobile_network[]"
                                            id="vinaphone"
-                                           value="" @if(old('mobile_network') != null) {{in_array('^09[012]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
+                                           value="vinaphone" @if(old('mobile_network') != null) {{in_array('vinaphone',old('mobile_network')) === true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="vinaphone">Vinaphone</label>
-                                    <input class="form-check-input" type="checkbox" name="mobile-number[]"
+                                    <input class="form-check-input" type="checkbox" name="mobile_network[]"
                                            id="mobiphone"
-                                           value="^09[789]{1}[0-9]{7}$" @if(old('mobile_network') != null) {{in_array('^09[789]{1}[0-9]{7}$',old('mobile_network')) == true ? 'checked' :''}} @endif>
+                                           value="mobiphone" @if(old('mobile_network') != null) {{in_array('mobiphone',old('mobile_network')) === true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="mobiphone">Mobiphone</label>
                                 </div>
                             </div>
@@ -108,10 +108,10 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-check-input" type="checkbox" name="status[]" id="complete"
-                                           value="1" @if(old('status') != null) {{in_array(1, old('status')) == true ? 'checked' :''}} @endif>
+                                           value="complete" @if(old('status') != null) {{in_array('complete', old('status')) === true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="complete">{{__('Complete')}}</label>
                                     <input class="form-check-input" type="checkbox" name="status[]" id="in-progress"
-                                           value="2" @if(old('status') != null) {{in_array(2, old('status')) == true ? 'checked' :''}} @endif>
+                                           value="in-progress" @if(old('status') != null) {{in_array('in-progress', old('status')) === true ? 'checked' :''}} @endif>
                                     <label class="form-check-label" for="in-progress">{{__('In-progress')}}</label>
                                 </div>
                             </div>

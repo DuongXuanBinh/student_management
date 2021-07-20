@@ -39,7 +39,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $students = $this->_studentRepository->filterStudent($request->all());
-
+        $request->flash();
         return response()->view('students.index',compact('students'));
     }
 
@@ -134,13 +134,11 @@ class StudentController extends Controller
         $student = $this->_studentRepository->findStudent($slug);
         $department_id = $student->department_id;
         $student_id = $student->id;
-        $student_name = $student->name;
         $department = $this->_departmentRepository->findByID($department_id);
         $department_name = $department->name;
         $results = $this->_resultRepository->getResultByStudentID($student_id);
         $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
-
-        return view('students.massive-update', compact('student_id', 'student_name', 'department_name', 'results', 'subjects'));
+        return view('students.massive-update', compact('student', 'department_name', 'results', 'subjects'));
     }
 
     public function sendMailDismiss()

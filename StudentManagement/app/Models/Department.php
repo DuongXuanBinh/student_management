@@ -19,11 +19,6 @@ class Department extends Model
         return $this->hasMany(Subject::class, 'department_id', 'id');
     }
 
-    public function students()
-    {
-        return $this->hasMany(Student::class, 'department_id', 'id');
-    }
-
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

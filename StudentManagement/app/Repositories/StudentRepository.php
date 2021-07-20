@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Student;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $current_year = Carbon::now()->format('Y');
         $students = $this->_model->with(['department' => function ($query) {
             $query->select('id', 'name');
-        }]);
+        }])->withCount('results');
         if (array_key_exists('age_from', $data)) {
             if (!is_null($data['age_from'])) {
                 $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
@@ -77,58 +78,43 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
                 });
             }
         }
-//        if(array_key_exists('mark_to',$data)){
-//            $students->whereHas('department')->whereHas('subjects')->whereHas('results')->where('mark','>=',$data['mark_to']);
-//        }
-//            ->whereIn('students.id', $student_by_mark)
-//            ->whereYear('students.birthday', '>=', $to_year)
-//            ->where(function ($query) use ($mobile_network) {
-//                for ($i = 0; $i < count($mobile_network); $i++) {
-//                    if ($i > 0) {
-//                        $query->orWhere('students.phone', 'regexp', $mobile_network[$i]);
-//                    } else {
-//                        $query->where('students.phone', 'regexp', $mobile_network[$i]);
-//                    }
-//                }
-//            })
-//            ->where(function ($query) use ($status, $complete, $in_progress) {
-//                if (count($status) === 1) {
-//                    if ($status[0] == 1) {
-//                        $query->whereIn('students.id', $complete);
-//                    } else {
-//                        $query->whereIn('students.id', $in_progress);
-//                    }
-//                }
-//
-//            })
-
-        return $students->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
-    }
-
-
-    /**Function to check student's completion
-     * $type = 1 => completed or 2 => incomplete
-     * @param $type
-     * @param $result_of_student
-     * @param $num_of_subject
-     * @return array
-     */
-    public function checkCompletion($type, $result_of_student, $num_of_subject)
-    {
-        $check_complete = [];
-        for ($i = 0; $i < count($result_of_student); $i++) {
-            $department_id = $result_of_student[$i]['department_id'];
-            $num_of_result = $result_of_student[$i]['num_of_result'];
-            for ($j = 0; $j < count($num_of_subject); $j++) {
-                if ($type == 1 && $department_id == $num_of_subject[$j]['department_id'] && $num_of_result == $num_of_subject[$j]['num_of_subject']) {
-                    array_push($check_complete, $result_of_student[$i]['student_id']);
-                } elseif ($type == 2 && $department_id == $num_of_subject[$j]['department_id'] && $num_of_result < $num_of_subject[$j]['num_of_subject']) {
-                    array_push($check_complete, $result_of_student[$i]['student_id']);
+        if (array_key_exists('mobile_network', $data)) {
+            if (count($data['mobile_network']) == 1) {
+                if (in_array('viettel', $data['mobile_network'])) {
+                    $students->where('phone', 'regexp', '^09[3456]{1}[0-9]{7}$');
+                } elseif (in_array('vinaphone', $data['mobile_network'])) {
+                    $students->where('phone', 'regexp', '^09[012]{1}[0-9]{7}$');
+                } elseif (in_array('mobiphone', $data['mobile_network'])) {
+                    $students->where('phone', 'regexp', '^09[789]{1}[0-9]{7}$');
+                }
+            } else {
+                if (!in_array('viettel', $data['mobile_network'])) {
+                    $students->where('phone', 'regexp', '^09[012]{1}[0-9]{7}$')->orWhere('phone', 'regexp', '^09[789]{1}[0-9]{7}$');
+                } elseif (!in_array('vinaphone', $data['mobile_network'])) {
+                    $students->where('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->orWhere('phone', 'regexp', '^09[789]{1}[0-9]{7}$');
+                } elseif (!in_array('mobiphone', $data['mobile_network'])) {
+                    $students->where('phone', 'regexp', '^09[3456]{1}[0-9]{7}$')->orWhere('phone', 'regexp', '^09[012]{1}[0-9]{7}$');
                 }
             }
         }
-        return $check_complete;
+        if (array_key_exists('status', $data)) {
+            if (count($data['status']) == 1) {
+                if (in_array('complete', $data['status'])) {
+                    $students->having('results_count', '=', 10);
+                }
+                if (in_array('in-progress', $data['status'])) {
+                    $students->having('results_count', '<', 10);
+                }
+            }
+        }
+        return $students->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
     }
+
+//    public function check(){
+//        $students = $this->_model->whereHas('department', function ($q) {
+//            $q->with('subjects')->withCount('subjects');
+//        })->get();
+//    }
 
     public function getStudentIDToDismiss($dismiss_student)
     {

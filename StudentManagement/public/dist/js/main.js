@@ -6,6 +6,57 @@ $(document).ready(function () {
         $("button.add-button").attr('disabled', 'disabled');
     }
     var value_array = [];
+
+    $("button.add-button").on('click', function () {
+        var input = $(".subset-hidden").clone(true).find("input[name='mark[]']").val('').end().removeClass("subset-hidden");
+        $(".result-set .result-subset select").each(function () {
+            var prevVal = $(this).data("previous");
+            $(input).find("option[value='" + prevVal + "']").show();
+            var value = $(this).val();
+            $(this).data("previous", value);
+            $(input).find("option[value='" + value + "']").hide();
+            var index = value_array.indexOf(value);
+            if (index > -1) {
+                value_array.splice(index, 1);
+            }
+        });
+
+        const random = Math.floor(Math.random() * value_array.length);
+        $(input).find("select").val(value_array[random]).find("option[value='" + value_array[random] + "']").attr('selected', 'selected');
+        if (count < max_count) {
+            $("div.result-set").append(input);
+            $(".result-set .result-subset select").each(function () {
+                var selected = $(this).find("option[selected='selected']").val();
+                $(".result-set .result-subset select").not(this).find("option[value = '" + selected + "']").hide();
+            });
+            ++count;
+            $(".add-button").attr('disabled', false);
+        }
+        if (count === max_count) {
+            $(".add-button").attr('disabled', true);
+
+        }
+        $(".result-set .result-subset select").change(function () {
+            $(input).find("option[value='" + value_array[random] + "']").attr('selected', false);
+            var prevVal = $(this).data("previous");
+            $(this).find("option[value='" + prevVal + "']").attr('selected', false);
+            $(".result-set .result-subset select").not(this).find("option[value='" + prevVal + "']").show();
+
+            var value = $(this).val();
+            $(this).find("option[value='" + value + "']").attr('selected', 'selected');
+            $(this).data("previous", value);
+            $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
+        });
+    });
+
+    $('.massive-update').on('click', '.delete-option', function () {
+        var x = $(this).parent().find("select").val();
+        $(".result-set .result-subset select").find("option[value='" + x + "']").show().attr('selected', false);
+        $(this).parent().parent().remove();
+        --count;
+        $(".add-button").attr('disabled', false);
+    })
+
     $(".result-subset").eq(0).find("option").each(function () {
         var option = $(this).val();
         value_array.push(option);
@@ -66,28 +117,6 @@ $(document).ready(function () {
         })
     });
 
-    // $("#massive-form").submit(function (e) {
-    //     var _url = $(this).attr('action');
-    //     e.preventDefault();
-    //     $.ajax({
-    //         type: "put",
-    //         url: _url,
-    //         data: $(this).serialize(),
-    //         success: function () {
-    //             $("#update-notification").modal('show');
-    //             $("#update-notification .modal-body .col-md-12").empty();
-    //             $("#update-notification .modal-body .col-md-12").append('<p>Update Successfully</p>');
-    //         },
-    //         error: function (xhr) {
-    //             $("#update-notification").modal('show');
-    //             $("#update-notification .modal-body .col-md-12").empty();
-    //             $.each(xhr.responseJSON.errors, function (i, error) {
-    //                 $("#update-notification .modal-body .col-md-12").append('<p>' + error + '</p>');
-    //             });
-    //         }
-    //     })
-    // });
-
     $(".delete-student").click(function () {
         var id = $(this).parent().siblings('input[type="hidden"]').val();
         var action = '/students/' + id;
@@ -116,57 +145,11 @@ $(document).ready(function () {
         $("#delete-subject form").attr('action', action);
     });
 
-    $("button.add-button").on('click', function () {
-        var input = $(".subset-hidden").clone(true).find("input[name='mark[]']").val('').end().removeClass("subset-hidden");
-        $(".result-set .result-subset select").each(function () {
-            var prevVal = $(this).data("previous");
-            $(input).find("option[value='" + prevVal + "']").show();
-            var value = $(this).val();
-            $(this).data("previous", value);
-            $(input).find("option[value='" + value + "']").hide();
-            var index = value_array.indexOf(value);
-            if (index > -1) {
-                value_array.splice(index, 1);
-            }
-        });
-
-        const random = Math.floor(Math.random() * value_array.length);
-        $(input).find("select").val(value_array[random]).find("option[value='" + value_array[random] + "']").attr('selected', 'selected');
-        if (count < max_count) {
-            $("div.result-set").append(input);
-            $(".result-set .result-subset select").each(function () {
-                var selected = $(this).find("option[selected='selected']").val();
-                $(".result-set .result-subset select").not(this).find("option[value = '" + selected + "']").hide();
-            });
-            ++count;
-            $(".add-button").attr('disabled', false);
-        }
-        if (count === max_count) {
-            $(".add-button").attr('disabled', true);
-        }
-        $(".result-set .result-subset select").change(function () {
-            $(input).find("option[value='" + value_array[random] + "']").attr('selected', false);
-            var prevVal = $(this).data("previous");
-            $(this).find("option[value='" + prevVal + "']").attr('selected', false);
-            $(".result-set .result-subset select").not(this).find("option[value='" + prevVal + "']").show();
-
-            var value = $(this).val();
-            $(this).find("option[value='" + value + "']").attr('selected', 'selected');
-            $(this).data("previous", value);
-            $(".result-set .result-subset select").not(this).find("option[value='" + value + "']").hide();
-        });
-    });
-
     $(".massive-update button.btn-secondary").click(function () {
         window.location.href = '/students';
     });
 
-    $('.massive-update').on('click', '.delete-option', function () {
-        var x = $(this).parent().find("select").val();
-        $(".result-set .result-subset select").find("option[value='" + x + "']").show().attr('selected', false);
-        $(this).parent().parent().remove();
-        --count;
-    })
+
 
     $(".result-set .result-subset select").each(function () {
         var value = $(this).val();
@@ -222,9 +205,21 @@ $("input[type=checkbox]").click(function(){
     }
 });
 
-// $(".google-btn").click(function(){
-//    window.location.href = "/auth/redirect/google";
-// });
+$("#massive-form").validate({
+    onfocusout: false,
+    onkeyup: false,
+    onclick: false,
+    rules: {
+        "mark": {
+            required: true,
+            decimal: true,
+            min: 0,
+            max: 10
+        }
+    }
+});
+
+
 
 
 

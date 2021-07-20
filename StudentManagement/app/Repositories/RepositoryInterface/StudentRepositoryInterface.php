@@ -8,8 +8,6 @@ interface StudentRepositoryInterface
 {
     public function filterStudent(array $data);
 
-    public function checkCompletion($type, $result_of_student, $num_of_subject);
-
     public function getStudentIDToDismiss($dismiss_student);
 
     public function deleteDepartmentStudent($id);

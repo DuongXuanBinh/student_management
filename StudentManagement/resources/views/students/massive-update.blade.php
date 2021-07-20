@@ -1,9 +1,6 @@
 @extends('layout.admin_template')
 
 @section('content')
-    <?php
-    $subjects = $subjects->pluck('name','id');
-    ?>
     <div class="massive-update">
         <div class="row">
             <div class="col-md-12">
@@ -14,8 +11,8 @@
                         <th>{{__("Department")}}</th>
                     </tr>
                     <tr>
-                        <td>{{$student_id}}</td>
-                        <td>{{$student_name}}</td>
+                        <td>{{$student->id}}</td>
+                        <td>{{$student->name}}</td>
                         <td>{{$department_name}}</td>
                     </tr>
                 </table>
@@ -38,12 +35,12 @@
                 <div class="row result-subset">
                     <div class="col-md-12">
                         {{Form::hidden('id',$result->id)}}
-                        {{Form::hidden('student_id',$student_id)}}
+                        {{Form::hidden('student_id',$student->id)}}
                         <div class="col-md-2">
                             {{Form::label('subject_id',__('Subject'))}}
                         </div>
                         <div class="col-md-4">
-                            {{Form::select('subject_id', $subjects, $result->subject_id)}}
+                            {{Form::select('subject_id', $subjects->pluck('name','id'), $result->subject_id)}}
                         </div>
                         <div class="col-md-2">
                             {{Form::label('mark',__('Mark'))}}
@@ -70,7 +67,7 @@
         {{--        form to append    --}}
         <div class="row result-subset subset-hidden">
             <div class="col-md-12">
-                {{Form::hidden('student_id[]',$student_id)}}
+                {{Form::hidden('student_id[]',$student->id)}}
                 <div class="col-md-2">
                     {{Form::label('subject_id',__('Subject'))}}
                 </div>

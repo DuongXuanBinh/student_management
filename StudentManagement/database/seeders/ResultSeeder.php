@@ -15,7 +15,7 @@ class ResultSeeder extends Seeder
      */
     public function run()
     {
-        $results = Result::factory()->count(800)->make();
+        $results = Result::factory()->count(400)->make();
         foreach ($results as $result) {
             repeat:
             try {

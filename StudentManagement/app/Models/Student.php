@@ -14,9 +14,9 @@ class Student extends Model
     protected $fillable = ['name', 'department_id', 'email', 'gender', 'birthday', 'address', 'phone', 'slug'];
     public $timestamps = true;
 
-    public function subjects()
+    public function results()
     {
-        return $this->belongsToMany(Subject::class, 'results', 'student_id', 'subject_id')->withPivot('mark','slug');
+        return $this->belongsToMany(Subject::class, 'results', 'student_id', 'subject_id')->withPivot('mark', 'slug');
     }
 
     public function department()
