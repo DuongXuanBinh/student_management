@@ -40,18 +40,19 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return parent::find($slug);
     }
 
-    public function massiveUpdateResult(Request $request, Student $student)
+    public function massiveUpdateResult($request, Student $student)
     {
-        $subject_id = $request->subject_id;
-        $mark = $request->mark;
+        $subject_id = $request['subject_id'];
+        $mark = $request['mark'];
         for ($i = 0; $i < count($subject_id); $i++) {
             $subject[$subject_id[$i]] = ['mark' => $mark[$i],
-                                         'slug' => $student->id.'-'.$subject_id[$i].'-'.$mark[$i]];
+                'slug' => $student->id . '-' . $subject_id[$i] . '-' . $mark[$i]];
         }
         $student->results()->sync($subject);
         $result = $this->getResultByStudentID($student->id);
 
         return $result;
+
     }
 
     /**
@@ -143,12 +144,17 @@ class ResultRepository extends EloquentRepository implements ResultRepositoryInt
         return $student_id;
     }
 
-    public function enrollSubject(Request $request)
+    public function enrollSubject($request)
     {
-        $this->_model->create(['student_id' => $request->id,
-            'subject_id' => $request->name,
+        $this->_model->create(['student_id' => $request['id'],
+            'subject_id' => $request['name'],
             'mark' => 0
         ]);
 
+    }
+
+    public function deleteResultByStudentID($id)
+    {
+        return $this->_model->where('student_id', $id)->delete();
     }
 }

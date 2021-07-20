@@ -15,7 +15,7 @@ interface ResultRepositoryInterface
      * @param $array
      * @return mixed
      */
-    public function massiveUpdateResult(Request $request, Student $student);
+    public function massiveUpdateResult(array $request, Student $student);
 
     public function getBadStudent($complete_student);
 
@@ -31,5 +31,7 @@ interface ResultRepositoryInterface
 
     public function getGPA($id);
 
-    public function enrollSubject(Request $request);
+    public function enrollSubject(array $request);
+
+    public function deleteResultByStudentID($id);
 }

@@ -143,9 +143,7 @@ class StudentController extends Controller
 
     public function sendMailDismiss()
     {
-        $result_per_student = $this->_resultRepository->getResultQuantity();
-        $subject_per_department = $this->_subjectRepository->getSubjectQuantity();
-        $complete_student = $this->_studentRepository->checkCompletion(1, $result_per_student, $subject_per_department);
+        $complete_student = $this->_studentRepository->checkCompletion(1);
         if(count($complete_student) === 0){
             return redirect()->back()->with('notification', 'No student with GPA under 5 this time');
         }

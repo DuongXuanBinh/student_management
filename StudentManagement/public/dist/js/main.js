@@ -6,8 +6,11 @@ $(document).ready(function () {
         $("button.add-button").attr('disabled', 'disabled');
     }
     var value_array = [];
-
+    if (count === 0){
+        $("#massive-form button").hide();
+    }
     $("button.add-button").on('click', function () {
+        $("#massive-form button").show();
         var input = $(".subset-hidden").clone(true).find("input[name='mark[]']").val('').end().removeClass("subset-hidden");
         $(".result-set .result-subset select").each(function () {
             var prevVal = $(this).data("previous");
@@ -34,7 +37,6 @@ $(document).ready(function () {
         }
         if (count === max_count) {
             $(".add-button").attr('disabled', true);
-
         }
         $(".result-set .result-subset select").change(function () {
             $(input).find("option[value='" + value_array[random] + "']").attr('selected', false);

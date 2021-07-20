@@ -45,7 +45,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $current_year = Carbon::now()->format('Y');
         $students = $this->_model->with(['department' => function ($query) {
             $query->select('id', 'name');
-        }])->withCount('results');
+        }]);
         if (array_key_exists('age_from', $data)) {
             if (!is_null($data['age_from'])) {
                 $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
@@ -100,21 +100,32 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         if (array_key_exists('status', $data)) {
             if (count($data['status']) == 1) {
                 if (in_array('complete', $data['status'])) {
-                    $students->having('results_count', '=', 10);
-                }
-                if (in_array('in-progress', $data['status'])) {
-                    $students->having('results_count', '<', 10);
+                    $student_id = $this->checkCompletion(1);
+                    $students->whereIn('id',$student_id);
+                }elseif (in_array('in-progress', $data['status'])){
+                    $student_id = $this->checkCompletion(2);
+                    $students->whereIn('id',$student_id);
                 }
             }
         }
         return $students->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
     }
 
-//    public function check(){
-//        $students = $this->_model->whereHas('department', function ($q) {
-//            $q->with('subjects')->withCount('subjects');
-//        })->get();
-//    }
+    public function checkCompletion($type)
+    {
+        $student_id = [];
+        $students = $this->_model->withCount('results')->with(['department' => function ($q) {
+            $q->withCount('subjects');
+        }])->get();
+        foreach ($students as $student) {
+            if ($type == 1 && $student->results_count == $student->department->subjects_count) {
+                array_push($student_id, $student->id);
+            } elseif ($type == 2 && $student->results_count < $student->department->subjects_count) {
+                array_push($student_id, $student->id);
+            }
+        }
+        return $student_id;
+    }
 
     public function getStudentIDToDismiss($dismiss_student)
     {

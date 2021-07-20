@@ -29,13 +29,14 @@
                 <p class="errorTxt"></p>
             </div>
         </div>
+        @if($results && $student && $subjects)
         {{Form::open(['method'=>'put','route'=>'results.massive-update','id'=>'massive-form'])}}
+            {{Form::hidden('student_id',$student->id)}}
         <div class="result-set">
             @foreach($results as $result)
                 <div class="row result-subset">
                     <div class="col-md-12">
                         {{Form::hidden('id',$result->id)}}
-                        {{Form::hidden('student_id',$student->id)}}
                         <div class="col-md-2">
                             {{Form::label('subject_id',__('Subject'))}}
                         </div>
@@ -89,5 +90,6 @@
                 </a>
             </div>
         </div>
+        @endif
     </div>
 @endsection

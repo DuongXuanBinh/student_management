@@ -128,15 +128,20 @@ class ResultController extends Controller
 
     public function massiveUpdate(ResultRequest $request)
     {
-        $student_id = array_unique($request->student_id);
-        $student = $this->_studentRepository->findStudentByID($student_id[0]);
+        $student_id = $request->student_id;
+        $student = $this->_studentRepository->findStudentByID($student_id);
         $department_id = $student->department_id;
         $department = $this->_departmentRepository->findByID($department_id);
         $department_name = $department->name;
-        $results = $this->_resultRepository->massiveUpdateResult($request, $student);
-        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
+        if (!array_key_exists('mark', $request->all())) {
+            $this->_resultRepository->deleteResultByStudentID($student_id);
+            return redirect()->back()->with('notification', 'Update Successfully')->with('department_name', $department_name)->with('student', $student);
+        } else {
+            $results = $this->_resultRepository->massiveUpdateResult($request->all(), $student);
+            $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
 
-        return redirect()->back()->with('student', $student)->with('subjects', $subjects)->with('department_name', $department_name)->with('results', $results)->with('subjects', $subjects)
-            ->with('notification', 'Update Successfully');
+            return redirect()->back()->with('student', $student)->with('subjects', $subjects)->with('department_name', $department_name)->with('results', $results)->with('subjects', $subjects)
+                ->with('notification', 'Update Successfully');
+        }
     }
 }

@@ -28,8 +28,7 @@ class ResultRequest extends FormRequest
         $subject_id = $this->subject_id;
         $id = $this->id;
         return [
-            'student_id' => 'array',
-            'student_id.*' => 'exists:students,id',
+            'student_id' => 'exists:students,id',
             'subject_id' => 'array',
             'subject_id[*]' => ['exists:subjects,id', Rule::unique('results')->where(function ($query) use ($student_id, $subject_id, $id) {
                 return $query->where('student_id', '=', $student_id)

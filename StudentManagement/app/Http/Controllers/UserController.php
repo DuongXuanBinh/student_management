@@ -114,7 +114,7 @@ class UserController extends Controller
     }
 
     public function enroll(Request $request){
-        $this->_resultRepository->enrollSubject($request);
+        $this->_resultRepository->enrollSubject($request->all());
 
         return back()->with('notification','Enroll Successfully');
     }
