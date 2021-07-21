@@ -2,11 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Models\Student;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StudentRepository extends EloquentRepository implements StudentRepositoryInterface
 {
@@ -46,37 +43,23 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $students = $this->_model->with(['department' => function ($query) {
             $query->select('id', 'name');
         }]);
-        if (array_key_exists('age_from', $data)) {
-            if (!is_null($data['age_from'])) {
-                $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
-            }
+
+        if (array_key_exists('age_from', $data) && !is_null($data['age_from'])) {
+            $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
         }
-        if (array_key_exists('age_to', $data)) {
-            if (!is_null($data['age_to'])) {
-                $students->whereYear('students.birthday', '>=', $current_year - $data['age_to']);
-            }
+
+        if (array_key_exists('age_to', $data) && !is_null($data['age_to'])) {
+            $students->whereYear('students.birthday', '>=', $current_year - $data['age_to']);
         }
-        if (array_key_exists('mark_from', $data)) {
-            if (!is_null($data['mark_from'])) {
-                $students->whereHas('department', function ($q) use ($data) {
-                    $q->whereHas('subjects', function ($q) use ($data) {
-                        $q->whereHas('results', function ($q) use ($data) {
-                            $q->where('mark', '>=', $data['mark_from']);
-                        });
-                    });
-                });
-            }
+        if (array_key_exists('mark_from', $data) && !is_null($data['mark_from'])) {
+            $students->whereHas('subjects', function ($q) use ($data) {
+                $q->where('mark', '>=', $data['mark_from']);
+            });
         }
-        if (array_key_exists('mark_to', $data)) {
-            if (!is_null($data['mark_to'])) {
-                $students->whereHas('department', function ($q) use ($data) {
-                    $q->whereHas('subjects', function ($q) use ($data) {
-                        $q->whereHas('results', function ($q) use ($data) {
-                            $q->where('mark', '>=', $data['mark_to']);
-                        });
-                    });
-                });
-            }
+        if (array_key_exists('mark_to', $data) && !is_null($data['mark_to'])) {
+            $students->whereHas('subjects', function ($q) use ($data) {
+                $q->where('mark', '>=', $data['mark_to']);
+            });
         }
         if (array_key_exists('mobile_network', $data)) {
             if (count($data['mobile_network']) == 1) {
@@ -97,15 +80,13 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
                 }
             }
         }
-        if (array_key_exists('status', $data)) {
-            if (count($data['status']) == 1) {
-                if (in_array('complete', $data['status'])) {
-                    $student_id = $this->checkCompletion(1);
-                    $students->whereIn('id',$student_id);
-                }elseif (in_array('in-progress', $data['status'])){
-                    $student_id = $this->checkCompletion(2);
-                    $students->whereIn('id',$student_id);
-                }
+        if (array_key_exists('status', $data) && count($data['status']) == 1) {
+            if (in_array('complete', $data['status'])) {
+                $student_id = $this->checkCompletion(1);
+                $students->whereIn('id', $student_id);
+            } elseif (in_array('in-progress', $data['status'])) {
+                $student_id = $this->checkCompletion(2);
+                $students->whereIn('id', $student_id);
             }
         }
         return $students->orderBy('students.id', 'ASC')->paginate(50)->withQueryString();
@@ -114,13 +95,13 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function checkCompletion($type)
     {
         $student_id = [];
-        $students = $this->_model->withCount('results')->with(['department' => function ($q) {
+        $students = $this->_model->withCount('subjects')->with(['department' => function ($q) {
             $q->withCount('subjects');
         }])->get();
         foreach ($students as $student) {
-            if ($type == 1 && $student->results_count == $student->department->subjects_count) {
+            if ($type == 1 && $student->subjects_count == $student->department->subjects_count) {
                 array_push($student_id, $student->id);
-            } elseif ($type == 2 && $student->results_count < $student->department->subjects_count) {
+            } elseif ($type == 2 && $student->subjects_count < $student->department->subjects_count) {
                 array_push($student_id, $student->id);
             }
         }
@@ -161,15 +142,12 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function getDepartment($student_id)
     {
-        $department_id = $this->_model->select('department_id')->where('id', $student_id)->first();
-        return $department_id;
+        return $this->_model->select('department_id')->where('id', $student_id)->first();
     }
 
     public function getIDByMail($email)
     {
-        $student_id = $this->_model->select('id')->where('email', $email)->first()->id;
-
-        return $student_id;
+        return $this->_model->select('id')->where('email', $email)->first()->id;
     }
 
     public function findStudentByID($id)

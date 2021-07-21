@@ -25,13 +25,9 @@ interface ResultRepositoryInterface
 
     public function getResultByStudentID($id);
 
-    public function getResultQuantity();
-
-    public function getStudentByMarkRange($from, $to);
-
     public function getGPA($id);
 
-    public function enrollSubject(array $request);
-
     public function deleteResultByStudentID($id);
+
+    public function enrollSubject(array $request);
 }

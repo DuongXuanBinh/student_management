@@ -1,3 +1,26 @@
+@if($errors->any())
+    <div class="modal fade" id="notification" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">{{__('Notification')}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>{{__('FAILED')}}</p>
+                            @foreach($errors->all() as $error)
+                                <p>{{$error}}</p>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 {{Form::model($user,array('route'=>array('user.update',$user->slug),'class'=>'form-layout','method'=>'put'))}}
 <div class="row">
     {{Form::hidden('id')}}

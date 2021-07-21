@@ -132,11 +132,10 @@ class StudentController extends Controller
     public function viewMassiveUpdate($slug)
     {
         $student = $this->_studentRepository->findStudent($slug);
+        $results = $student->subjects->pluck('mark', 'id');
         $department_id = $student->department_id;
-        $student_id = $student->id;
         $department = $this->_departmentRepository->findByID($department_id);
         $department_name = $department->name;
-        $results = $this->_resultRepository->getResultByStudentID($student_id);
         $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
         return view('students.massive-update', compact('student', 'department_name', 'results', 'subjects'));
     }

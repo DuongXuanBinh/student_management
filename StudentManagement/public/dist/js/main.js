@@ -6,9 +6,15 @@ $(document).ready(function () {
         $("button.add-button").attr('disabled', 'disabled');
     }
     var value_array = [];
-    if (count === 0){
+    $(".result-subset").eq(0).find("option").each(function () {
+        var option = $(this).val();
+        value_array.push(option);
+    });
+
+    if (count === 0) {
         $("#massive-form button").hide();
     }
+
     $("button.add-button").on('click', function () {
         $("#massive-form button").show();
         var input = $(".subset-hidden").clone(true).find("input[name='mark[]']").val('').end().removeClass("subset-hidden");
@@ -23,7 +29,6 @@ $(document).ready(function () {
                 value_array.splice(index, 1);
             }
         });
-
         const random = Math.floor(Math.random() * value_array.length);
         $(input).find("select").val(value_array[random]).find("option[value='" + value_array[random] + "']").attr('selected', 'selected');
         if (count < max_count) {
@@ -57,14 +62,11 @@ $(document).ready(function () {
         $(this).parent().parent().remove();
         --count;
         $(".add-button").attr('disabled', false);
-    })
+        value_array.push(x);
+    });
 
-    $(".result-subset").eq(0).find("option").each(function () {
-        var option = $(this).val();
-        value_array.push(option);
-    })
-    $(".result-subset").find("input[name='student_id']").attr("name", "student_id[]");
-    $(".result-subset").find("select[name='subject_id']").attr("name", "subject_id[]");
+
+
     $(".result-subset").find("input[name='mark']").attr("name", "mark[]");
     $(".result-subset").find("input[name='id']").attr("name", "id[]");
     $('#notification').modal('show');
@@ -152,7 +154,6 @@ $(document).ready(function () {
     });
 
 
-
     $(".result-set .result-subset select").each(function () {
         var value = $(this).val();
         $(this).data("previous", value)
@@ -171,10 +172,10 @@ $(document).ready(function () {
     });
 
     var a = $("#enroll-subject option").length;
-    if(a === 0){
-        $("#enroll-subject button").attr('disabled','disabled');
-    }else{
-        $("#enroll-subject button").attr('disabled',false);
+    if (a === 0) {
+        $("#enroll-subject button").attr('disabled', 'disabled');
+    } else {
+        $("#enroll-subject button").attr('disabled', false);
     }
 })
 
@@ -198,36 +199,14 @@ $(() => {
     $('#logreg-forms #cancel_signup').click(toggleSignUp);
 })
 
-$("input[type=checkbox]").click(function(){
+$("input[type=checkbox]").click(function () {
     var check = $(this).is(':checked');
-    if(check === true){
-        $(this).prop('checked','checked');
-    }else{
+    if (check === true) {
+        $(this).prop('checked', 'checked');
+    } else {
         $(this).removeProp('checked');
     }
 });
-
-$("#massive-form").validate({
-    onfocusout: false,
-    onkeyup: false,
-    onclick: false,
-    rules: {
-        "mark": {
-            required: true,
-            decimal: true,
-            min: 0,
-            max: 10
-        }
-    }
-});
-
-
-
-
-
-
-
-
 
 
 

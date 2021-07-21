@@ -21,8 +21,6 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         $user = $this->_model->where('provider', $type)->where('email',$email)->first();
         if ($user === null) {
             $user = false;
-
-            return $user;
         }
         return $user;
     }

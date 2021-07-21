@@ -1,5 +1,14 @@
 @extends('layout.admin_template')
 
+<?php
+$old = old();
+if (!empty($old)) {
+    foreach ($old['subject_id'] as $key => $subject_id) {
+        $results[$subject_id] = $old['mark'][$key];
+    }
+    dd($errors->get('mark.0'));
+}
+?>
 @section('content')
     <div class="massive-update">
         <div class="row">
@@ -24,30 +33,34 @@
                 <button class="add-button">+ {{__('Add Subject')}}</button>
             </div>
         </div>
+        @if($errors->any())
         <div class="row">
             <div class="col-md-12">
-                <p class="errorTxt"></p>
+                @foreach($errors->all() as $error)
+                <p class="errorTxt" style="text-align: center">{{$error}}</p>
+                @endforeach
             </div>
         </div>
+        @endif
         @if($results && $student && $subjects)
         {{Form::open(['method'=>'put','route'=>'results.massive-update','id'=>'massive-form'])}}
             {{Form::hidden('student_id',$student->id)}}
         <div class="result-set">
-            @foreach($results as $result)
+            @foreach($results as $subject_id => $mark)
+
                 <div class="row result-subset">
                     <div class="col-md-12">
-                        {{Form::hidden('id',$result->id)}}
                         <div class="col-md-2">
                             {{Form::label('subject_id',__('Subject'))}}
                         </div>
                         <div class="col-md-4">
-                            {{Form::select('subject_id', $subjects->pluck('name','id'), $result->subject_id)}}
+                            {{showSubjects($name = 'subject_id[]',$subjects, $subject_id)}}
                         </div>
                         <div class="col-md-2">
                             {{Form::label('mark',__('Mark'))}}
                         </div>
                         <div class="col-md-4">
-                            {{Form::text('mark',$result->mark)}}
+                            {{Form::text('mark', $mark)}}
                         </div>
                         <a class="delete-option">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -56,6 +69,7 @@
                                     d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"/>
                             </svg>
                         </a>
+
                     </div>
                 </div>
             @endforeach
@@ -65,15 +79,14 @@
             {{Form::button(__('Cancel'),['class'=>'btn btn-secondary'])}}
         </div>
         {{Form::close()}}
-        {{--        form to append    --}}
+{{--                form to append    --}}
         <div class="row result-subset subset-hidden">
             <div class="col-md-12">
-                {{Form::hidden('student_id[]',$student->id)}}
                 <div class="col-md-2">
                     {{Form::label('subject_id',__('Subject'))}}
                 </div>
                 <div class="col-md-4">
-                    {{Form::select('subject_id[]',$subjects->pluck('name','id'))}}
+                    {{showSubject($name = 'subject_id[]', $subjects)}}
                 </div>
                 <div class="col-md-2">
                     {{Form::label('mark',__('Mark'))}}

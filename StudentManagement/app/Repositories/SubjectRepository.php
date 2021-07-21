@@ -72,30 +72,22 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
 
     public function getEnrollableSubject($id, array $studied_subject)
     {
-        $result = $this->_model->select('id','name')->where('department_id', '=', $id)->
+        return $this->_model->select('id','name')->where('department_id', '=', $id)->
             whereNotIn('name',$studied_subject)->get();
-
-        return $result;
     }
 
     public function getSubjectQuantity()
     {
-        $num_of_subject = $this->_model->select('department_id', DB::raw('count(*) as num_of_subject'))
+        return $this->_model->select('department_id', DB::raw('count(*) as num_of_subject'))
             ->groupBy('department_id')->get();
-
-        return $num_of_subject;
     }
 
     public function getSubjectByDepartment($department_id,$subject_id)
     {
-        $subject = $this->_model->where('department_id', '=', $department_id)->where('id', '=', $subject_id)->first();
-
-        return $subject;
+        return $this->_model->where('department_id', '=', $department_id)->where('id', '=', $subject_id)->first();
     }
 
     public function getSubjectByDepartmentID($department_id){
-        $subject = $this->_model->where('department_id', '=', $department_id)->get();
-
-        return $subject;
+        return $this->_model->where('department_id', '=', $department_id)->get();
     }
 }
