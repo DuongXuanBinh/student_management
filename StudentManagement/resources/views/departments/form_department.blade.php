@@ -1,3 +1,13 @@
+@if($errors->any())
+    <div class="row">
+        <div class="col-md-12">
+            <p>{{__('FAILED')}}</p>
+            @foreach($errors->all() as $error)
+                <p class="errorTxt">{{$error}}</p>
+            @endforeach
+        </div>
+    </div>
+@endif
 @if(request()->segment(2) == 'create')
     {{Form::open(['method'=>'post','url'=>'departments/','class'=>'form-layout'])}}
     <div class="row">

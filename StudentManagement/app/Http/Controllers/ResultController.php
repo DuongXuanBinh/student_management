@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ResultRequest;
 use App\Http\Requests\ResultRequest2;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
-use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 
@@ -16,13 +15,11 @@ class ResultController extends Controller
     protected $_studentRepository;
     protected $_departmentRepository;
 
-    public function __construct(ResultRepositoryInterface $resultRepository,
-                                SubjectRepositoryInterface $subjectRepository,
+    public function __construct(SubjectRepositoryInterface $subjectRepository,
                                 StudentRepositoryInterface $studentRepository,
                                 DepartmentRepositoryInterface $departmentRepository)
     {
         $this->_departmentRepository = $departmentRepository;
-        $this->_resultRepository = $resultRepository;
         $this->_subjectRepository = $subjectRepository;
         $this->_studentRepository = $studentRepository;
     }
@@ -128,20 +125,13 @@ class ResultController extends Controller
 
     public function massiveUpdate(ResultRequest $request)
     {
-        $student_id = $request->student_id;
-        $student = $this->_studentRepository->findStudentByID($student_id);
-        $department_id = $student->department_id;
-        $department = $this->_departmentRepository->findByID($department_id);
-        $department_name = $department->name;
-        if (!array_key_exists('mark', $request->all())) {
-            $this->_resultRepository->deleteResultByStudentID($student_id);
-            return redirect()->back()->with('notification', 'Update Successfully')->with('department_name', $department_name)->with('student', $student);
-        } else {
-            $results = $this->_resultRepository->massiveUpdateResult($request->all(), $student);
-            $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
+        $results = $this->_resultRepository->massiveUpdateResult($request->all(), $request->student_id);
+        $department = $this->_departmentRepository->findByID($request->department_id);
+        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($student->department_id);
 
-            return redirect()->back()->with('student', $student)->with('subjects', $subjects)->with('department_name', $department_name)->with('results', $results)->with('subjects', $subjects)
-                ->with('notification', 'Update Successfully');
-        }
+        return redirect()->back()->with('student', $student)
+            ->with('subjects', $subjects)
+            ->with('department_name', $department->name)
+            ->with('results', $results)->with('subjects', $subjects);
     }
 }

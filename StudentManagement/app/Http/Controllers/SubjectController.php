@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectRequest;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
-use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
-use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -15,17 +13,15 @@ class SubjectController extends Controller
     protected $_departmentRepository;
 
     public function __construct(SubjectRepositoryInterface $subjectRepository,
-                                ResultRepositoryInterface $resultRepository,
                                 DepartmentRepositoryInterface $departmentRepository)
     {
-        $this->_resultRepository = $resultRepository;
         $this->_subjectRepository = $subjectRepository;
         $this->_departmentRepository = $departmentRepository;
     }
 
     public function index()
     {
-        $subjects = $this->_subjectRepository->index();
+        $subjects = $this->_subjectRepository->getAll();
 
         return response()->view('subjects.index', compact('subjects'));
     }
@@ -102,7 +98,7 @@ class SubjectController extends Controller
     {
         $id = $this->_subjectRepository->find($slug)->id;
         $delete_result = $this->_resultRepository->deleteSubjectResult($id);
-        $delete_subject = $this->_subjectRepository->deleteSubject($slug);
+        $delete_subject = $this->_subjectRepository->delete($slug);
         if ($delete_subject === true && $delete_result === true) {
             return redirect('/subjects')->with('notification', 'Delete Successfully');
         } else {

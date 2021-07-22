@@ -5,6 +5,7 @@ $(document).ready(function () {
     if (count === max_count) {
         $("button.add-button").attr('disabled', 'disabled');
     }
+    $("#update-notification").hide();
     var value_array = [];
     $(".result-subset").eq(0).find("option").each(function () {
         var option = $(this).val();
@@ -13,6 +14,7 @@ $(document).ready(function () {
 
     if (count === 0) {
         $("#massive-form button").hide();
+        $("button.add-button").attr('disabled', false);
     }
 
     $("button.add-button").on('click', function () {
@@ -69,8 +71,6 @@ $(document).ready(function () {
 
     $(".result-subset").find("input[name='mark']").attr("name", "mark[]");
     $(".result-subset").find("input[name='id']").attr("name", "id[]");
-    $('#notification').modal('show');
-    $("#update-notification").modal('hide');
     $(".range input").attr('disabled', true);
     $(".mobile-network").attr('disabled', true);
     $("button.filter-by").attr('disabled', true);
@@ -95,9 +95,8 @@ $(document).ready(function () {
             token: _token,
             data: $(this).serialize(),
             success: function (data) {
-                $("#update-notification").modal('show');
-                $("#update-notification .modal-body .col-md-12").empty();
-                $("#update-notification .modal-body .col-md-12").append('<p>Update Successfully</p>');
+                $("#update-notification").show();
+                $("#update-notification .col-md-12").empty().append('<p style="color: #03803e; text-align: center">Update Successfully</p>');
                 $(this).find("input[name='name']").text(data.name);
                 $(this).find("input[name='address']").text(data.address);
                 $(this).find("input[name='birthday']").text(data.birthday);
@@ -112,10 +111,10 @@ $(document).ready(function () {
                 $(this).find("input[name='phone']").text(data.phone);
             },
             error: function (xhr) {
-                $("#update-notification").modal('show');
-                $("#update-notification .modal-body .col-md-12").empty();
+                $("#update-notification").show();
+                $("#update-notification .col-md-12").empty();
                 $.each(xhr.responseJSON.errors, function (i, error) {
-                    $("#update-notification .modal-body .col-md-12").append('<p>' + error + '</p>');
+                    $("#update-notification .col-md-12").append('<p class="errorTxt" style="text-align: center">' + error + '</p>');
                 });
             }
         })

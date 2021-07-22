@@ -1,28 +1,15 @@
 @if($errors->any())
-    <div class="modal fade" id="notification" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">{{__('Notification')}}</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>{{__('FAILED')}}</p>
-                            @foreach($errors->all() as $error)
-                                <p>{{$error}}</p>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <p style="font-weight: bold">{{__('FAILED')}}</p>
+            @foreach($errors->all() as $error)
+                <p class="errorTxt">{{$error}}</p>
+            @endforeach
         </div>
     </div>
 @endif
 @if(request()->segment(2) == 'create')
-    {{Form::open(['method'=>'post','route'=>'subjects.create','class'=>'form-layout'])}}
+    {{Form::open(['method'=>'post','route'=>'subjects.store','class'=>'form-layout'])}}
     <div class="row">
         {{Form::hidden('id')}}
         <div class="col-md-12">

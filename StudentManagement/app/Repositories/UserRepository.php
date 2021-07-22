@@ -11,11 +11,6 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         return \App\Models\User::class;
     }
 
-    public function createUser(array $attribute)
-    {
-        return parent::create($attribute);
-    }
-
     public function checkProvider($type, $email)
     {
         $user = $this->_model->where('provider', $type)->where('email',$email)->first();
@@ -25,4 +20,12 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         return $user;
     }
 
+    public function deleteUser($student_id){
+        if (is_array($student_id)) {
+        $result = $this->_model->whereIn('student_id', $student_id);
+        } else {
+            $result = $this->_model->where('student_id', $student_id);
+        }
+        return $result->delete();
+    }
 }

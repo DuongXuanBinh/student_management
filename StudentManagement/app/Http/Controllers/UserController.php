@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
-use App\Repositories\DepartmentRepository;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
-use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
@@ -25,13 +23,11 @@ class UserController extends Controller
     public function __construct(UserRepositoryInterface $userRepository,
                                 StudentRepositoryInterface $studentRepository,
                                 DepartmentRepositoryInterface $departmentRepository,
-                                ResultRepositoryInterface $resultRepository,
                                 SubjectRepositoryInterface $subjectRepository)
     {
         $this->_userRepository = $userRepository;
         $this->_studentRepository = $studentRepository;
         $this->_departmentRepository = $departmentRepository;
-        $this->_resultRepository = $resultRepository;
         $this->_subjectRepository = $subjectRepository;
     }
 
@@ -44,7 +40,7 @@ class UserController extends Controller
     {
         $email = Auth::user()->email;
         $id = $this->_studentRepository->getIDByMail($email);
-        $user = $this->_studentRepository->findStudentById($id);
+        $user = $this->_studentRepository->findById($id);
 
         return response()->view('users.index', compact('user'));
     }
@@ -60,8 +56,8 @@ class UserController extends Controller
     {
         $email = Auth::user()->email;
         $id = $this->_studentRepository->getIDByMail($email);
-        $user = $this->_studentRepository->findStudentById($id);
-        $departments = $this->_departmentRepository->index();
+        $user = $this->_studentRepository->findById($id);
+        $departments = $this->_departmentRepository->getAll();
 
         return response()->view('users.edit', compact('departments', 'user'));
     }
@@ -75,7 +71,7 @@ class UserController extends Controller
      */
     public function update(StudentRequest $request, $id)
     {
-        $this->_studentRepository->updateStudent($id, $request->all());
+        $this->_studentRepository->update($id, $request->all());
 
         return redirect('/user')->with('notification', 'Update Successfully');
     }
@@ -90,7 +86,7 @@ class UserController extends Controller
     {
         $details['email'] = $request->email;
         $details['password'] = Str::random(10);
-        $user = $this->_userRepository->createUser($details);
+        $user = $this->_userRepository->create($details);
 
         return $user;
     }
@@ -101,22 +97,23 @@ class UserController extends Controller
         $id = $this->_studentRepository->getIDByMail($email);
         $results = $this->_resultRepository->getResultByStudentID($id);
         $gpa = $this->_resultRepository->getGPA($id);
-        $user = $this->_studentRepository->findStudentById($id);
+        $user = $this->_studentRepository->findById($id);
         $department_id = $this->_studentRepository->getDepartment($id)->department_id;
         $studied_subject = [];
         foreach ($results as $result) {
             array_push($studied_subject, $result->name);
         }
-        $enrollable_subjects = $this->_subjectRepository->getEnrollableSubject($department_id,$studied_subject);
+        $enrollable_subjects = $this->_subjectRepository->getEnrollableSubject($department_id, $studied_subject);
 
         return view('users.user_result', compact('results', 'gpa', 'user', 'enrollable_subjects'));
 
     }
 
-    public function enroll(Request $request){
-        $this->_resultRepository->enrollSubject($request->all());
+    public function enroll(Request $request)
+    {
+        $this->_studentRepository->enrollSubject($request->all());
 
-        return back()->with('notification','Enroll Successfully');
+        return back()->with('notification', 'Enroll Successfully');
     }
 
     public function changeLanguage($language)

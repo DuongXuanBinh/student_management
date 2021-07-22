@@ -16,7 +16,7 @@ class Students extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name',30);
-            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('department_id')->nullable();
             $table->foreign('department_id')->references('id')->on('departments');
             $table->string('email')->unique();
             $table->tinyInteger('gender');

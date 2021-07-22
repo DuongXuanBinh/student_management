@@ -2,11 +2,11 @@
 
 namespace App\Repositories\RepositoryInterface;
 
-use Illuminate\Http\Request;
-
 interface StudentRepositoryInterface
 {
     public function filterStudent(array $data);
+
+    public function checkCompletion($type);
 
     public function getStudentIDToDismiss($dismiss_student);
 
@@ -18,5 +18,17 @@ interface StudentRepositoryInterface
 
     public function getIDByMail($email);
 
-    public function findStudentByID($id);
+    public function enrollSubject($request);
+
+    public function massiveUpdateResult($request, $student_id);
+
+    public function deleteSubject($ids);
+
+    public function getGPA($id);
+
+    public function getResultByStudentID($id);
+
+    public function getBadStudent();
+
+    public function deleteStudentResult($id);
 }

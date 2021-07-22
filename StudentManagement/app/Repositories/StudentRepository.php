@@ -4,37 +4,13 @@ namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class StudentRepository extends EloquentRepository implements StudentRepositoryInterface
 {
     public function getModel()
     {
         return \App\Models\Student::class;
-    }
-
-    public function index(array $data)
-    {
-        return $this->filterStudent($data);
-    }
-
-    public function createNewStudent(array $attribute)
-    {
-        return parent::create($attribute);
-    }
-
-    public function deleteStudent($slug)
-    {
-        return parent::delete($slug);
-    }
-
-    public function updateStudent($slug, array $attribute)
-    {
-        return parent::update($slug, $attribute);
-    }
-
-    public function findStudent($slug)
-    {
-        return parent::find($slug);
     }
 
     public function filterStudent($data)
@@ -95,7 +71,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function checkCompletion($type)
     {
         $student_id = [];
-        $students = $this->_model->withCount('subjects')->with(['department' => function ($q) {
+        $students = $this->_model->with('subjects')->withCount('subjects')->with(['department' => function ($q) {
             $q->withCount('subjects');
         }])->get();
         foreach ($students as $student) {
@@ -142,7 +118,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function getDepartment($student_id)
     {
-        return $this->_model->select('department_id')->where('id', $student_id)->first();
+        return $this->findByID($student_id)->department();
     }
 
     public function getIDByMail($email)
@@ -150,9 +126,58 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return $this->_model->select('id')->where('email', $email)->first()->id;
     }
 
-    public function findStudentByID($id)
+    public function enrollSubject($request)
     {
-        return $this->_model->where('id', $id)->firstOrFail();
+        $this->_model->subjects()->attach($request['subject_id'],['student_id' => $request['id'],
+            'mark' => 0,
+            'slug' => $this->_model->id.'-'.$request['subject_id'].'-0'
+        ]);
     }
 
+    public function massiveUpdateResult($request, $student_id)
+    {
+        $subject = [];
+        $mark = $request['mark'];
+        $subject_ids = $request['subject_id'];
+        $student = $this->findByID($student_id);
+        foreach ($subject_ids as $key => $subject_id) {
+            $subject[$subject_id] = ['mark' => $mark[$key]];
+        }
+        $student->subjects()->sync($subject);
+
+        return $student->subjects;
+    }
+
+    public function deleteSubject($ids)
+    {
+        return $this->_model->subjects()->detach($ids);
+    }
+
+    public function getResultByStudentID($id)
+    {
+        $student = $this->findByID($id);
+        return $student->with('subjects');
+    }
+
+    public function getGPA($id)
+    {
+        $student = $this->findByID($id);
+        return $student->with(['subjects' => function ($q){
+            $q->select(DB::raw('avg(mark) as GPA'));
+        }]);
+    }
+
+    public function getBadStudent()
+    {
+        return $this->_model->with(['subjects'=> function ($q){
+            $q->select('student_id', DB::raw('avg(mark) as average_mark'))
+                ->whereIn('student_id', $this->checkCompletion(1))
+                ->groupBy('student_id')->having('average_mark', '<', 5);
+        }]);
+    }
+
+    public function deleteStudentResult($id){
+        $student = $this->findByID($id);
+        $student->subjects()->sync([]);
+    }
 }

@@ -54,7 +54,7 @@ class RegisterController extends Controller
         $email = $data['email'];
         return Validator::make($data, [
             'student_id' => 'required|exists:students,id',
-            'email' => ['required', Rule::unique('users')->where(function ($query) use ($provider, $email) {
+            'email' => ['required','exists:students,email', Rule::unique('users')->where(function ($query) use ($provider, $email) {
                 $query->where('email',$email)->where('provider',$provider);
             })],
             'password' => 'required|string|min:8'

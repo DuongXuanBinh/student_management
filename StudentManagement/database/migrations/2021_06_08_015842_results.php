@@ -21,7 +21,6 @@ class Results extends Migration
             $table->unsignedBigInteger('subject_id');
             $table->foreign('subject_id')->references('id')->on('subjects');
             $table->double('mark',4,2,true);
-            $table->string('slug');
             $table->timestamps();
         });
     }

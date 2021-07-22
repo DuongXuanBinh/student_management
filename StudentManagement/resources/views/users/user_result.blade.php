@@ -35,7 +35,7 @@
                 <form action="{{route('user.enroll')}}" method="post" id="enroll-subject">
                     @csrf
                     <input type="hidden" name="id" value="{{$user->id}}">
-                    <select name="name">
+                    <select name="subject_id">
                         @foreach($enrollable_subjects as $enrollable_subject)
                             <option value="{{$enrollable_subject->id}}">{{$enrollable_subject->name}}</option>
                         @endforeach

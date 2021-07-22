@@ -27,17 +27,18 @@ class ResultRequest extends FormRequest
     {
         return [
             'student_id' => 'exists:students,id',
-            'subject_id.*' => ['exists:subjects,id'],
+            'subject_id.*' => 'exists:subjects,id',
             'mark.*' => ['numeric', 'min:0', 'max:10'],
         ];
     }
 
-//    public function messages()
-//    {
-//        return [
-//            'mark.*.numeric' => ':attribute at must be number',
-//            'mark.*.min' => ':attribute must be greater or equal to 0',
-//            'mark.*.max' => ':attribute must be less than or equal to 10',
-//        ];
-//    }
+    public function messages()
+    {
+        return [
+            'mark.*.numeric' => 'Mark at must be number',
+            'mark.*.min' => 'Mark must be greater or equal to 0',
+            'mark.*.max' => 'Mark must be less than or equal to 10',
+            'subject_id.*.exists' => 'Subject does not exist'
+        ];
+    }
 }

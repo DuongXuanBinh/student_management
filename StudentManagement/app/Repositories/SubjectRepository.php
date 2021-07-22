@@ -12,31 +12,6 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
         return \App\Models\Subject::class;
     }
 
-    public function index()
-    {
-        return parent::getAll();
-    }
-
-    public function createSubject(array $attribute)
-    {
-        return parent::create($attribute);
-    }
-
-    public function deleteSubject($slug)
-    {
-        return parent::delete($slug);
-    }
-
-    public function updateSubject($slug, array $attribute)
-    {
-        return parent::update($slug, $attribute);
-    }
-
-    public function find($slug)
-    {
-        return parent::find($slug);
-    }
-
     /**
      * Delete Subject by department id
      * @param $id

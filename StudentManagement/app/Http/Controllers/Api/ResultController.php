@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Result;
-use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
@@ -15,19 +14,13 @@ class ResultController extends Controller
     protected $_subjectRepository;
     protected $_studentRepository;
 
-    public function __construct(ResultRepositoryInterface $resultRepository,
-                                SubjectRepositoryInterface $subjectRepository,
+    public function __construct(SubjectRepositoryInterface $subjectRepository,
                                 StudentRepositoryInterface $studentRepository)
     {
-        $this->_resultRepository = $resultRepository;
         $this->_subjectRepository = $subjectRepository;
         $this->_studentRepository = $studentRepository;
     }
 
-    /**Display a listing of the resource.
-     *
-     * @return \App\Repositories\ResultRepository[]|\Illuminate\Database\Eloquent\Collection
-     */
     public function index()
     {
         $results = $this->_resultRepository->index();
@@ -35,12 +28,6 @@ class ResultController extends Controller
         return $results;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
@@ -91,12 +78,5 @@ class ResultController extends Controller
         $result->delete();
     }
 
-    public function massiveUpdate(Request $request)
-    {
-        $student_id = array_unique($request->student_id);
-        $student = $this->_studentRepository->findStudentById($student_id[0]);
-        $results = $this->_resultRepository->massiveUpdateResult($request, $student);
 
-        return $results;
-    }
 }

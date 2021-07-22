@@ -52,6 +52,11 @@ abstract class EloquentRepository implements RepositoryInterface
         return $this->_model->where('slug',$slug)->firstOrFail();
     }
 
+    public function findByID($id)
+    {
+        return $this->_model->where('id',$id)->firstOrFail();
+    }
+
     /**Create
      * @param array $attribute
      * @return mixed|void

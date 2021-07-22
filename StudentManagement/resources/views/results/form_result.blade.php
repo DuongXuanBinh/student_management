@@ -1,5 +1,15 @@
+@if($errors->any())
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <p style="font-weight: bold">{{__('FAILED')}}</p>
+            @foreach($errors->all() as $error)
+                <p class="errorTxt">{{$error}}</p>
+            @endforeach
+        </div>
+    </div>
+@endif
 @if(request()->segment(2)== 'create')
-    {{Form::open(['method'=>'post','route'=>'results.create','class'=>'form-layout'])}}
+    {{Form::open(['method'=>'post','route'=>'results.store','class'=>'form-layout'])}}
     <div class="row">
         {{Form::hidden('id')}}
         <div class="col-md-12">

@@ -25,8 +25,8 @@ Route::group(['middleware' => 'locale'], function () {
         return view('welcome');
     });
     Route::get('/change-language/{language}', [UserController::class, 'changeLanguage'])->name('change-language');
-    Route::get('callback/{provider}',[SocialController::class,'callback']);
-    Route::get('/auth/redirect/{provider}',[SocialController::class,'redirect'])->name('login.sns');
+    Route::get('callback/{provider}', [SocialController::class, 'callback']);
+    Route::get('/auth/redirect/{provider}', [SocialController::class, 'redirect'])->name('login.sns');
 
     require __DIR__ . '/auth.php';
     Auth::routes();
@@ -46,7 +46,7 @@ Route::group(['middleware' => 'locale'], function () {
 
             Route::prefix('/results')->group(function () {
                 Route::get('/dismiss-student', [StudentController::class, 'sendMailDismiss'])->name('students.dismiss');
-                Route::put('/massive-update', [ResultController::class, 'massiveUpdate'])->name('results.massive-update');
+                Route::put('/massive-update', [StudentController::class, 'massiveUpdate'])->name('results.massive-update');
             });
 
             Route::resources(['students' => StudentController::class,
@@ -56,16 +56,16 @@ Route::group(['middleware' => 'locale'], function () {
             ]);
         });
         Route::group(['middleware' => 'role:student'], function () {
-            Route::prefix('/user')->group(function(){
-                Route::get('/result',[UserController::class,'getResult'])->name('user.result');
-                Route::get('/{slug}/edit',[UserController::class,'edit'])->name('user.edit');
-                Route::post('/result/enroll',[UserController::class,'enroll'])->name('user.enroll');
+            Route::prefix('/user')->group(function () {
+                Route::get('/result', [UserController::class, 'getResult'])->name('user.result');
+                Route::get('/{slug}/edit', [UserController::class, 'edit'])->name('user.edit');
+                Route::post('/result/enroll', [UserController::class, 'enroll'])->name('user.enroll');
             });
             Route::resource('user', UserController::class)->only(['index', 'update']);
         });
-        Route::group(['middleware'=>'role:student|admin'],function(){
+        Route::group(['middleware' => 'role:student|admin'], function () {
             Route::get('/students/filter', [StudentController::class, 'filterStudent'])->name('student.filter');
-            Route::resource('students',StudentController::class)->only(['index']);
+            Route::resource('students', StudentController::class)->only(['index']);
         });
     });
 });

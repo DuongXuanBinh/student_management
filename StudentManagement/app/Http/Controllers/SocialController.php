@@ -13,7 +13,7 @@ class SocialController extends Controller
     protected $_studentRepository;
 
     public function __construct(UserRepositoryInterface $userRepository,
-                                  StudentRepositoryInterface $studentRepository)
+                                StudentRepositoryInterface $studentRepository)
     {
         $this->_userRepository = $userRepository;
         $this->_studentRepository = $studentRepository;

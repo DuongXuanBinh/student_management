@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DepartmentRequest;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
-use App\Repositories\RepositoryInterface\ResultRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
+use App\Repositories\RepositoryInterface\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
@@ -15,16 +15,17 @@ class DepartmentController extends Controller
     protected $_subjectRepository;
     protected $_resultRepository;
     protected $_studentRepository;
+    protected $_userRepository;
 
     public function __construct(DepartmentRepositoryInterface $departmentRepository,
                                 SubjectRepositoryInterface $subjectRepository,
-                                ResultRepositoryInterface $resultRepository,
-                                StudentRepositoryInterface $studentRepository)
+                                StudentRepositoryInterface $studentRepository,
+                                UserRepositoryInterface $userRepository)
     {
         $this->_departmentRepository = $departmentRepository;
         $this->_subjectRepository = $subjectRepository;
-        $this->_resultRepository = $resultRepository;
         $this->_studentRepository = $studentRepository;
+        $this->_userRepository = $userRepository;
     }
 
     /**
@@ -34,7 +35,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = $this->_departmentRepository->index();
+        $departments = $this->_departmentRepository->getAll();
 
         return response()->view('departments.index', compact('departments'));
     }
@@ -46,7 +47,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        $departments = $this->_departmentRepository->index();
+        $departments = $this->_departmentRepository->getAll();
 
         return response()->view('departments.create', compact('departments'));
     }
@@ -120,13 +121,14 @@ class DepartmentController extends Controller
         $students = $this->_studentRepository->getStudent($id);
         DB::beginTransaction();
         try {
-            if (count($subjects) != 0) {
+            if (count($subjects) > 0) {
                 $this->_resultRepository->deleteSubjectResult($subjects);
                 $this->_subjectRepository->deleteDepartmentSubject($id);
             }
-            if (count($students) != 0) {
+            if (count($students) > 0) {
                 $this->_studentRepository->deleteDepartmentStudent($id);
             }
+            $this->_userRepository->deleteUser($students);
             $this->_departmentRepository->deleteDepartment($slug);
             DB::commit();
             return redirect()->back()->with('notification', 'Delete Successfully');
