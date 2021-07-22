@@ -13,12 +13,12 @@ $(document).ready(function () {
     });
 
     if (count === 0) {
-        $("#massive-form button").hide();
         $("button.add-button").attr('disabled', false);
+        $(".massive-update button.btn").attr('disabled','disabled');
     }
 
     $("button.add-button").on('click', function () {
-        $("#massive-form button").show();
+        $(".massive-update button.btn").attr('disabled',false);
         var input = $(".subset-hidden").clone(true).find("input[name='mark[]']").val('').end().removeClass("subset-hidden");
         $(".result-set .result-subset select").each(function () {
             var prevVal = $(this).data("previous");
@@ -206,7 +206,5 @@ $("input[type=checkbox]").click(function () {
         $(this).removeProp('checked');
     }
 });
-
-
 
 

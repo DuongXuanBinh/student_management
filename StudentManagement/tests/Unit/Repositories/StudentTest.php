@@ -61,7 +61,7 @@ class StudentTest extends TestCase
                 }
             }
         }
-        $complete  =  $this->studentRepository->checkCompletion($type,$result_per_student,$num_of_subject);
+        $complete  =  $this->studentRepository->checkCompletion($type);
         sort($expect);
         $this->assertEquals($expect,$complete);
     }

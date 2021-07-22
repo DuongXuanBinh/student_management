@@ -74,6 +74,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $students = $this->_model->with('subjects')->withCount('subjects')->with(['department' => function ($q) {
             $q->withCount('subjects');
         }])->get();
+
         foreach ($students as $student) {
             if ($type == 1 && $student->subjects_count == $student->department->subjects_count) {
                 array_push($student_id, $student->id);
@@ -128,20 +129,22 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
 
     public function enrollSubject($request)
     {
-        $this->_model->subjects()->attach($request['subject_id'],['student_id' => $request['id'],
-            'mark' => 0,
-            'slug' => $this->_model->id.'-'.$request['subject_id'].'-0'
-        ]);
+        $this->_model->subjects()->attach($request['subject_id'],
+            ['student_id' => $request['id'],
+                'mark' => 0]);
     }
 
     public function massiveUpdateResult($request, $student_id)
     {
         $subject = [];
-        $mark = $request['mark'];
-        $subject_ids = $request['subject_id'];
         $student = $this->findByID($student_id);
-        foreach ($subject_ids as $key => $subject_id) {
-            $subject[$subject_id] = ['mark' => $mark[$key]];
+        if (isset($request['mark'])) {
+            $mark = $request['mark'];
+            $subject_ids = $request['subject_id'];
+
+            foreach ($subject_ids as $key => $subject_id) {
+                $subject[$subject_id] = ['mark' => $mark[$key]];
+            }
         }
         $student->subjects()->sync($subject);
 
@@ -162,22 +165,30 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function getGPA($id)
     {
         $student = $this->findByID($id);
-        return $student->with(['subjects' => function ($q){
+        return $student->with(['subjects' => function ($q) {
             $q->select(DB::raw('avg(mark) as GPA'));
         }]);
     }
 
     public function getBadStudent()
     {
-        return $this->_model->with(['subjects'=> function ($q){
+        return $this->_model->with(['subjects' => function ($q) {
             $q->select('student_id', DB::raw('avg(mark) as average_mark'))
                 ->whereIn('student_id', $this->checkCompletion(1))
                 ->groupBy('student_id')->having('average_mark', '<', 5);
-        }]);
+        }])->get();
     }
 
-    public function deleteStudentResult($id){
+    public function deleteStudentResult($id)
+    {
         $student = $this->findByID($id);
         $student->subjects()->sync([]);
+    }
+
+    public function getResult()
+    {
+        return $this->_model->with(['subjects' => function ($q) {
+            $q->select('results.id', 'subject_id','mark');
+        }])->paginate(50);
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResultRequest;
 use App\Http\Requests\StudentRequest;
 use App\Jobs\SendMailDismiss;
+use App\Models\Result;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
@@ -140,7 +142,6 @@ class StudentController extends Controller
             return redirect()->back()->with('notification', 'No student with GPA under 5');
         }
         $bad_student = $this->_studentRepository->getBadStudent();
-
         $student_id = $this->_studentRepository->getStudentIDToDismiss($bad_student);
         $sendEmail = new SendMailDismiss($student_id);
         $this->dispatch($sendEmail);
@@ -148,7 +149,7 @@ class StudentController extends Controller
         return redirect()->back()->with('notification', 'Send e-mail successfully');
     }
 
-    public function massiveUpdate(Request $request)
+    public function massiveUpdate(ResultRequest $request)
     {
         $this->_studentRepository->massiveUpdateResult($request->all(), $request->student_id);
         $student = $this->_studentRepository->findByID($request->student_id);

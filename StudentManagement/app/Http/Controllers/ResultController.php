@@ -10,7 +10,6 @@ use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
 
 class ResultController extends Controller
 {
-    protected $_resultRepository;
     protected $_subjectRepository;
     protected $_studentRepository;
     protected $_departmentRepository;
@@ -30,7 +29,7 @@ class ResultController extends Controller
      */
     public function index()
     {
-        $results = $this->_resultRepository->index();
+        $results = $this->_studentRepository->getResult();
 
         return response()->view('results.index', compact('results'));
     }
@@ -121,17 +120,5 @@ class ResultController extends Controller
         $subject = $this->_subjectRepository->getSubjectByDepartment($department_id, $subject_id);
 
         return $subject;
-    }
-
-    public function massiveUpdate(ResultRequest $request)
-    {
-        $results = $this->_resultRepository->massiveUpdateResult($request->all(), $request->student_id);
-        $department = $this->_departmentRepository->findByID($request->department_id);
-        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($student->department_id);
-
-        return redirect()->back()->with('student', $student)
-            ->with('subjects', $subjects)
-            ->with('department_name', $department->name)
-            ->with('results', $results)->with('subjects', $subjects);
     }
 }
