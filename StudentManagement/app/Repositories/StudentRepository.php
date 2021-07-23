@@ -74,7 +74,6 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $students = $this->_model->with('subjects')->withCount('subjects')->with(['department' => function ($q) {
             $q->withCount('subjects');
         }])->get();
-
         foreach ($students as $student) {
             if ($type == 1 && $student->subjects_count == $student->department->subjects_count) {
                 array_push($student_id, $student->id);
@@ -122,9 +121,9 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         return $this->findByID($student_id)->department();
     }
 
-    public function getIDByMail($email)
+    public function checkUserByMail($email)
     {
-        return $this->_model->select('id')->where('email', $email)->first()->id;
+        return $this->_model->where('email', $email)->first();
     }
 
     public function enrollSubject($request)
@@ -159,15 +158,15 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function getResultByStudentID($id)
     {
         $student = $this->findByID($id);
-        return $student->with('subjects');
+        return $student->with('subjects')->get();
     }
 
     public function getGPA($id)
     {
         $student = $this->findByID($id);
         return $student->with(['subjects' => function ($q) {
-            $q->select(DB::raw('avg(mark) as GPA'));
-        }]);
+            $q->select('results.id', 'subject_id', DB::raw('avg(mark) as GPA'))->groupBy('');
+        }])->get();
     }
 
     public function getBadStudent()
@@ -188,7 +187,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function getResult()
     {
         return $this->_model->with(['subjects' => function ($q) {
-            $q->select('results.id', 'subject_id','mark');
+            $q->select('results.id', 'subject_id', 'mark');
         }])->paginate(50);
     }
 }

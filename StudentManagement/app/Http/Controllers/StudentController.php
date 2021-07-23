@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ResultRequest;
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\CreateStudentRequest;
 use App\Jobs\SendMailDismiss;
 use App\Models\Result;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
@@ -38,7 +39,7 @@ class StudentController extends Controller
     {
         $students = $this->_studentRepository->filterStudent($request->all());
 
-        return response()->view('students.index',compact('students'));
+        return response()->view('students.index', compact('students'));
     }
 
     /**
@@ -53,22 +54,32 @@ class StudentController extends Controller
         return response()->view('students.create', compact('departments'));
     }
 
-    public function store(StudentRequest $request)
+    public function store(CreateStudentRequest $request)
     {
-        $student = $this->_studentRepository->create($request->all());
         $password = Str::random(8);
-        $user = [
-            'student_id' => $student->id,
-            'email' => $student->email,
+        $info = [
+            'email' => $request->email,
             'password' => Hash::make($password)
         ];
-        $this->_userRepository->create($user);
-        Mail::send('mail.account_mail',compact('student','password'),function ($message) use ($student){
-            $message->from('xuanbinh1011@gmail.com','ABC University');
-            $message->to($student->email,$student->name);
-            $message->subject('Account Generation');
-        });
-        return redirect()->back()->with('notification', 'Successfully added');
+        DB::beginTransaction();
+        try {
+            $user = $this->_userRepository->create($info);
+            $info = $request->all();
+            $info['user_id'] = $user->id;
+            $student = $this->_studentRepository->create($info);
+
+            Mail::send('mail.account_mail', compact('student', 'password'), function ($message) use ($student) {
+                $message->from('xuanbinh1011@gmail.com', 'ABC University');
+                $message->to($student->email, $student->name);
+                $message->subject('Account Generation');
+            });
+            DB::commit();
+            return redirect()->back()->with('notification', 'Successfully added');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('notification', 'Delete Failed');
+        }
+
     }
 
     /**
@@ -106,6 +117,7 @@ class StudentController extends Controller
      */
     public function update(StudentRequest $request, $slug)
     {
+        $this->_userRepository->update($request->user_id,$request->all());
         return $this->_studentRepository->update($slug, $request->all());
     }
 
@@ -137,8 +149,8 @@ class StudentController extends Controller
 
     public function sendMailDismiss()
     {
-        $complete_student = $this->_studentRepository->checkCompletion(1);
-        if(count($complete_student) === 0){
+        $complete_students = $this->_studentRepository->checkCompletion(1);
+        if (count($complete_students) === 0) {
             return redirect()->back()->with('notification', 'No student with GPA under 5');
         }
         $bad_student = $this->_studentRepository->getBadStudent();

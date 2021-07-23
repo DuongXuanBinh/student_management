@@ -14,11 +14,15 @@ class Students extends Migration
     public function up()
     {
         Schema::create('students', function (Blueprint $table) {
+            $table->unique(['user_id', 'email']);
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('name',30);
-            $table->unsignedBigInteger('department_id')->nullable();
+            $table->unsignedBigInteger('department_id');
             $table->foreign('department_id')->references('id')->on('departments');
-            $table->string('email')->unique();
+            $table->string('email');
+            $table->foreign('email')->references('email')->on('users');
             $table->tinyInteger('gender');
             $table->date('birthday');
             $table->string('address');

@@ -50,13 +50,8 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        $provider = $data['provider'];
-        $email = $data['email'];
         return Validator::make($data, [
-            'student_id' => 'required|exists:students,id',
-            'email' => ['required','exists:students,email', Rule::unique('users')->where(function ($query) use ($provider, $email) {
-                $query->where('email',$email)->where('provider',$provider);
-            })],
+            'email' => ['required'],
             'password' => 'required|string|min:8'
         ]);
     }
@@ -70,10 +65,8 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'student_id' => $data['student_id'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'provider' => $data['provider']
         ]);
     }
 }

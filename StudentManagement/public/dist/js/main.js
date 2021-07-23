@@ -85,40 +85,40 @@ $(document).ready(function () {
         }
     });
 
-    $(".update-student-form").submit(function (e) {
-        var _url = $(this).attr('action');
-        var _token = $('input[name="_token"]').val();
-        e.preventDefault();
-        $.ajax({
-            type: "put",
-            url: _url,
-            token: _token,
-            data: $(this).serialize(),
-            success: function (data) {
-                $("#update-notification").show();
-                $("#update-notification .col-md-12").empty().append('<p style="color: #03803e; text-align: center">Update Successfully</p>');
-                $(this).find("input[name='name']").text(data.name);
-                $(this).find("input[name='address']").text(data.address);
-                $(this).find("input[name='birthday']").text(data.birthday);
-                var department_name = $(this).find("option[value='" + data.department_id + "']").text();
-                $(this).find("select[name='department_id']").text(department_name);
-                if (data.gender === '0') {
-                    $(this).find("select[name='gender']").html('Female');
-                } else {
-                    $(this).find("select[name='gender']").html('Male');
-                }
-                $(this).find("input[name='email']").text(data.email);
-                $(this).find("input[name='phone']").text(data.phone);
-            },
-            error: function (xhr) {
-                $("#update-notification").show();
-                $("#update-notification .col-md-12").empty();
-                $.each(xhr.responseJSON.errors, function (i, error) {
-                    $("#update-notification .col-md-12").append('<p class="errorTxt" style="text-align: center">' + error + '</p>');
-                });
-            }
-        })
-    });
+    // $(".update-student-form").submit(function (e) {
+    //     var _url = $(this).attr('action');
+    //     var _token = $('input[name="_token"]').val();
+    //     e.preventDefault();
+    //     $.ajax({
+    //         type: "put",
+    //         url: _url,
+    //         token: _token,
+    //         data: $(this).serialize(),
+    //         success: function (data) {
+    //             $("#update-notification").show();
+    //             $("#update-notification .col-md-12").empty().append('<p style="color: #03803e; text-align: center">Update Successfully</p>');
+    //             $(this).find("input[name='name']").text(data.name);
+    //             $(this).find("input[name='address']").text(data.address);
+    //             $(this).find("input[name='birthday']").text(data.birthday);
+    //             var department_name = $(this).find("option[value='" + data.department_id + "']").text();
+    //             $(this).find("select[name='department_id']").text(department_name);
+    //             if (data.gender === '0') {
+    //                 $(this).find("select[name='gender']").html('Female');
+    //             } else {
+    //                 $(this).find("select[name='gender']").html('Male');
+    //             }
+    //             $(this).find("input[name='email']").text(data.email);
+    //             $(this).find("input[name='phone']").text(data.phone);
+    //         },
+    //         error: function (xhr) {
+    //             $("#update-notification").show();
+    //             $("#update-notification .col-md-12").empty();
+    //             $.each(xhr.responseJSON.errors, function (i, error) {
+    //                 $("#update-notification .col-md-12").append('<p class="errorTxt" style="text-align: center">' + error + '</p>');
+    //             });
+    //         }
+    //     })
+    // });
 
     $(".delete-student").click(function () {
         var id = $(this).parent().siblings('input[type="hidden"]').val();

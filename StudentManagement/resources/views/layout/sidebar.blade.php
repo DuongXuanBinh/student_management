@@ -10,7 +10,12 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>{{ucfirst(Auth::user()->student->name)}}</p>
+                <p> @if(Auth::user()->hasRole('admin'))
+                        {{__('Admin')}}
+                    @elseif(Auth::user()->hasRole('student'))
+                        {{ucfirst(Auth::user()->student->name)}}
+                    @endif
+                </p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i>{{__('Online')}}</a>
             </div>

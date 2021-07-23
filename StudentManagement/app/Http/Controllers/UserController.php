@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\UserRequest;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
@@ -17,7 +18,6 @@ class UserController extends Controller
     protected $_userRepository;
     protected $_studentRepository;
     protected $_departmentRepository;
-    protected $_resultRepository;
     protected $_subjectRepository;
 
     public function __construct(UserRepositoryInterface $userRepository,
@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         $email = Auth::user()->email;
         $id = $this->_studentRepository->getIDByMail($email);
-        $user = $this->_studentRepository->findById($id);
+        $user = $this->_studentRepository->findByID($id);
 
         return response()->view('users.index', compact('user'));
     }
@@ -56,7 +56,7 @@ class UserController extends Controller
     {
         $email = Auth::user()->email;
         $id = $this->_studentRepository->getIDByMail($email);
-        $user = $this->_studentRepository->findById($id);
+        $user = $this->_studentRepository->findByID($id);
         $departments = $this->_departmentRepository->getAll();
 
         return response()->view('users.edit', compact('departments', 'user'));
@@ -82,7 +82,7 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function createUser(Request $request)
+    public function create(UserRequest $request)
     {
         $details['email'] = $request->email;
         $details['password'] = Str::random(10);
@@ -95,8 +95,8 @@ class UserController extends Controller
     {
         $email = Auth::user()->email;
         $id = $this->_studentRepository->getIDByMail($email);
-        $results = $this->_resultRepository->getResultByStudentID($id);
-        $gpa = $this->_resultRepository->getGPA($id);
+        $results = $this->_studentRepository->getResultByStudentID($id);
+        $gpa = $this->_studentRepository->getGPA($id);
         $user = $this->_studentRepository->findById($id);
         $department_id = $this->_studentRepository->getDepartment($id)->department_id;
         $studied_subject = [];

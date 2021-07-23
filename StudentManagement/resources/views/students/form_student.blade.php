@@ -25,7 +25,6 @@
     {{Form::open(['method'=>'post','route'=>'students.store','class'=>'form-layout'])}}
     <div class="row">
         <div class="col-md-12">
-            {{Form::hidden('id')}}
             <div class="col-md-4">
                 {{Form::label('name',__('Name'))}}
             </div>
@@ -104,6 +103,7 @@
     {{Form::model($student,array('route'=>array('students.update',$student->slug),'class'=>'form-layout update-student-form','method'=>'put'))}}
     <div class="row">
         {{Form::hidden('id')}}
+        {{Form::hidden('user_id')}}
         {{Form::hidden('slug',$student->slug)}}
         <div class="col-md-12">
             <div class="col-md-4">

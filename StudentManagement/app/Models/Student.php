@@ -11,7 +11,7 @@ class Student extends Model
 {
     use HasFactory, HasSlug;
 
-    protected $fillable = ['name', 'department_id', 'email', 'gender', 'birthday', 'address', 'phone', 'slug'];
+    protected $fillable = ['user_id', 'name', 'department_id', 'email', 'gender', 'birthday', 'address', 'phone', 'slug'];
     public $timestamps = true;
 
     public function subjects()

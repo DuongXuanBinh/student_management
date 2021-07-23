@@ -16,7 +16,7 @@ interface StudentRepositoryInterface
 
     public function getDepartment($student_id);
 
-    public function getIDByMail($email);
+    public function checkUserByMail($email);
 
     public function enrollSubject($request);
 

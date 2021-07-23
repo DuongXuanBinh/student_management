@@ -143,7 +143,13 @@
                         <!-- The user image in the navbar-->
                         <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs">{{ucfirst(Auth::user()->student->name)}}</span>
+                        <span class="hidden-xs">
+                             @if(Auth::user()->hasRole('admin'))
+                                {{__('Hello')}}, {{__('Admin')}}
+                            @elseif(Auth::user()->hasRole('student'))
+                                {{__('Hello')}}, {{ucfirst(Auth::user()->student->name)}}
+                            @endif
+                        </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->

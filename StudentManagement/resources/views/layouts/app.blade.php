@@ -87,10 +87,19 @@
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{__('Hello')}}, {{ucfirst(Auth::user()->student->name)}}
+                                @if(Auth::user()->hasRole('admin'))
+                                    {{__('Hello')}}, {{__('Admin')}}
+                                @elseif(Auth::user()->hasRole('student'))
+                                    {{__('Hello')}}, {{ucfirst(Auth::user()->student->name)}}
+                                @else
+                                    {{__('Hello')}}, {{__('Guest')}}
+                                @endif
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{Auth::user()->hasRole('admin') ? route('students.index') : route('user.index')}}">{{__('Main Page')}}</a>
+                                @role('admin|student')
+                                <a class="dropdown-item"
+                                   href="{{Auth::user()->hasRole('admin') ? route('students.index') : route('user.index')}}">{{__('Main Page')}}</a>
+                                @endrole
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

@@ -13,7 +13,6 @@ class DepartmentController extends Controller
 {
     protected $_departmentRepository;
     protected $_subjectRepository;
-    protected $_resultRepository;
     protected $_studentRepository;
     protected $_userRepository;
 
@@ -55,12 +54,12 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\DepartmentRequest $request
-     * @return
+     * @param DepartmentRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(DepartmentRequest $request)
     {
-        $this->_departmentRepository->createDepartment($request->all());
+        $this->_departmentRepository->create($request->all());
 
         return redirect('/departments')->with('notification', 'Added successfully');
     }
@@ -100,7 +99,7 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, $slug)
     {
-        $result = $this->_departmentRepository->updateDepartment($slug, $request->all());
+        $result = $this->_departmentRepository->update($slug, $request->all());
         if ($result === false) {
             return redirect()->back()->with('notification', 'Update Failed');
         } else {
@@ -122,14 +121,14 @@ class DepartmentController extends Controller
         DB::beginTransaction();
         try {
             if (count($subjects) > 0) {
-                $this->_resultRepository->deleteSubjectResult($subjects);
+                $this->_studentRepository->deleteSubjectResult($subjects);
                 $this->_subjectRepository->deleteDepartmentSubject($id);
             }
             if (count($students) > 0) {
                 $this->_studentRepository->deleteDepartmentStudent($id);
             }
-            $this->_userRepository->deleteUser($students);
-            $this->_departmentRepository->deleteDepartment($slug);
+            $this->_userRepository->delete($students);
+            $this->_departmentRepository->delete($slug);
             DB::commit();
             return redirect()->back()->with('notification', 'Delete Successfully');
         } catch (\Exception $e) {

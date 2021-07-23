@@ -4,7 +4,13 @@
     <div class="row">
         <h3>{{__('Department List')}}</h3>
     </div>
-
+    @if(session('notification'))
+        <div class="row">
+            <div class="col-md-12">
+                <p style="color: #03803e; font-size: 1.2em; text-align: center">{{session('notification')}}</p>
+            </div>
+        </div>
+    @endif
     <div class="modal fade" id="delete-department" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
