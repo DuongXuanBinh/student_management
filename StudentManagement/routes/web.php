@@ -38,30 +38,26 @@ Route::group(['middleware' => 'locale'], function () {
         Route::group(['middleware' => 'role:admin'], function () {
             Route::prefix('/students')->group(function () {
                 Route::get('/{slug}/results', [StudentController::class, 'viewMassiveUpdate'])->name('students.massive-update');
+                Route::get('/dismiss-student', [StudentController::class, 'sendMailDismiss'])->name('students.dismiss');
+                Route::put('/massive-update', [StudentController::class, 'massiveUpdate'])->name('results.massive-update');
             });
 
             Route::prefix('/departments')->group(function () {
                 Route::get('/get-subject', [SubjectController::class, 'getSubject']);
             });
 
-            Route::prefix('/results')->group(function () {
-                Route::get('/dismiss-student', [StudentController::class, 'sendMailDismiss'])->name('students.dismiss');
-                Route::put('/massive-update', [StudentController::class, 'massiveUpdate'])->name('results.massive-update');
-            });
-
             Route::resources(['students' => StudentController::class,
                 'departments' => DepartmentController::class,
                 'subjects' => SubjectController::class,
-                'results' => ResultController::class,
+//                'results' => ResultController::class,
             ]);
         });
         Route::group(['middleware' => 'role:student'], function () {
             Route::prefix('/user')->group(function () {
                 Route::get('/result', [UserController::class, 'getResult'])->name('user.result');
-                Route::get('/{slug}/edit', [UserController::class, 'edit'])->name('user.edit');
                 Route::post('/result/enroll', [UserController::class, 'enroll'])->name('user.enroll');
             });
-            Route::resource('user', UserController::class)->only(['index', 'update']);
+            Route::resource('user', UserController::class)->only(['index', 'update','edit']);
         });
         Route::group(['middleware' => 'role:student|admin'], function () {
             Route::get('/students/filter', [StudentController::class, 'filterStudent'])->name('student.filter');

@@ -40,7 +40,7 @@
             <li class="{{(request()->segment(1)=='students') ? 'active' : ''}}"><a href="{{ route('students.index') }}"><i class="fa fa-link"></i> <span>{{__('Students')}}</span></a></li>
             <li class="{{(request()->segment(1)=='departments') ? 'active' : ''}}"><a href="{{ route('departments.index') }}" ><i class="fa fa-link"></i> <span>{{__('Departments')}}</span></a></li>
             <li class="{{(request()->segment(1)=='subjects') ? 'active' : ''}}"><a href="{{ route('subjects.index') }}"><i class="fa fa-link"></i> <span>{{__('Subjects')}}</span></a></li>
-            <li class="{{(request()->segment(1)=='results') ? 'active' : ''}}"><a href="{{ route('results.index') }}"><i class="fa fa-link"></i> <span>{{__('Results')}}</span></a></li>
+{{--            <li class="{{(request()->segment(1)=='results') ? 'active' : ''}}"><a href="{{ route('results.index') }}"><i class="fa fa-link"></i> <span>{{__('Results')}}</span></a></li>--}}
         </ul>
         <!-- /.sidebar-menu -->
     </section>

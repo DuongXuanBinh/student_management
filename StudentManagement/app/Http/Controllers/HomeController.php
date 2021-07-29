@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    protected $_studentRepository;
+
+    public function __construct(StudentRepositoryInterface $studentRepository)
     {
+        $this->_studentRepository = $studentRepository;
         $this->middleware('auth');
     }
 
@@ -24,12 +23,20 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('admin')) {
-            return redirect()->route('students.index');
-        } elseif ($user->hasRole('student')){
-            return redirect()->route('user.index');
+        $check = $this->_studentRepository->checkUserByMail($user->email);
+        if (!$user->hasAnyRole('student', 'admin', 'non-registered')) {
+            if ($check) {
+                $user->assignRole('student');
+            } else {
+                $user->assignRole('non-registered');
+            }
         } else {
-            return redirect('dashboard');
+            if ($user->hasRole('admin')) {
+                return redirect()->route('students.index');
+            } elseif ($user->hasRole('student')) {
+                return redirect()->route('user.index');
+            }
         }
+        return view('home');
     }
 }

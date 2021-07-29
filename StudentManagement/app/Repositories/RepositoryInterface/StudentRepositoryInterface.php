@@ -8,13 +8,9 @@ interface StudentRepositoryInterface
 
     public function checkCompletion($type);
 
-    public function getStudentIDToDismiss($dismiss_student);
-
     public function deleteDepartmentStudent($id);
 
-    public function getStudent($department_id);
-
-    public function getDepartment($student_id);
+    public function getUser($department_id);
 
     public function checkUserByMail($email);
 
@@ -22,7 +18,7 @@ interface StudentRepositoryInterface
 
     public function massiveUpdateResult($request, $student_id);
 
-    public function deleteSubject($ids);
+    public function deleteResults($department_id, array $subject_ids);
 
     public function getGPA($id);
 

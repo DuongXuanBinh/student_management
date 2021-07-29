@@ -5,7 +5,7 @@
         <h3>Update Student</h3>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-md-offset-4">
             @include('students.form_student')
         </div>
     </div>

@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\Result;
 use App\Models\Student;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -26,7 +25,9 @@ class SendMailDismiss implements ShouldQueue
     public function __construct(array $id)
     {
         $this->_id = $id;
+
     }
+
 
     /**
      * Execute the job.
@@ -37,10 +38,10 @@ class SendMailDismiss implements ShouldQueue
     {
         $student_ids = $this->_id;
         foreach ($student_ids as $student_id){
-            $student = Student::where('id','=',$student_id)->first();
+            $student = Student::find($student_id);
             $department = Student::join('departments','students.department_id','departments.id')
-                ->where('students.id','=',$student_id)->first();
-            $results = Result::join('subjects','subjects.id','results.subject_id')->where('student_id','=',$student_id)->get();
+                ->where('students.id',$student_id)->first();
+            $results = Result::join('subjects','subjects.id','results.subject_id')->where('student_id',$student_id)->get();
             $gpa = Result::select(DB::raw('avg(mark) as average_mark'))->where('student_id','=',$student_id)->first();
             Mail::send('mail.mail_dismiss',['student'=>$student,'department'=>$department,'results'=>$results,'gpa'=>$gpa],function ($message) use ($student) {
                 $message->from('xuanbinh1011@gmail.com','ABC University');

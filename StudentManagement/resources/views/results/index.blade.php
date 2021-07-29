@@ -4,6 +4,13 @@
     <div class="row">
         <h3>{{__('Result List')}}</h3>
     </div>
+    @if(session('notification'))
+        <div class="row">
+            <div class="col-md-12">
+                <h4 style="text-align: center; font-weight: bold" class="{{session('notification') === 'Failed' ? 'errorTxt' : 'successTxt'}}">{{strtoupper(session('notification'))}}</h4>
+            </div>
+        </div>
+    @endif
     <div class="modal fade" id="dismiss-student" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -13,7 +20,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="hidden" name="slug">
+                            <input type="hidden" name="id">
                             <p>{{__("Are you sure to send mail of dismiss all the student with GPA under 5?")}}</p>
                         </div>
                     </div>
@@ -79,14 +86,15 @@
                     <th></th>
                 </tr>
                 @foreach($results as $result)
+                    @foreach($result->subjects as $subject)
                     <tr>
-                        <td>{{$result->id}}</td>
-                        <td>{{$result->student_id}}</td>
-                        <td>{{$result->subject_id}}</td>
-                        <td>{{$result->mark}}</td>
-                        <input type="hidden" name="slug" value="{{$result->slug}}">
+                        <input type="hidden" name="id" value="{{$subject->id}}">
+                            <td>{{$subject->id}}</td>
+                            <td>{{$subject->student_id}}</td>
+                            <td>{{$subject->subject_id}}</td>
+                            <td>{{$subject->mark}}</td>
                         <td>
-                            <a href="{{ route('results.edit',[$result->slug]) }}" class="update-result">
+                            <a href="{{ route('results.edit',[$subject->id]) }}" class="update-result">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-pencil" viewBox="0 0 16 16">
                                     <path
@@ -104,6 +112,7 @@
                             </a>
                         </td>
                     </tr>
+                    @endforeach
                 @endforeach
             </table>
             <div style="text-align:  center">

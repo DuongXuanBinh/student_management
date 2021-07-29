@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface\RepositoryInterface;
+use Carbon\Carbon;
 
 abstract class EloquentRepository implements RepositoryInterface
 {
@@ -39,7 +40,7 @@ abstract class EloquentRepository implements RepositoryInterface
      */
     public function getAll()
     {
-        return $this->_model->paginate(50);
+        return $this->_model->paginate(30);
     }
 
     /**
@@ -63,6 +64,8 @@ abstract class EloquentRepository implements RepositoryInterface
      */
     public function create(array $attribute)
     {
+        $attribute['created_at'] = Carbon::now('Asia/Ho_Chi_Minh');
+        $attribute['updated_at'] = Carbon::now('Asia/Ho_Chi_Minh');
         return $this->_model->create($attribute);
     }
 
@@ -76,6 +79,7 @@ abstract class EloquentRepository implements RepositoryInterface
         $result = $this->find($slug);
 
         if ($result) {
+            $attribute['updated_at'] = Carbon::now('Asia/Ho_Chi_Minh');
             $result->update($attribute);
 
             return $result;

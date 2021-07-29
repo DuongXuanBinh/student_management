@@ -4,6 +4,13 @@
     <div class="row">
         <h3>{{__('Subject List')}}</h3>
     </div>
+    @if(session('notification'))
+        <div class="row">
+            <div class="col-md-12">
+                <h4 style="text-align: center; font-weight: bold" class="{{session('notification') === 'Failed' ? 'errorTxt' : 'successTxt'}}">{{strtoupper(session('notification'))}}</h4>
+            </div>
+        </div>
+    @endif
     <div class="modal fade" id="delete-subject" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

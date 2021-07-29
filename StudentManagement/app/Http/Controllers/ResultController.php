@@ -40,7 +40,7 @@ class ResultController extends Controller
      */
     public function create()
     {
-        $subjects = $this->_subjectRepository->index();
+        $subjects = $this->_subjectRepository->getAll();
 
         return response()->view('results.create', compact('subjects'));
     }
@@ -53,19 +53,15 @@ class ResultController extends Controller
      */
     public function store(ResultRequest2 $request)
     {
-        $subject = $this->checkSubjectOfStudent($request->student_id, $request->subject_id);
-        if ($subject === null) {
-            return redirect()->back()->with('notification', 'Failed. This subject does not exist in this student\'s department');
-        }
-        $this->_resultRepository->createResult($request->all());
+        $this->_studentRepository->createResult($request->all());
 
         return redirect('/results')->with('notification', 'Added Successfully');
     }
 
 
-    public function show($slug)
+    public function show($id)
     {
-        $result = $this->_resultRepository->find($slug);
+        $result = $this->_studentRepository->showResult($id);
 
         return response()->view('results.show', compact('result'));
     }
@@ -76,10 +72,10 @@ class ResultController extends Controller
      * @param $slug
      * @return \Illuminate\Http\Response
      */
-    public function edit($slug)
+    public function edit($id)
     {
-        $result = $this->_resultRepository->find($slug);
-        $subjects = $this->_subjectRepository->index();
+        $result = $this->_studentRepository->showResult($id);
+        $subjects = $this->_subjectRepository->getAll();
         return response()->view('results.edit', compact('result', 'subjects'));
     }
 
@@ -90,14 +86,11 @@ class ResultController extends Controller
      * @param $slug
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ResultRequest2 $request, $slug)
+    public function update(ResultRequest2 $request)
     {
-        $result = $this->_resultRepository->updateResult($slug, $request->all());
-        if ($result === false) {
-            return redirect('/results')->with('notification', 'Update Failed');
-        } else {
-            return redirect('/results')->with('notification', 'Update Successfully');
-        }
+        $this->_studentRepository->updateResult($request->all());
+
+        return redirect('/results')->with('notification', 'Update Successfully');
     }
 
     /**
@@ -108,17 +101,9 @@ class ResultController extends Controller
      */
     public function destroy($id)
     {
-        $this->_resultRepository->deleteResult($id);
+        $this->_studentRepository->deleteResult($id);
 
         return redirect('/results')->with('notification', 'Delete Successfully');
     }
 
-    public function checkSubjectOfStudent($student_id, $subject_id)
-    {
-        $student = $this->_studentRepository->findStudentById($student_id);
-        $department_id = $student->department_id;
-        $subject = $this->_subjectRepository->getSubjectByDepartment($department_id, $subject_id);
-
-        return $subject;
-    }
 }

@@ -16,9 +16,9 @@ class CreateSocialUsersTable extends Migration
         Schema::create('social_users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('email');
-            $table->foreign('email')->references('email')->on('users');
+            $table->foreign('email')->references('email')->on('users')->onUpdate('cascade');
             $table->string('provider')->nullable();
             $table->timestamps();
         });

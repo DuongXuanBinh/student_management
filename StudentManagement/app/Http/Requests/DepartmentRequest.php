@@ -24,7 +24,7 @@ class DepartmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:5|max:100|unique:departments,name,' . $this->id . ',id',
+            'name' => 'required|alpha|min:5|max:30|unique:departments,name,' . $this->id . ',id',
         ];
     }
 }

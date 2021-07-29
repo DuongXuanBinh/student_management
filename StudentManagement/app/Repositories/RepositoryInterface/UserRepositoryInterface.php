@@ -3,7 +3,7 @@ namespace App\Repositories\RepositoryInterface;
 
 interface UserRepositoryInterface
 {
-    public function checkProvider($type, $email);
+    public function delete($user_id);
 
-    public function deleteUser($student_id);
+    public function getByMail($mail);
 }

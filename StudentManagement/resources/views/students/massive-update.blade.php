@@ -1,7 +1,7 @@
 @extends('layout.admin_template')
 <?php
 $old = old();
-if (!empty($old)) {
+if (!empty($old) && isset($old['subject_id'])) {
     $results = [];
     for ($i = 0; $i < (count($old['subject_id'])); $i++) {
         $results[$i]['id'] = $old['subject_id'][$i];
@@ -58,7 +58,7 @@ if (!empty($old)) {
                                 {{Form::label('mark',__('Mark'))}}
                             </div>
                             <div class="col-md-4">
-                                {{Form::text('mark', $results[$i]['mark'])}}
+                                {{Form::text('mark', $results[$i]['mark'],array('class'=>'form-control'))}}
                                 {{showError('mark',$i,$errors)}}
                             </div>
                             <a class="delete-option">

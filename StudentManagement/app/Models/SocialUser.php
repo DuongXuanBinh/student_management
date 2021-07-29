@@ -11,8 +11,13 @@ class SocialUser extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'student_id',
+        'user_id',
         'email',
         'provider',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

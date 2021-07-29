@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\RepositoryInterface\SocialUserRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
-use App\Models\User;
+use Carbon\Carbon;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialController extends Controller
 {
     protected $_userRepository;
+    protected $_socialUserRepository;
     protected $_studentRepository;
 
     public function __construct(UserRepositoryInterface $userRepository,
+                                SocialUserRepositoryInterface $socialUserRepository,
                                 StudentRepositoryInterface $studentRepository)
     {
         $this->_userRepository = $userRepository;
+        $this->_socialUserRepository = $socialUserRepository;
         $this->_studentRepository = $studentRepository;
     }
 
@@ -30,20 +34,23 @@ class SocialController extends Controller
         $user = $this->createUser($info, $provider);
         auth()->login($user);
 
-        return redirect('/home');
+        return redirect()->route('user.index');
     }
 
     public function createUser($info, $provider)
     {
-        $user = $this->_userRepository->checkProvider($provider, $info->email);
-        $student_id = $this->_studentRepository->getIDByMail($info->email);
-        if (!$user) {
-            $user = User::create([
-                'student_id' => $student_id,
+        $check = $this->_socialUserRepository->checkProvider($provider, $info->email);
+        if (!$check) {
+            $user_id = $this->_studentRepository->getIDByMail($info->email);
+            $this->_socialUserRepository->create([
+                'user_id' => $user_id,
                 'email' => $info->email,
-                'provider' => $provider
+                'provider' => $provider,
+                'created_at' => Carbon::now('Asia/Ho_Chi_Minh'),
+                'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
             ]);
         }
+        $user = $this->_userRepository->getByMail($info->email);
 
         return $user;
     }

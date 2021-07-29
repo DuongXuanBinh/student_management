@@ -17,9 +17,9 @@ class Results extends Migration
             $table->unique(array('student_id','subject_id'));
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->foreign('student_id')->references('id')->on('students');
+            $table->foreign('student_id')->references('id')->on('students')->onUpdate('cascade');
             $table->unsignedBigInteger('subject_id');
-            $table->foreign('subject_id')->references('id')->on('subjects');
+            $table->foreign('subject_id')->references('id')->on('subjects')->onUpdate('cascade');
             $table->double('mark',4,2,true);
             $table->timestamps();
         });

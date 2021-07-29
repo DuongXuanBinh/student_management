@@ -4,6 +4,13 @@
     <div>
         <h3>{{__('My Profile')}}</h3>
     </div>
+    @if(session('notification'))
+        <div class="row">
+            <div class="col-md-12">
+                <h4 style="text-align: center; font-weight: bold" class="{{session('notification') === 'Failed' ? 'errorTxt' : 'successTxt'}}">{{strtoupper(session('notification'))}}</h4>
+            </div>
+        </div>
+    @endif
     <table class="table table-striped" style="margin-top: 50px;">
         <thead>
         <tr>

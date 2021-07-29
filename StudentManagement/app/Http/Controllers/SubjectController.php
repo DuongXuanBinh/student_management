@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SubjectRequest;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class SubjectController extends Controller
 {
     protected $_subjectRepository;
-    protected $_resultRepository;
     protected $_departmentRepository;
 
     public function __construct(SubjectRepositoryInterface $subjectRepository,
@@ -28,8 +28,8 @@ class SubjectController extends Controller
 
     public function create()
     {
-        $subjects = $this->_subjectRepository->index();
-        $departments = $this->_departmentRepository->index();
+        $subjects = $this->_subjectRepository->getAll();
+        $departments = $this->_departmentRepository->getAll();
 
         return response()->view('subjects.create', compact('subjects', 'departments'));
     }
@@ -37,72 +37,50 @@ class SubjectController extends Controller
 
     public function store(SubjectRequest $request)
     {
-        $this->_subjectRepository->createSubject($request->all());
+        $this->_subjectRepository->create($request->all());
 
         return redirect('/subjects')->with('notification', 'Added Successfully');
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($slug)
     {
         $subject = $this->_subjectRepository->find($slug);
-        $departments = $this->_departmentRepository->index();
+        $departments = $this->_departmentRepository->getAll();
 
         return response()->view('subjects.show', compact('subject', 'departments'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($slug)
     {
         $subject = $this->_subjectRepository->find($slug);
-        $departments = $this->_departmentRepository->index();
+        $departments = $this->_departmentRepository->getAll();
 
         return response()->view('subjects.edit', compact('subject', 'departments'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\SubjectRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(SubjectRequest $request, $slug)
     {
-        $result = $this->_subjectRepository->updateSubject($slug, $request->all());
+        $result = $this->_subjectRepository->update($slug, $request->all());
         if ($result === false) {
-            return redirect()->back()->with('notification', 'Update Failed');
+            return redirect()->back()->with('notification', 'Failed');
         } else {
             return redirect('/subjects')->with('notification', 'Update Successfully');
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function destroy($slug)
     {
         $id = $this->_subjectRepository->find($slug)->id;
-        $delete_result = $this->_resultRepository->deleteSubjectResult($id);
-        $delete_subject = $this->_subjectRepository->delete($slug);
-        if ($delete_subject === true && $delete_result === true) {
-            return redirect('/subjects')->with('notification', 'Delete Successfully');
-        } else {
-            return redirect()->back()->with('notification', 'Delete Failed');
+        DB::beginTransaction();
+        try {
+            $this->_subjectRepository->deleteSubjectResult($id);
+            $this->_subjectRepository->delete($slug);
+            DB::commit();
+            return redirect()->route('subjects.index')->with('notification', 'Delete Successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('notification', 'Failed');
         }
     }
 }

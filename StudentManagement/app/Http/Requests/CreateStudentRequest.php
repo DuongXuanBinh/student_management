@@ -26,12 +26,12 @@ class CreateStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:30',
+            'name' => 'required|alpha|max:30',
             'department_id' => ['required', Rule::in(Department::pluck('id')->toArray())],
             'email' => ['required', 'email', Rule::unique('users', 'email')],
             'gender' => ['required', Rule::in(['0', '1'])],
-            'birthday' => 'required|date',
-            'address' => 'required',
+            'birthday' => 'required|date|date_format:Y-m-d|before:today|after:1980-01-01',
+            'address' => 'required|string|max:50',
             'phone' => ['required', 'regex:/^(09)[0-9]{8}$/', Rule::unique('students', 'phone')],
         ];
     }

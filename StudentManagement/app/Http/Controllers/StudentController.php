@@ -6,7 +6,6 @@ use App\Http\Requests\ResultRequest;
 use App\Http\Requests\StudentRequest;
 use App\Http\Requests\CreateStudentRequest;
 use App\Jobs\SendMailDismiss;
-use App\Models\Result;
 use App\Repositories\RepositoryInterface\DepartmentRepositoryInterface;
 use App\Repositories\RepositoryInterface\StudentRepositoryInterface;
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
@@ -38,8 +37,9 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $students = $this->_studentRepository->filterStudent($request->all());
+        $request->flash();
 
-        return response()->view('students.index', compact('students'));
+        return view('students.index',compact('students'));
     }
 
     /**
@@ -74,10 +74,10 @@ class StudentController extends Controller
                 $message->subject('Account Generation');
             });
             DB::commit();
-            return redirect()->back()->with('notification', 'Successfully added');
+            return redirect()->route('students.index')->with('notification', 'Successfully added');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('notification', 'Delete Failed');
+            return redirect()->route('students.index')->with('notification', 'Failed');
         }
 
     }
@@ -119,20 +119,22 @@ class StudentController extends Controller
     {
         $this->_userRepository->update($request->user_id,$request->all());
         return $this->_studentRepository->update($slug, $request->all());
+
     }
 
     public function destroy($slug)
     {
-        $id = $this->_studentRepository->find($slug)->id;
+        $student = $this->_studentRepository->find($slug);
         DB::beginTransaction();
         try {
-            $this->_studentRepository->deleteStudentResult($id);
+            $this->_studentRepository->deleteStudentResult($student->id);
             $this->_studentRepository->delete($slug);
+            $this->_userRepository->delete($student->user_id);
             DB::commit();
             return redirect()->back()->with('notification', 'Successfully deleted');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('notification', 'Delete Failed');
+            return redirect()->back()->with('notification', 'Failed');
         }
     }
 
@@ -140,10 +142,10 @@ class StudentController extends Controller
     {
         $student = $this->_studentRepository->find($slug);
         $results = $student->subjects->toArray();
-        $department_id = $student->department_id;
-        $department = $this->_departmentRepository->findByID($department_id);
+        $department = $this->_departmentRepository->findByID($student->department_id);
         $department_name = $department->name;
-        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
+        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($student->department_id);
+
         return view('students.massive-update', compact('student', 'department_name', 'results', 'subjects'));
     }
 
@@ -151,11 +153,10 @@ class StudentController extends Controller
     {
         $complete_students = $this->_studentRepository->checkCompletion(1);
         if (count($complete_students) === 0) {
-            return redirect()->back()->with('notification', 'No student with GPA under 5');
+            return redirect()->back()->with('notification', 'All students are still in-progress');
         }
-        $bad_student = $this->_studentRepository->getBadStudent();
-        $student_id = $this->_studentRepository->getStudentIDToDismiss($bad_student);
-        $sendEmail = new SendMailDismiss($student_id);
+        $bad_students = $this->_studentRepository->getBadStudent();
+        $sendEmail = new SendMailDismiss($bad_students);
         $this->dispatch($sendEmail);
 
         return redirect()->back()->with('notification', 'Send e-mail successfully');
@@ -166,12 +167,11 @@ class StudentController extends Controller
         $this->_studentRepository->massiveUpdateResult($request->all(), $request->student_id);
         $student = $this->_studentRepository->findByID($request->student_id);
         $results = $student->subjects->toArray();
-        $department_id = $student->department_id;
-        $department = $this->_departmentRepository->findByID($department_id);
+        $department = $this->_departmentRepository->findByID($student->department_id);
         $department_name = $department->name;
-        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($department_id);
+        $subjects = $this->_subjectRepository->getSubjectByDepartmentID($student->department_id);
 
-        return redirect()->back()->with('student', $student)->with('department_name', $department_name)->with('results', $results)->with('subjects', $subjects)
-            ->with('notification', 'Update Successfully');
+        return redirect()->back()->with('student', $student)->with('department_name', $department_name)->with('results', $results)
+            ->with('subjects', $subjects)->with('notification', 'Update Successfully');
     }
 }

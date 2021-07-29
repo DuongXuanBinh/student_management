@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
-use App\Jobs\SendMailDismiss;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -14,10 +14,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(
-            \App\Repositories\RepositoryInterface\ResultRepositoryInterface::class,
-            \App\Repositories\ResultRepository::class
-        );
         $this->app->singleton(
             \App\Repositories\RepositoryInterface\StudentRepositoryInterface::class,
             \App\Repositories\StudentRepository::class
@@ -33,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             \App\Repositories\RepositoryInterface\UserRepositoryInterface::class,
             \App\Repositories\UserRepository::class
+        );
+        $this->app->singleton(
+            \App\Repositories\RepositoryInterface\SocialUserRepositoryInterface::class,
+            \App\Repositories\SocialUserRepository::class
         );
     }
 

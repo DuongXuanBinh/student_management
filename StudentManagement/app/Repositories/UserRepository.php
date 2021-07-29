@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface\UserRepositoryInterface;
+use Carbon\Carbon;
 
 class UserRepository extends EloquentRepository implements UserRepositoryInterface
 {
@@ -16,6 +17,7 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         unset($attribute['id']);
         $result = $this->findByID($id);
         if ($result) {
+            $result['updated_at'] = Carbon::now('Asia/Ho_Chi_Minh');
             $result->update($attribute);
 
             return true;
@@ -24,22 +26,18 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
         return false;
     }
 
-    public function checkProvider($type, $email)
+    public function delete($user_id)
     {
-        $user = $this->_model->where('provider', $type)->where('email', $email)->first();
-        if ($user === null) {
-            $user = false;
-        }
-        return $user;
-    }
-
-    public function deleteUser($student_id)
-    {
-        if (is_array($student_id)) {
-            $result = $this->_model->whereIn('student_id', $student_id);
-        } else {
-            $result = $this->_model->where('student_id', $student_id);
+        if(!is_array($user_id)) {
+            $result = $this->_model->where('id', $user_id);
+        }else {
+            $result = $this->_model->whereIn('id', $user_id);
         }
         return $result->delete();
+    }
+
+    public function getByMail($email)
+    {
+        return $this->_model->where('email',$email)->first();
     }
 }

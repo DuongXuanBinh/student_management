@@ -6,7 +6,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-md-offset-4">
             @include('departments.form_department')
         </div>
     </div>

@@ -35,7 +35,6 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = $this->_departmentRepository->getAll();
-
         return response()->view('departments.index', compact('departments'));
     }
 
@@ -61,7 +60,8 @@ class DepartmentController extends Controller
     {
         $this->_departmentRepository->create($request->all());
 
-        return redirect('/departments')->with('notification', 'Added successfully');
+
+        return redirect()->route('departments.index')->with('notification', 'Added successfully');
     }
 
     /**
@@ -103,7 +103,7 @@ class DepartmentController extends Controller
         if ($result === false) {
             return redirect()->back()->with('notification', 'Update Failed');
         } else {
-            return redirect('/departments')->with('notification', 'Update Successfully');
+            return redirect()->route('departments.index')->with('notification', 'Update Successfully');
         }
     }
 
@@ -115,19 +115,16 @@ class DepartmentController extends Controller
      */
     public function destroy($slug)
     {
-        $id = $this->_departmentRepository->find($slug)->id;
-        $subjects = $this->_subjectRepository->getSubjectID($id);
-        $students = $this->_studentRepository->getStudent($id);
+        $department_id = $this->_departmentRepository->find($slug)->id;
+        $subjects = $this->_subjectRepository->getSubjectID($department_id);
+        $user_ids = $this->_studentRepository->getUser($department_id);
+
         DB::beginTransaction();
         try {
-            if (count($subjects) > 0) {
-                $this->_studentRepository->deleteSubjectResult($subjects);
-                $this->_subjectRepository->deleteDepartmentSubject($id);
-            }
-            if (count($students) > 0) {
-                $this->_studentRepository->deleteDepartmentStudent($id);
-            }
-            $this->_userRepository->delete($students);
+            $this->_studentRepository->deleteResults($department_id, $subjects);
+            $this->_subjectRepository->deleteDepartmentSubject($department_id);
+            $this->_studentRepository->deleteDepartmentStudent($department_id);
+            $this->_userRepository->delete($user_ids);
             $this->_departmentRepository->delete($slug);
             DB::commit();
             return redirect()->back()->with('notification', 'Delete Successfully');

@@ -7,7 +7,7 @@
     @if(session('notification'))
         <div class="row">
             <div class="col-md-12">
-                <p style="color: #03803e; font-size: 1.2em; text-align: center">{{session('notification')}}</p>
+                <h4 style="text-align: center; font-weight: bold">{{strtoupper(session('notification'))}}</h4>
             </div>
         </div>
     @endif

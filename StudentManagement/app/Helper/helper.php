@@ -2,7 +2,7 @@
 if (!function_exists('showSubjects')) {
     function showSubjects($name, $subjects, $subject_id)
     {
-        echo "<select name='" . $name . "'>";
+        echo "<select name='" . $name . "' class='form-control'>";
         foreach ($subjects as $subject) {
             if ($subject->id == $subject_id) {
                 echo "<option value='" . $subject->id . "' selected='selected'>" . $subject->name . "</option>";
@@ -17,7 +17,7 @@ if (!function_exists('showSubjects')) {
 if (!function_exists('showSubject')) {
     function showSubject($name, $subjects)
     {
-        echo "<select name='" . $name . "'>";
+        echo "<select name='" . $name . "' class='form-control'>";
         foreach ($subjects as $subject) {
             echo "<option value='" . $subject->id . "'>" . $subject->name . "</option>";
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,9 +27,10 @@ class SubjectRequest extends FormRequest
     {
         $name = $this->name;
         $department_id = $this->department_id;
+        $department_ids = Department::all()->pluck('id')->toArray();
         return [
-            'name' => 'required',
-            'department_id' => ['required', Rule::unique('subjects')->where(function ($query) use ($name, $department_id) {
+            'name' => 'required|alpha|max:30',
+            'department_id' => ['required', Rule::in($department_ids),Rule::unique('subjects')->where(function ($query) use ($name, $department_id) {
                 return $query->where('name', '=', $name)->where('department_id', '=', $department_id);
             })->ignore($this->id)],
         ];
