@@ -49,7 +49,6 @@ Route::group(['middleware' => 'locale'], function () {
             Route::resources(['students' => StudentController::class,
                 'departments' => DepartmentController::class,
                 'subjects' => SubjectController::class,
-//                'results' => ResultController::class,
             ]);
         });
         Route::group(['middleware' => 'role:student'], function () {
