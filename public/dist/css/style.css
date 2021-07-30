@@ -1,29 +1,31 @@
-.table-student tr td{
+.table-student tr td {
     vertical-align: middle !important;
     text-align: left !important;
 }
+
 .table-striped a svg {
     height: 12px;
     width: 12px;
 }
-.btn-secondary{
+
+.btn-secondary {
     border: 0.5px solid darkgray;
 }
 
-.table-student tr th:first-of-type,.table-student tr td:first-of-type{
+.table-student tr th:first-of-type, .table-student tr td:first-of-type {
     display: none;
 }
 
-#update-notification, #notification{
+#update-notification, #notification {
     z-index: 1200;
 }
 
-#enroll-subject select{
+#enroll-subject select {
     width: 200px;
     margin-right: 15px;
 }
 
-table th{
+table th {
     text-transform: uppercase;
 }
 
@@ -35,48 +37,46 @@ table th{
     color: darkred;
 }
 
-label{
+label {
     font-weight: normal;
     margin-top: 5px;
 }
 
 
-
-.filter-student input[type=text]{
-    width: 60px;
+.filter-student input[type=text] {
     margin-right: 20px;
-    text-align: center;
 }
-.filter-student input[type=checkbox]{
+
+.filter-student input[type=checkbox] {
     width: 30px;
 }
 
-.filter-student button[type=submit]{
+.filter-student button[type=submit] {
     float: right;
     width: 100px;
 }
 
-.form-layout input, .form-layout select{
+.form-layout input, .form-layout select {
     width: 260px;
     margin-bottom: 10px;
 }
 
-.form-layout button{
+.form-layout button {
     margin-right: 10px;
     width: 80px;
 }
 
-.form-layout label{
+.form-layout label {
     margin-top: 5px;
 }
 
-h3{
+h3 {
     margin-bottom: 25px !important;
     text-transform: uppercase;
     text-align: center;
 }
 
-.massive-update table th{
+.massive-update table th {
     width: 309px;
 }
 
@@ -93,6 +93,13 @@ h3{
     margin: 10px auto;
 }
 
+.filter-student input[type=text] {
+    margin-bottom: 10px;
+}
+
+#vinaphone {
+    margin-left: 20px;
+}
 
 .delete-option {
     color: darkred;
@@ -104,17 +111,17 @@ h3{
     margin: 0 auto;
 }
 
-.massive-update table th{
+.massive-update table th {
     text-align: center;
 }
 
-.massive-update table{
+.massive-update table {
     margin: 30px auto;
     text-align: center;
     width: 80%;
 }
 
-.subset-hidden{
+.subset-hidden {
     display: none;
 }
 
@@ -122,10 +129,11 @@ h3{
     text-transform: uppercase;
 }
 
-#vietnam-flag, #usa-flag{
-    height:20px;
+#vietnam-flag, #usa-flag {
+    height: 20px;
     width: 20px;
 }
+
 /*.massive-update table th, td {*/
 /*    text-align: center;*/
 /*    border: 0.5px solid black;*/
@@ -150,24 +158,31 @@ h3{
     width: 70%;
 }
 
-.massive-update button.btn-secondary{
+.massive-update button.btn-secondary {
     border: 0.5px solid grey;
 }
 
-.massive-update button{
+.massive-update button {
     float: right;
     margin: 10px 10px;
 }
 
-.errorTxt{
+.errorTxt {
     color: darkred;
     margin-top: 5px;
 }
 
-.successTxt{
+.successTxt {
     color: green;
 }
 
+.filter-student {
+    position: relative;
+}
+
+.filter-student .row .col-md-1:first-of-type{
+    padding: 0;
+}
 .filter-student button {
     margin-left: 10px;
 }
@@ -178,7 +193,7 @@ h3{
 }
 
 
-.table-result tr th:last-of-type,.table-subject tr th:last-of-type {
+.table-result tr th:last-of-type, .table-subject tr th:last-of-type {
     width: 60px;
 }
 
@@ -205,7 +220,7 @@ h3{
     color: white;
 }
 
-a.facebook-btn, a.google-btn{
+a.facebook-btn, a.google-btn {
     display: inline !important;
 }
 
@@ -232,7 +247,7 @@ a.facebook-btn, a.google-btn{
     width: 16px;
     position: absolute;
     top: 5px;
-    left:-30px;
+    left: -30px;
 }
 
 body {

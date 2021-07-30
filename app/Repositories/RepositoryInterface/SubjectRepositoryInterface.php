@@ -12,4 +12,7 @@ interface SubjectRepositoryInterface
 
     public function getSubjectByDepartment($department_id,$subject_id);
 
+    public function getSubjectByDepartmentID($department_id);
+
+    public function deleteSubjectResult($subject_id);
 }

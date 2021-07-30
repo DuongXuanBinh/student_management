@@ -34,12 +34,13 @@ class SocialController extends Controller
         $user = $this->createUser($info, $provider);
         auth()->login($user);
 
-        return redirect()->route('user.index');
+        return redirect()->route('home');
     }
 
     public function createUser($info, $provider)
     {
         $check = $this->_socialUserRepository->checkProvider($provider, $info->email);
+
         if (!$check) {
             $user_id = $this->_studentRepository->getIDByMail($info->email);
             $this->_socialUserRepository->create([

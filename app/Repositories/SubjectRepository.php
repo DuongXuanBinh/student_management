@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface\SubjectRepositoryInterface;
-use Illuminate\Support\Facades\DB;
 
 class SubjectRepository extends EloquentRepository implements SubjectRepositoryInterface
 {
@@ -11,7 +10,6 @@ class SubjectRepository extends EloquentRepository implements SubjectRepositoryI
     {
         return \App\Models\Subject::class;
     }
-
 
     public function deleteDepartmentSubject($id)
     {

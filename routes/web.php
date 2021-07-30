@@ -7,7 +7,6 @@ use App\Http\Controllers\SocialController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\ResultController;
 use App\Http\Controllers\HomeController;
 
 /*

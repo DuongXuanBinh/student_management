@@ -22,8 +22,8 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         $check = $this->_studentRepository->checkUserByMail($user->email);
+
         if (!$user->hasAnyRole('student', 'admin', 'non-registered')) {
             if ($check) {
                 $user->assignRole('student');
@@ -37,6 +37,7 @@ class HomeController extends Controller
                 return redirect()->route('user.index');
             }
         }
+
         return view('home');
     }
 }

@@ -8,7 +8,7 @@
 @if(session('notification'))
     <div class="row">
         <div class="col-md-12">
-            <h4 style="text-align: center; font-weight: bold">{{strtoupper(session('notification'))}}</h4>
+            <h4 style="text-align: center; font-weight: bold" class="{{session('notification') === 'Failed' ? 'errorTxt' : 'successTxt'}}">{{strtoupper(session('notification'))}}</h4>
         </div>
     </div>
 @endif

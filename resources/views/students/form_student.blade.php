@@ -7,29 +7,11 @@
 @endif
 @if(session('notification'))
     <div class="row">
-        <div class="col-md-12">
-            <h4 style="text-align: center; font-weight: bold" class="{{session('notification') === 'Failed' ? 'errorTxt' : 'successTxt'}}">{{strtoupper(session('notification'))}}</h4>
+        <div class="col-md-6 col-md-offset-1">
+            <h4 style="text-align:center; font-weight: bold" class="{{session('notification') === 'Failed' ? 'errorTxt' : 'successTxt'}}">{{strtoupper(session('notification'))}}</h4>
         </div>
     </div>
 @endif
-<div class="modal fade" id="update-notification" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">{{__('Notification')}}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
-            </div>
-        </div>
-    </div>
-</div>
 @if(request()->segment(2) == 'create')
     {{Form::open(['method'=>'post','route'=>'students.store','class'=>'form-layout'])}}
     <div class="row">
@@ -283,7 +265,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-5">
-            {{Form::button(__('ADD'),['class'=>'btn btn-primary','type'=>'submit'])}}
+            {{Form::button(__('UPDATE'),['class'=>'btn btn-primary','type'=>'submit'])}}
         </div>
     </div>
     {{Form::close()}}

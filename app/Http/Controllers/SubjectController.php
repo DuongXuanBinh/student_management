@@ -62,6 +62,7 @@ class SubjectController extends Controller
     public function update(SubjectRequest $request, $slug)
     {
         $result = $this->_subjectRepository->update($slug, $request->all());
+
         if ($result === false) {
             return redirect()->back()->with('notification', 'Failed');
         } else {
@@ -72,14 +73,17 @@ class SubjectController extends Controller
     public function destroy($slug)
     {
         $id = $this->_subjectRepository->find($slug)->id;
+
         DB::beginTransaction();
         try {
             $this->_subjectRepository->deleteSubjectResult($id);
             $this->_subjectRepository->delete($slug);
             DB::commit();
+
             return redirect()->route('subjects.index')->with('notification', 'Delete Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()->with('notification', 'Failed');
         }
     }

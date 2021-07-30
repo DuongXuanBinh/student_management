@@ -42,11 +42,6 @@ class StudentController extends Controller
         return view('students.index',compact('students'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $departments = $this->_departmentRepository->getAll();
@@ -61,33 +56,29 @@ class StudentController extends Controller
             'email' => $request->email,
             'password' => Hash::make($password)
         ];
+
         DB::beginTransaction();
         try {
             $user = $this->_userRepository->create($info);
             $info = $request->all();
             $info['user_id'] = $user->id;
             $student = $this->_studentRepository->create($info);
-
             Mail::send('mail.account_mail', compact('student', 'password'), function ($message) use ($student) {
                 $message->from('xuanbinh1011@gmail.com', 'ABC University');
                 $message->to($student->email, $student->name);
                 $message->subject('Account Generation');
             });
             DB::commit();
+
             return redirect()->route('students.index')->with('notification', 'Successfully added');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->route('students.index')->with('notification', 'Failed');
         }
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($slug)
     {
         $student = $this->_studentRepository->find($slug);
@@ -95,31 +86,21 @@ class StudentController extends Controller
         return response()->view('students.show', compact('student'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($slug)
     {
         $student = $this->_studentRepository->find($slug);
         $departments = $this->_departmentRepository->getAll();
+
         return response()->view('students.edit', compact('departments', 'student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(StudentRequest $request, $slug)
     {
         $this->_userRepository->update($request->user_id,$request->all());
-        return $this->_studentRepository->update($slug, $request->all());
+        $student = $this->_studentRepository->update($slug, $request->all());
+        $departments = $this->_departmentRepository->getAll();
 
+        return redirect()->route('students.edit',[$student->slug])->with('student',$student)->with('departments',$departments)->with('notification','Update successfully');
     }
 
     public function destroy($slug)
@@ -131,9 +112,11 @@ class StudentController extends Controller
             $this->_studentRepository->delete($slug);
             $this->_userRepository->delete($student->user_id);
             DB::commit();
+
             return redirect()->back()->with('notification', 'Successfully deleted');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()->with('notification', 'Failed');
         }
     }
@@ -152,9 +135,11 @@ class StudentController extends Controller
     public function sendMailDismiss()
     {
         $complete_students = $this->_studentRepository->checkCompletion(1);
+
         if (count($complete_students) === 0) {
             return redirect()->back()->with('notification', 'All students are still in-progress');
         }
+
         $bad_students = $this->_studentRepository->getBadStudent();
         $sendEmail = new SendMailDismiss($bad_students);
         $this->dispatch($sendEmail);

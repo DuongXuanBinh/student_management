@@ -24,7 +24,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
             $students->whereYear('students.birthday', '<=', $current_year - $data['age_from']);
         }
 
-        if (array_key_exists('age_to', $data) && !is_null($data['age_to'])) {
+        if (isset($data['age_to']) && !is_null($data['age_to'])) {
             $students->whereYear('students.birthday', '>=', $current_year - $data['age_to']);
         }
 
@@ -34,22 +34,22 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
                 if (!empty($data['mark_from'])) {
                     $q->where('mark', '>=', $data['mark_from']);
                 }
-
                 if (!empty($data['mark_to'])) {
                     $q->where('mark', '<=', $data['mark_to']);
                 }
             });
         }
+
         if (array_key_exists('mobile_network', $data)) {
-            $students->where(function($q) use ($data) {
+            $students->where(function ($q) use ($data) {
                 if (in_array('viettel', $data['mobile_network'])) {
-                    $q->orWhere('phone','regexp',VIETTEL);
+                    $q->orWhere('phone', 'regexp', VIETTEL);
                 }
-                if (in_array('vinaphone', $data['mobile_network'])){
-                    $q->orWhere('phone','regexp',VINAPHONE);
+                if (in_array('vinaphone', $data['mobile_network'])) {
+                    $q->orWhere('phone', 'regexp', VINAPHONE);
                 }
-                if (in_array('mobiphone', $data['mobile_network'])){
-                    $q->orWhere('phone','regexp',MOBIPHONE);
+                if (in_array('mobiphone', $data['mobile_network'])) {
+                    $q->orWhere('phone', 'regexp', MOBIPHONE);
                 }
             });
         }
@@ -114,6 +114,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     {
         $subject = [];
         $student = $this->findByID($student_id);
+
         if (isset($request['mark'])) {
             $mark = $request['mark'];
             $subject_ids = $request['subject_id'];
@@ -130,6 +131,7 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
     public function deleteResults($department_id, $subject_ids)
     {
         $students = $this->_model->where('department_id', $department_id)->get();
+
         foreach ($students as $student) {
             $student->subjects()->detach($subject_ids);
         }
@@ -166,52 +168,4 @@ class StudentRepository extends EloquentRepository implements StudentRepositoryI
         $student = $this->findByID($id);
         $student->subjects()->sync([]);
     }
-
-//    public function getResult()
-//    {
-//        return $this->_model->with(['subjects' => function ($q) {
-//            $q->select('*')->orderBy('results.id', 'ASC');
-//        }])->orderBy('id')->paginate(50);
-//    }
-//
-//    public function createResult($request)
-//    {
-//        $student = $this->findByID($request['student_id']);
-//        $student->subjects()->attach($request['subject_id'], [
-//            'student_id' => $student->id,
-//            'mark' => $request['mark'],
-//            'created_at' => Carbon::now('Asia/Ho_Chi_Minh'),
-//            'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
-//        ]);
-//    }
-//
-//    public function showResult($id)
-//    {
-//        return $this->_model->whereHas('subjects', function ($q) use ($id) {
-//            $q->select('*')->where('results.id', $id);
-//        })->with(['subjects' => function ($q) use ($id) {
-//            $q->select('*')->where('results.id', $id);
-//        }])->first();
-//    }
-//
-//    public function updateResult($request)
-//    {
-//        $student = $this->findByID($request['student_id']);
-//        $student->subjects()->updateExistingPivot($request['subject_id'], [
-//            'student_id' => $student->id,
-//            'mark' => $request['mark'],
-//            'updated_at' => Carbon::now('Asia/Ho_Chi_Minh')
-//        ]);
-//    }
-//
-//    public function deleteResult($id)
-//    {
-//        $student = $this->_model->whereHas('subjects', function ($q) use ($id) {
-//            $q->select('*')->where('results.id', $id);
-//        })->with(['subjects' => function ($q) use ($id) {
-//            $q->select('*')->where('results.id', $id);
-//        }])->first();
-//
-//        $student->subjects()->wherePivot('id', $id)->detach();
-//    }
 }
